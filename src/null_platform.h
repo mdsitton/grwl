@@ -260,6 +260,7 @@ void _glfwSetClipboardStringNull(const char* string);
 const char* _glfwGetClipboardStringNull(void);
 const char* _glfwGetScancodeNameNull(int scancode);
 int _glfwGetKeyScancodeNull(int key);
+const char *_glfwGetKeyboardLayoutNameNull(void);
 
 EGLenum _glfwGetEGLPlatformNull(EGLint** attribs);
 EGLNativeDisplayType _glfwGetEGLNativeDisplayNull(void);

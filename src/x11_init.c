@@ -1182,6 +1182,7 @@ GLFWbool _glfwConnectX11(int platformID, _GLFWplatform* platform)
         _glfwSetCursorX11,
         _glfwGetScancodeNameX11,
         _glfwGetKeyScancodeX11,
+        _glfwGetKeyboardLayoutNameX11,
         _glfwSetClipboardStringX11,
         _glfwGetClipboardStringX11,
 #if defined(GLFW_BUILD_LINUX_JOYSTICK)
@@ -1381,6 +1382,8 @@ int _glfwInitX11(void)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XFreeCursor");
     _glfw.x11.xlib.FreeEventData = (PFN_XFreeEventData)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XFreeEventData");
+    _glfw.x11.xlib.GetAtomName = (PFN_XGetAtomName)
+        _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XGetAtomName");
     _glfw.x11.xlib.GetErrorText = (PFN_XGetErrorText)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XGetErrorText");
     _glfw.x11.xlib.GetEventData = (PFN_XGetEventData)
@@ -1487,6 +1490,8 @@ int _glfwInitX11(void)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XVisualIDFromVisual");
     _glfw.x11.xlib.WarpPointer = (PFN_XWarpPointer)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XWarpPointer");
+    _glfw.x11.xkb.AllocKeyboard = (PFN_XkbAllocKeyboard)
+        _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XkbAllocKeyboard");
     _glfw.x11.xkb.FreeKeyboard = (PFN_XkbFreeKeyboard)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XkbFreeKeyboard");
     _glfw.x11.xkb.FreeNames = (PFN_XkbFreeNames)
@@ -1575,6 +1580,9 @@ void _glfwTerminateX11(void)
 
     _glfw_free(_glfw.x11.primarySelectionString);
     _glfw_free(_glfw.x11.clipboardString);
+
+    if (_glfw.x11.keyboardLayoutName)
+        XFree(_glfw.x11.keyboardLayoutName);
 
     XUnregisterIMInstantiateCallback(_glfw.x11.display,
                                      NULL, NULL, NULL,

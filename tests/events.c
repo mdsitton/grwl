@@ -466,6 +466,12 @@ static void drop_callback(GLFWwindow* window, int count, const char* paths[])
         printf("  %i: \"%s\"\n", i, paths[i]);
 }
 
+static void keyboard_layout_callback(void)
+{
+    printf("%08x at %0.3f: Keyboard layout changed to \'%s\'\n",
+           counter++, glfwGetTime(), glfwGetKeyboardLayoutName());
+}
+
 static void monitor_callback(GLFWmonitor* monitor, int event)
 {
     if (event == GLFW_CONNECTED)
@@ -547,6 +553,7 @@ int main(int argc, char** argv)
 
     glfwSetMonitorCallback(monitor_callback);
     glfwSetJoystickCallback(joystick_callback);
+    glfwSetKeyboardLayoutCallback(keyboard_layout_callback);
 
     while ((ch = getopt(argc, argv, "hfn:")) != -1)
     {

@@ -24,6 +24,7 @@
 //
 //========================================================================
 
+#if defined(_GLFW_WAYLAND)
 #include <wayland-client-core.h>
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
@@ -176,6 +177,8 @@ typedef int (* PFN_xkb_state_key_get_syms)(struct xkb_state*, xkb_keycode_t, con
 typedef enum xkb_state_component (* PFN_xkb_state_update_mask)(struct xkb_state*, xkb_mod_mask_t, xkb_mod_mask_t, xkb_mod_mask_t, xkb_layout_index_t, xkb_layout_index_t, xkb_layout_index_t);
 typedef xkb_layout_index_t (* PFN_xkb_state_key_get_layout)(struct xkb_state*,xkb_keycode_t);
 typedef int (* PFN_xkb_state_mod_index_is_active)(struct xkb_state*,xkb_mod_index_t,enum xkb_state_component);
+typedef xkb_mod_mask_t (* PFN_xkb_state_serialize_mods)(struct xkb_state*, enum xkb_state_component);
+typedef const char * (* PFN_xkb_keymap_layout_get_name)(struct xkb_keymap*,xkb_layout_index_t);
 #define xkb_context_new _glfw.wl.xkb.context_new
 #define xkb_context_unref _glfw.wl.xkb.context_unref
 #define xkb_keymap_new_from_string _glfw.wl.xkb.keymap_new_from_string
@@ -189,6 +192,8 @@ typedef int (* PFN_xkb_state_mod_index_is_active)(struct xkb_state*,xkb_mod_inde
 #define xkb_state_update_mask _glfw.wl.xkb.state_update_mask
 #define xkb_state_key_get_layout _glfw.wl.xkb.state_key_get_layout
 #define xkb_state_mod_index_is_active _glfw.wl.xkb.state_mod_index_is_active
+#define xkb_state_serialize_mods _glfw.wl.xkb.state_serialize_mods
+#define xkb_keymap_layout_get_name _glfw.wl.xkb.keymap_layout_get_name
 
 typedef struct xkb_compose_table* (* PFN_xkb_compose_table_new_from_locale)(struct xkb_context*, const char*, enum xkb_compose_compile_flags);
 typedef void (* PFN_xkb_compose_table_unref)(struct xkb_compose_table*);
@@ -461,6 +466,7 @@ typedef struct _GLFWlibraryWayland
     int                         keyRepeatScancode;
 
     char*                       clipboardString;
+    char*                       keyboardLayoutName;
     short int                   keycodes[256];
     short int                   scancodes[GLFW_KEY_LAST + 1];
     char                        keynames[GLFW_KEY_LAST + 1][5];
@@ -480,6 +486,7 @@ typedef struct _GLFWlibraryWayland
         xkb_mod_index_t         capsLockIndex;
         xkb_mod_index_t         numLockIndex;
         unsigned int            modifiers;
+        xkb_layout_index_t      group;
 
         PFN_xkb_context_new context_new;
         PFN_xkb_context_unref context_unref;
@@ -494,7 +501,8 @@ typedef struct _GLFWlibraryWayland
         PFN_xkb_state_update_mask state_update_mask;
         PFN_xkb_state_key_get_layout state_key_get_layout;
         PFN_xkb_state_mod_index_is_active state_mod_index_is_active;
-
+        PFN_xkb_state_serialize_mods state_serialize_mods;
+        PFN_xkb_keymap_layout_get_name keymap_layout_get_name;
         PFN_xkb_compose_table_new_from_locale compose_table_new_from_locale;
         PFN_xkb_compose_table_unref compose_table_unref;
         PFN_xkb_compose_state_new compose_state_new;
@@ -654,6 +662,7 @@ void _glfwSetCursorPosWayland(_GLFWwindow* window, double xpos, double ypos);
 void _glfwSetCursorModeWayland(_GLFWwindow* window, int mode);
 const char* _glfwGetScancodeNameWayland(int scancode);
 int _glfwGetKeyScancodeWayland(int key);
+const char* _glfwGetKeyboardLayoutNameWayland(void);
 GLFWbool _glfwCreateCursorWayland(_GLFWcursor* cursor, const GLFWimage* image, int xhot, int yhot);
 GLFWbool _glfwCreateStandardCursorWayland(_GLFWcursor* cursor, int shape);
 void _glfwDestroyCursorWayland(_GLFWcursor* cursor);
@@ -683,4 +692,4 @@ void _glfwUpdateContentScaleWayland(_GLFWwindow* window);
 
 void _glfwAddSeatListenerWayland(struct wl_seat* seat);
 void _glfwAddDataDeviceListenerWayland(struct wl_data_device* device);
-
+#endif

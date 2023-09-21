@@ -1748,6 +1748,12 @@ static void keyboardHandleModifiers(void* userData,
             _glfw.wl.xkb.modifiers |= modifiers[i].bit;
         }
     }
+
+    if (_glfw.wl.xkb.group != group)
+    {
+        _glfw.wl.xkb.group = group;
+        _glfwInputKeyboardLayout();
+    }
 }
 
 #ifdef WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION
@@ -2601,6 +2607,29 @@ const char* _glfwGetScancodeNameWayland(int scancode)
 int _glfwGetKeyScancodeWayland(int key)
 {
     return _glfw.wl.scancodes[key];
+}
+
+const char* _glfwGetKeyboardLayoutNameWayland(void)
+{
+    if (!_glfw.wl.xkb.keymap)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Wayland: Keymap missing");
+        return NULL;
+    }
+
+    const char* name = xkb_keymap_layout_get_name(_glfw.wl.xkb.keymap,
+                                                  _glfw.wl.xkb.group);
+    if (!name)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Wayland: Failed to query keyboard layout name");
+        return NULL;
+    }
+
+    free(_glfw.wl.keyboardLayoutName);
+    _glfw.wl.keyboardLayoutName = _glfw_strdup(name);
+    return _glfw.wl.keyboardLayoutName;
 }
 
 GLFWbool _glfwCreateCursorWayland(_GLFWcursor* cursor,

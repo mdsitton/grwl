@@ -16,6 +16,14 @@ them at runtime with the @ref GLFW_PLATFORM init hint.  After initialization the
 selected platform can be queried with @ref glfwGetPlatform.  You can check if
 support for a given platform is compiled in with @ref glfwPlatformSupported.
 
+@subsubsection keyboard_layout_34 Keyboard layouts
+
+GLFW can now notify when the keyboard layout has changed with @ref
+glfwSetKeyboardLayoutCallback and provides the human-readable name of the
+current layout with @ref glfwGetKeyboardLayoutName.
+
+For more information, see @ref keyboard_layout.
+
 
 @subsubsection standard_cursors_34 More standard cursors
 

@@ -55,6 +55,7 @@ GLFWbool _glfwConnectNull(int platformID, _GLFWplatform* platform)
         _glfwSetCursorNull,
         _glfwGetScancodeNameNull,
         _glfwGetKeyScancodeNull,
+        _glfwGetKeyboardLayoutNameNull,
         _glfwSetClipboardStringNull,
         _glfwGetClipboardStringNull,
         _glfwInitJoysticksNull,

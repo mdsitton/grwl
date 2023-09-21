@@ -705,6 +705,7 @@ typedef struct _GLFWlibraryWin32
     HDEVNOTIFY          deviceNotificationHandle;
     int                 acquiredMonitorCount;
     char*               clipboardString;
+    char*               keyboardLayoutName;
     short int           keycodes[512];
     short int           scancodes[GLFW_KEY_LAST + 1];
     char                keynames[GLFW_KEY_LAST + 1][5];
@@ -849,6 +850,7 @@ void _glfwSetCursorPosWin32(_GLFWwindow* window, double xpos, double ypos);
 void _glfwSetCursorModeWin32(_GLFWwindow* window, int mode);
 const char* _glfwGetScancodeNameWin32(int scancode);
 int _glfwGetKeyScancodeWin32(int key);
+const char* _glfwGetKeyboardLayoutNameWin32(void);
 GLFWbool _glfwCreateCursorWin32(_GLFWcursor* cursor, const GLFWimage* image, int xhot, int yhot);
 GLFWbool _glfwCreateStandardCursorWin32(_GLFWcursor* cursor, int shape);
 void _glfwDestroyCursorWin32(_GLFWcursor* cursor);

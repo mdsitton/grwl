@@ -652,6 +652,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM l
         case WM_INPUTLANGCHANGE:
         {
             _glfwUpdateKeyNamesWin32();
+            _glfwInputKeyboardLayout();
             break;
         }
 
@@ -2212,6 +2213,48 @@ const char* _glfwGetScancodeNameWin32(int scancode)
 int _glfwGetKeyScancodeWin32(int key)
 {
     return _glfw.win32.scancodes[key];
+}
+
+const char* _glfwGetKeyboardLayoutNameWin32(void)
+{
+    WCHAR klid[KL_NAMELENGTH];
+    int size;
+    LCID lcid;
+    WCHAR* language;
+
+    if (!GetKeyboardLayoutNameW(klid))
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Win32: Failed to retrieve keyboard layout name");
+        return NULL;
+    }
+
+    // NOTE: We only care about the language part of the keyboard layout ID
+    lcid = MAKELCID(LANGIDFROMLCID(wcstoul(klid, NULL, 16)), 0);
+
+    size = GetLocaleInfoW(lcid, LOCALE_SLANGUAGE, NULL, 0);
+    if (!size)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Win32: Failed to retrieve keyboard layout name length");
+        return NULL;
+    }
+
+    language = calloc(size, sizeof(WCHAR));
+
+    if (!GetLocaleInfoW(lcid, LOCALE_SLANGUAGE, language, size))
+    {
+        free(language);
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Win32: Failed to translate keyboard layout name");
+        return NULL;
+    }
+
+    free(_glfw.win32.keyboardLayoutName);
+    _glfw.win32.keyboardLayoutName = _glfwCreateUTF8FromWideStringWin32(language);
+    free(language);
+
+    return _glfw.win32.keyboardLayoutName;
 }
 
 GLFWbool _glfwCreateCursorWin32(_GLFWcursor* cursor,

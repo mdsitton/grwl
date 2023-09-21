@@ -404,6 +404,7 @@ GLFWbool _glfwConnectWayland(int platformID, _GLFWplatform* platform)
         _glfwSetCursorWayland,
         _glfwGetScancodeNameWayland,
         _glfwGetKeyScancodeWayland,
+        _glfwGetKeyboardLayoutNameWayland,
         _glfwSetClipboardStringWayland,
         _glfwGetClipboardStringWayland,
 #if defined(GLFW_BUILD_LINUX_JOYSTICK)
@@ -651,6 +652,10 @@ int _glfwInitWayland(void)
         _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_key_get_layout");
     _glfw.wl.xkb.state_mod_index_is_active = (PFN_xkb_state_mod_index_is_active)
         _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_mod_index_is_active");
+    _glfw.wl.xkb.state_serialize_mods = (PFN_xkb_state_serialize_mods)
+        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_serialize_mods");
+    _glfw.wl.xkb.keymap_layout_get_name = (PFN_xkb_keymap_layout_get_name)
+        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_layout_get_name");
     _glfw.wl.xkb.compose_table_new_from_locale = (PFN_xkb_compose_table_new_from_locale)
         _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_table_new_from_locale");
     _glfw.wl.xkb.compose_table_unref = (PFN_xkb_compose_table_unref)
@@ -916,6 +921,7 @@ void _glfwTerminateWayland(void)
         close(_glfw.wl.cursorTimerfd);
 
     _glfw_free(_glfw.wl.clipboardString);
+    _glfw_free(_glfw.wl.keyboardLayoutName);
 }
 
 #endif // _GLFW_WAYLAND

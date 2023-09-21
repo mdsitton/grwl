@@ -641,6 +641,7 @@ GLFWbool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
         _glfwSetCursorWin32,
         _glfwGetScancodeNameWin32,
         _glfwGetKeyScancodeWin32,
+        _glfwGetKeyboardLayoutNameWin32,
         _glfwSetClipboardStringWin32,
         _glfwGetClipboardStringWin32,
         _glfwInitJoysticksWin32,
@@ -740,6 +741,7 @@ void _glfwTerminateWin32(void)
         UnregisterClassW(MAKEINTATOM(_glfw.win32.mainWindowClass), _glfw.win32.instance);
 
     _glfw_free(_glfw.win32.clipboardString);
+    _glfw_free(_glfw.win32.keyboardLayoutName);
     _glfw_free(_glfw.win32.rawInput);
 
     _glfwTerminateWGL();

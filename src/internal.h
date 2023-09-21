@@ -700,6 +700,7 @@ struct _GLFWplatform
     void (*setCursor)(_GLFWwindow*,_GLFWcursor*);
     const char* (*getScancodeName)(int);
     int (*getKeyScancode)(int);
+    const char* (*getKeyboardLayoutName)(void);
     void (*setClipboardString)(const char*);
     const char* (*getClipboardString)(void);
     GLFWbool (*initJoysticks)(void);
@@ -878,6 +879,7 @@ struct _GLFWlibrary
     struct {
         GLFWmonitorfun  monitor;
         GLFWjoystickfun joystick;
+        GLFWkeyboardlayoutfun layout;
     } callbacks;
 
     // These are defined in platform.h
@@ -930,6 +932,7 @@ void _glfwInputWindowDamage(_GLFWwindow* window);
 void _glfwInputWindowCloseRequest(_GLFWwindow* window);
 void _glfwInputWindowMonitor(_GLFWwindow* window, _GLFWmonitor* monitor);
 
+void _glfwInputKeyboardLayout(void);
 void _glfwInputKey(_GLFWwindow* window,
                    int key, int scancode, int action, int mods);
 void _glfwInputChar(_GLFWwindow* window,

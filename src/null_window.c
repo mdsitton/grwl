@@ -698,6 +698,11 @@ int _glfwGetKeyScancodeNull(int key)
     return _glfw.null.scancodes[key];
 }
 
+const char* _glfwGetKeyboardLayoutNameNull(void)
+{
+    return "";
+}
+
 void _glfwGetRequiredInstanceExtensionsNull(char** extensions)
 {
 }
