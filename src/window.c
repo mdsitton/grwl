@@ -245,6 +245,11 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     window->numer       = GLFW_DONT_CARE;
     window->denom       = GLFW_DONT_CARE;
 
+    window->preedit.cursorPosX = 0;
+    window->preedit.cursorPosY = height;
+    window->preedit.cursorWidth = 0;
+    window->preedit.cursorHeight = 0;
+
     if (!_glfw.platform.createWindow(window, &wndconfig, &ctxconfig, &fbconfig))
     {
         glfwDestroyWindow((GLFWwindow*) window);
@@ -267,15 +272,18 @@ void glfwDefaultWindowHints(void)
 
     // The default is a focused, visible, resizable window with decorations
     memset(&_glfw.hints.window, 0, sizeof(_glfw.hints.window));
-    _glfw.hints.window.resizable    = GLFW_TRUE;
-    _glfw.hints.window.visible      = GLFW_TRUE;
-    _glfw.hints.window.decorated    = GLFW_TRUE;
-    _glfw.hints.window.focused      = GLFW_TRUE;
-    _glfw.hints.window.autoIconify  = GLFW_TRUE;
-    _glfw.hints.window.centerCursor = GLFW_TRUE;
-    _glfw.hints.window.focusOnShow  = GLFW_TRUE;
-    _glfw.hints.window.xpos         = GLFW_ANY_POSITION;
-    _glfw.hints.window.ypos         = GLFW_ANY_POSITION;
+    _glfw.hints.window.resizable      = GLFW_TRUE;
+    _glfw.hints.window.visible        = GLFW_TRUE;
+    _glfw.hints.window.decorated      = GLFW_TRUE;
+    _glfw.hints.window.focused        = GLFW_TRUE;
+    _glfw.hints.window.autoIconify    = GLFW_TRUE;
+    _glfw.hints.window.centerCursor   = GLFW_TRUE;
+    _glfw.hints.window.focusOnShow    = GLFW_TRUE;
+    _glfw.hints.window.xpos           = GLFW_ANY_POSITION;
+    _glfw.hints.window.ypos           = GLFW_ANY_POSITION;
+    // The default is hard-fullscreen, which is exclusive.
+    // Soft-fullscreen is not exclusive and is suitable for applications such as text-editors.
+    _glfw.hints.window.softFullscreen = GLFW_FALSE;
 
     // The default is 24 bits of color, 24 bits of depth and 8 bits of stencil,
     // double buffered
@@ -397,6 +405,9 @@ GLFWAPI void glfwWindowHint(int hint, int value)
         case GLFW_MOUSE_PASSTHROUGH:
             _glfw.hints.window.mousePassthrough = value ? GLFW_TRUE : GLFW_FALSE;
             return;
+        case GLFW_SOFT_FULLSCREEN:
+            _glfw.hints.window.softFullscreen = value ? GLFW_TRUE : GLFW_FALSE;
+            return;
         case GLFW_CLIENT_API:
             _glfw.hints.context.client = value;
             return;
@@ -494,6 +505,11 @@ GLFWAPI void glfwDestroyWindow(GLFWwindow* handle)
         *prev = window->next;
     }
 
+    // Clear memory for preedit text
+    if (window->preedit.text)
+        _glfw_free(window->preedit.text);
+    if (window->preedit.blockSizes)
+        _glfw_free(window->preedit.blockSizes);
     _glfw_free(window);
 }
 
