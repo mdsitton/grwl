@@ -558,10 +558,13 @@ void _glfwGetMonitorWorkareaWin32(_GLFWmonitor* monitor,
 
 GLFWvidmode* _glfwGetVideoModesWin32(_GLFWmonitor* monitor, int* count)
 {
-    int modeIndex = 0, size = 0;
+    int modeIndex = 0, size = 1;
     GLFWvidmode* result = NULL;
 
-    *count = 0;
+    *count = 1;
+    // HACK: Always return the current video mode
+    result = _glfw_calloc(1, sizeof(GLFWvidmode));
+    _glfwGetVideoModeWin32(monitor, result);
 
     for (;;)
     {
@@ -620,14 +623,6 @@ GLFWvidmode* _glfwGetVideoModesWin32(_GLFWmonitor* monitor, int* count)
 
         (*count)++;
         result[*count - 1] = mode;
-    }
-
-    if (!*count)
-    {
-        // HACK: Report the current mode if no valid modes were found
-        result = _glfw_calloc(1, sizeof(GLFWvidmode));
-        _glfwGetVideoModeWin32(monitor, result);
-        *count = 1;
     }
 
     return result;
