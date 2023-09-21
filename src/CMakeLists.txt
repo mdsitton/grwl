@@ -121,6 +121,9 @@ if (GLFW_BUILD_WAYLAND)
     wayland_generate(
         "${WAYLAND_PROTOCOLS_BASE}/unstable/text-input/text-input-unstable-v3.xml"
         "${GLFW_BINARY_DIR}/src/wayland-text-input-unstable-v3-client-protocol")
+    wayland_generate(
+        "${WAYLAND_PROTOCOLS_BASE}/staging/xdg-activation/xdg-activation-v1.xml"
+        "${GLFW_BINARY_DIR}/src/wayland-xdg-activation-v1-client-protocol")
 endif()
 
 if (WIN32 AND GLFW_BUILD_SHARED_LIBRARY)

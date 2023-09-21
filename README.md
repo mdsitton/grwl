@@ -121,6 +121,8 @@ information on what to include when reporting a bug.
 
 ## Changelog
 
+ - Added `glfwRequestWindowAttention` implementation for Wayland using
+   xdg-activation-v1 protocol (#2287)
  - Added `glfwSetWindowBadge` and `glfwSetWindowBadgeString` for displaying window application badge (#2248)
  - Added `glfwSetWindowProgressIndicator` for displaying progress on the dock or taskbar (#2286,#1183)
  - Added `glfwSetPreeditCandidateCallback` function and

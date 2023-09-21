@@ -50,6 +50,7 @@
 #include "wayland-idle-inhibit-unstable-v1-client-protocol.h"
 #include "wayland-text-input-unstable-v1-client-protocol.h"
 #include "wayland-text-input-unstable-v3-client-protocol.h"
+#include "wayland-xdg-activation-v1-client-protocol.h"
 
 // NOTE: Versions of wayland-scanner prior to 1.17.91 named every global array of
 //       wl_interface pointers 'types', making it impossible to combine several unmodified
@@ -90,6 +91,10 @@
 
 #define types _glfw_text_input_v3_types
 #include "wayland-text-input-unstable-v3-client-protocol-code.h"
+#undef types
+
+#define types _glfw_xdg_activation_types
+#include "wayland-xdg-activation-v1-client-protocol-code.h"
 #undef types
 
 static void wmBaseHandlePing(void* userData,
@@ -200,6 +205,13 @@ static void registryHandleGlobal(void* userData,
         _glfw.wl.textInputManagerV3 =
             wl_registry_bind(registry, name,
                              &zwp_text_input_manager_v3_interface,
+                             1);
+    }
+    else if (strcmp(interface, "xdg_activation_v1") == 0)
+    {
+        _glfw.wl.activationManager =
+            wl_registry_bind(registry, name,
+                             &xdg_activation_v1_interface,
                              1);
     }
 }
@@ -944,6 +956,8 @@ void _glfwTerminateWayland(void)
         zwp_text_input_manager_v1_destroy(_glfw.wl.textInputManagerV1);
     if (_glfw.wl.textInputManagerV3)
         zwp_text_input_manager_v3_destroy(_glfw.wl.textInputManagerV3);
+    if (_glfw.wl.activationManager)
+        xdg_activation_v1_destroy(_glfw.wl.activationManager);
     if (_glfw.wl.registry)
         wl_registry_destroy(_glfw.wl.registry);
     if (_glfw.wl.display)
