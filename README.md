@@ -121,6 +121,8 @@ information on what to include when reporting a bug.
 
 ## Changelog
 
+ - Added `glfwSetWindowBadge` and `glfwSetWindowBadgeString` for displaying window application badge (#2248)
+ - Added `glfwSetWindowProgressIndicator` for displaying progress on the dock or taskbar (#2286,#1183)
  - Added `glfwSetPreeditCandidateCallback` function and
    `GLFWpreeditcandidatefun` type for preedit candidates (#2130)
  - Added `glfwGetPreeditCandidate` function to get a preeidt candidate text

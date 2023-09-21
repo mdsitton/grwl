@@ -1219,6 +1219,9 @@ GLFWbool _glfwConnectX11(int platformID, _GLFWplatform* platform)
         _glfwDestroyWindowX11,
         _glfwSetWindowTitleX11,
         _glfwSetWindowIconX11,
+        _glfwSetWindowProgressIndicatorX11,
+        _glfwSetWindowBadgeX11,
+        _glfwSetWindowBadgeStringX11,
         _glfwGetWindowPosX11,
         _glfwSetWindowPosX11,
         _glfwGetWindowSizeX11,
@@ -1331,6 +1334,8 @@ GLFWbool _glfwConnectX11(int platformID, _GLFWplatform* platform)
 
 int _glfwInitX11(void)
 {
+    _glfwInitDBusPOSIX();
+
     _glfw.x11.xlib.AllocClassHint = (PFN_XAllocClassHint)
         _glfwPlatformGetModuleSymbol(_glfw.x11.xlib.handle, "XAllocClassHint");
     _glfw.x11.xlib.AllocSizeHints = (PFN_XAllocSizeHints)
@@ -1675,6 +1680,8 @@ void _glfwTerminateX11(void)
         close(_glfw.x11.emptyEventPipe[0]);
         close(_glfw.x11.emptyEventPipe[1]);
     }
+
+    _glfwTerminateDBusPOSIX();
 }
 
 #endif // _GLFW_X11
