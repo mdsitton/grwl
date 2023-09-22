@@ -180,6 +180,8 @@ static GLFWbool loadLibraries(void)
             _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmEnableBlurBehindWindow");
         _glfw.win32.dwmapi.GetColorizationColor = (PFN_DwmGetColorizationColor)
             _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmGetColorizationColor");
+        _glfw.win32.dwmapi.SetWindowAttribute = (PFN_DwmSetWindowAttribute)
+            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmSetWindowAttribute");
     }
 
     _glfw.win32.shcore.instance = _glfwPlatformLoadModule("shcore.dll");
@@ -223,6 +225,18 @@ static GLFWbool loadLibraries(void)
             _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmSetOpenStatus");
     }
 
+    _glfw.win32.uxtheme.instance = _glfwPlatformLoadModule("uxtheme.dll");
+    if (_glfw.win32.uxtheme.instance)
+    {
+        _glfw.win32.uxtheme.ShouldAppsUseDarkMode = (ShouldAppsUseDarkModePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(132));
+        _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx = (GetImmersiveColorFromColorSetExPtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(95));
+        _glfw.win32.uxtheme.GetImmersiveColorTypeFromName = (GetImmersiveColorTypeFromNamePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(96));
+        _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference = (GetImmersiveUserColorSetPreferencePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(98));
+
+        _glfw.win32.uxtheme.uxThemeAvailable = _glfw.win32.uxtheme.ShouldAppsUseDarkMode && _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx && _glfw.win32.uxtheme.GetImmersiveColorTypeFromName && _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference;
+        _glfw.win32.uxtheme.darkTitleAvailable = _glfwIsWindows10BuildOrGreaterWin32(22000);
+    }
+
     return GLFW_TRUE;
 }
 
@@ -250,6 +264,9 @@ static void freeLibraries(void)
 
     if (_glfw.win32.imm32.instance)
         _glfwPlatformFreeModule(_glfw.win32.imm32.instance);
+
+    if (_glfw.win32.uxtheme.instance)
+        _glfwPlatformFreeModule(_glfw.win32.uxtheme.instance);
 }
 
 // Create key code translation tables

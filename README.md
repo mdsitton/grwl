@@ -428,6 +428,7 @@ information on what to include when reporting a bug.
  - [Win32] Disabled framebuffer transparency on Windows 7 when DWM windows are
    opaque (#1512)
  - [Win32] Made hidden helper window use its own window class
+ - [Win32] Added support for dark title bar (#2228)
  - [X11] Bugfix: `glfwFocusWindow` could terminate on older WMs or without a WM
  - [X11] Bugfix: `glfwMaximizeWindow` had no effect on hidden windows
  - [X11] Bugfix: `glfwPostEmptyEvent` could be ignored due to race condition
