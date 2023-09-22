@@ -635,6 +635,7 @@ GLFWbool _glfwConnectCocoa(int platformID, _GLFWplatform* platform)
         _glfwWaitEventsCocoa,
         _glfwWaitEventsTimeoutCocoa,
         _glfwPostEmptyEventCocoa,
+        _glfwCreateUserContextCocoa,
         _glfwGetEGLPlatformCocoa,
         _glfwGetEGLNativeDisplayCocoa,
         _glfwGetEGLNativeWindowCocoa,

@@ -121,6 +121,11 @@ information on what to include when reporting a bug.
 
 ## Changelog
 
+
+ - Added OpenGL and OpenGL ES user contexts for multiple window contexts via
+         `GLFWusercontext`, `glfwCreateUserContext`, `glfwDestroyUserContext`,
+         `glfwMakeUserContextCurrent`, `glfwGetCurrentUserContext` (#1687)
+ - Added `GLFW_PLATFORM` init hint for runtime platform selection (#1958)
  - Added `GLFW_ANGLE_PLATFORM_TYPE` init hint and `GLFW_ANGLE_PLATFORM_TYPE_*`
    values to select ANGLE backend (#1380)
  - Added `GLFW_ANY_PLATFORM`, `GLFW_PLATFORM_WIN32`, `GLFW_PLATFORM_COCOA`,

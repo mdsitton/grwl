@@ -508,6 +508,7 @@ GLFWbool _glfwConnectWayland(int platformID, _GLFWplatform* platform)
         _glfwWaitEventsWayland,
         _glfwWaitEventsTimeoutWayland,
         _glfwPostEmptyEventWayland,
+		_glfwCreateUserContextWayland,
         _glfwGetEGLPlatformWayland,
         _glfwGetEGLNativeDisplayWayland,
         _glfwGetEGLNativeWindowWayland,
