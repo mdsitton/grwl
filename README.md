@@ -437,6 +437,7 @@ information on what to include when reporting a bug.
  - [GLX] Added loading of glvnd `libGLX.so.0` where available
  - [GLX] Bugfix: Context creation failed if GLX 1.4 was not exported by GLX library
  - [EGL] Made it possible to query the `EGLConfig` that was chosen to create a given window via `glfwGetEGLConfig`
+* [Win32] Bugfix: Worker threads are now able to correctly detect if the GLFW window has focus by getting the `GLFW_FOCUSED` attribute.
 
 
 ## Contact

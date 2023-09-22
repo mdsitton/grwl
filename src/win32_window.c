@@ -2797,7 +2797,7 @@ void _glfwSetWindowMonitorWin32(_GLFWwindow* window,
 
 GLFWbool _glfwWindowFocusedWin32(_GLFWwindow* window)
 {
-    return window->win32.handle == GetActiveWindow();
+    return window->win32.handle == GetForegroundWindow();
 }
 
 GLFWbool _glfwWindowIconifiedWin32(_GLFWwindow* window)
