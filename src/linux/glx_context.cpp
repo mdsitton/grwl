@@ -50,7 +50,7 @@ static GRWLbool chooseGLXFBConfig(const _GRWLfbconfig* desired, GLXFBConfig* res
         return GRWL_FALSE;
     }
 
-    usableConfigs = _grwl_calloc(nativeCount, sizeof(_GRWLfbconfig));
+    usableConfigs = (_GRWLfbconfig*)_grwl_calloc(nativeCount, sizeof(_GRWLfbconfig));
     usableCount = 0;
 
     for (int i = 0; i < nativeCount; i++)
@@ -172,7 +172,7 @@ static void swapIntervalGLX(int interval)
 {
     if (_grwl.glx.EXT_swap_control)
     {
-        _GRWLwindow* window = _grwlPlatformGetTls(&_grwl.contextSlot);
+        _GRWLwindow* window = (_GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
         if (window)
         {
             _grwl.glx.SwapIntervalEXT(_grwl.x11.display, window->context.glx.window, interval);
@@ -694,7 +694,7 @@ _GRWLusercontext* _grwlCreateUserContextGLX(_GRWLwindow* window)
     _GRWLusercontext* context;
     _GRWLctxconfig ctxconfig;
 
-    context = calloc(1, sizeof(_GRWLusercontext));
+    context = (_GRWLusercontext*)_grwl_calloc(1, sizeof(_GRWLusercontext));
     context->window = window;
 
     ctxconfig = _grwl.hints.context;
