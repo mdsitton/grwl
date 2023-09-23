@@ -452,7 +452,7 @@ typedef VkResult(APIENTRY* PFN_vkCreateXcbSurfaceKHR)(VkInstance, const VkXcbSur
 typedef VkBool32(APIENTRY* PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)(VkPhysicalDevice, uint32_t,
                                                                              xcb_connection_t*, xcb_visualid_t);
 
-    #include "xkb_unicode.h"
+    #include "linux/xkb_unicode.h"
     #include "posix_poll.h"
 
     #define GRWL_X11_WINDOW_STATE _GRWLwindowX11 x11;
