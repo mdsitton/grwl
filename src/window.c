@@ -1191,12 +1191,14 @@ GLFWAPI void glfwPollEvents(void)
 {
     _GLFW_REQUIRE_INIT();
     _glfw.platform.pollEvents();
+    _glfwPlatformPollEvents();
 }
 
 GLFWAPI void glfwWaitEvents(void)
 {
     _GLFW_REQUIRE_INIT();
     _glfw.platform.waitEvents();
+    _glfwPollAllJoysticks();
 }
 
 GLFWAPI void glfwWaitEventsTimeout(double timeout)
