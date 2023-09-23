@@ -2,6 +2,7 @@
 // This file is part of GRWL(a fork of GLFW) licensed under the Zlib license.
 // See file LICENSE.md for full license details
 //===========================================================================
+#pragma once
 
 #if defined(_GRWL_COCOA)
     #include <cstdint>

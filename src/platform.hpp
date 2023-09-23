@@ -2,6 +2,7 @@
 // This file is part of GRWL(a fork of GLFW) licensed under the Zlib license.
 // See file LICENSE.md for full license details
 //===========================================================================
+#pragma once
 
 #if defined(GRWL_BUILD_WIN32_TIMER) || defined(GRWL_BUILD_WIN32_MODULE) || defined(GRWL_BUILD_WIN32_THREAD) || \
     defined(GRWL_BUILD_COCOA_TIMER) || defined(GRWL_BUILD_POSIX_TIMER) || defined(GRWL_BUILD_POSIX_MODULE) ||  \
