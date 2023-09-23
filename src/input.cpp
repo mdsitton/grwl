@@ -75,14 +75,14 @@ static struct vendor_product parseGUID(const char* guid)
 static _GRWLmapping* findMappingUSBVendorProduct(const char* guid)
 {
 
-    struct vendor_product this;
-    this = parseGUID(guid);
+    struct vendor_product startingItem;
+    startingItem = parseGUID(guid);
 
     for (int i = 0; i < _grwl.mappingCount; i++)
     {
-        struct vendor_product that = parseGUID(_grwl.mappings[i].guid);
+        struct vendor_product testItem = parseGUID(_grwl.mappings[i].guid);
 
-        if (memcmp(&this, &that, sizeof(struct vendor_product)) == 0)
+        if (memcmp(&startingItem, &testItem, sizeof(struct vendor_product)) == 0)
         {
             return _grwl.mappings + i;
         }
