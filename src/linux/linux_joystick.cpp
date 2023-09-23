@@ -251,8 +251,8 @@ static void closeJoystick(_GRWLjoystick* js)
 //
 static int compareJoysticks(const void* fp, const void* sp)
 {
-    const _GRWLjoystick* fj = fp;
-    const _GRWLjoystick* sj = sp;
+    const _GRWLjoystick* fj = (_GRWLjoystick*)fp;
+    const _GRWLjoystick* sj = (_GRWLjoystick*)sp;
     return strcmp(fj->linjs.path, sj->linjs.path);
 }
 
