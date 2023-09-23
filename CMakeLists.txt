@@ -126,14 +126,6 @@ write_basic_package_version_file(src/grwlConfigVersion.cmake
 #--------------------------------------------------------------------
 add_subdirectory(src)
 
-if (GRWL_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
-if (GRWL_BUILD_TESTS)
-    add_subdirectory(tests)
-endif()
-
 if (DOXYGEN_FOUND AND GRWL_BUILD_DOCS)
     add_subdirectory(docs)
 endif()
