@@ -1,9 +1,9 @@
 /*************************************************************************
- * GLFW 3.4 - www.glfw.org
- * A library for OpenGL, window and input
+ * GRWL (formerly from GLFW) - Graphics Windowing Library
  *------------------------------------------------------------------------
  * Copyright (c) 2002-2006 Marcus Geelnard
  * Copyright (c) 2006-2019 Camilla Löwy <elmindreda@glfw.org>
+ * Copyright (c) 2023 Matthew Sitton <matthewsitton@gmail.com>
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages

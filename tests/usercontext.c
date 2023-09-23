@@ -1,3 +1,9 @@
+//===========================================================================
+// This file is part of GRWL(a fork of GLFW) licensed under the Zlib license.
+// See file LICENSE.md for full license details
+//===========================================================================
+// Test user context creation
+
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE

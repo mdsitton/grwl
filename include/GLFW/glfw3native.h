@@ -1,6 +1,5 @@
 /*************************************************************************
- * GLFW 3.4 - www.glfw.org
- * A library for OpenGL, window and input
+ * GRWL (formerly from GLFW) - Graphics Windowing Library
  *------------------------------------------------------------------------
  * Copyright (c) 2002-2006 Marcus Geelnard
  * Copyright (c) 2006-2018 Camilla Löwy <elmindreda@glfw.org>
