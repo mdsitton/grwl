@@ -149,6 +149,7 @@
 #elif defined(__APPLE__)
     #define GRWL_BUILD_COCOA_TIMER
 #else
+    #define _GNU_SOURCE
     #define GRWL_BUILD_POSIX_TIMER
     #define GRWL_BUILD_POSIX_DBUS
 #endif

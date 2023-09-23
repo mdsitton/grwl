@@ -3,8 +3,6 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define _GNU_SOURCE
-
 #include "internal.hpp"
 
 #if defined(GRWL_BUILD_POSIX_POLL)

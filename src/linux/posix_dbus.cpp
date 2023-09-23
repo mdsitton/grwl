@@ -3,8 +3,6 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define _GNU_SOURCE
-
 #include "internal.hpp"
 
 #include <cstring>
@@ -90,7 +88,7 @@ void _grwlInitDBusPOSIX(void)
         }
 
         //"org.grwl.<exe_name>_<pid>"
-        char* busName = _grwl_calloc(21 + strlen(_grwl.dbus.legalExecutableName), sizeof(char));
+        char* busName = (char*)_grwl_calloc(21 + strlen(_grwl.dbus.legalExecutableName), sizeof(char));
         if (!busName)
         {
             _grwlInputError(GRWL_OUT_OF_MEMORY, "Failed to allocate memory for bus name");
@@ -134,7 +132,7 @@ void _grwlCacheSignalNameDBusPOSIX(void)
     }
 
     //"/org/grwl/<exe_name>_<pid>"
-    char* signalName = _grwl_calloc(22 + strlen(_grwl.dbus.legalExecutableName), sizeof(char));
+    char* signalName = (char*)_grwl_calloc(22 + strlen(_grwl.dbus.legalExecutableName), sizeof(char));
     if (!signalName)
     {
         _grwlInputError(GRWL_OUT_OF_MEMORY, "Failed to allocate memory for signal name");
@@ -172,7 +170,7 @@ void _grwlCacheFullExecutableNameDBusPOSIX(void)
     }
     unsigned int exeNameLength = (exeNameEnd - lastFound) - 1;
 
-    char* exeNameFinal = _grwl_calloc(exeNameLength + 1, sizeof(char));
+    char* exeNameFinal = (char*)_grwl_calloc(exeNameLength + 1, sizeof(char));
     if (!exeNameFinal)
     {
         _grwlInputError(GRWL_OUT_OF_MEMORY, "Failed to allocate memory for executable name");
@@ -218,7 +216,7 @@ void _grwlCacheLegalExecutableNameDBusPOSIX(void)
         }
     }
 
-    char* exeNameFinal = _grwl_calloc(validExeNameLength + 1, sizeof(char));
+    char* exeNameFinal = (char*)_grwl_calloc(validExeNameLength + 1, sizeof(char));
     if (!exeNameFinal)
     {
         _grwlInputError(GRWL_OUT_OF_MEMORY, "Failed to allocate memory for executable name");
@@ -251,7 +249,7 @@ void _grwlCacheDesktopFilePathDBusPOSIX(void)
     //"application://<exe_name>.desktop"
     unsigned int desktopFileLength =
         strlen("application://") + strlen(_grwl.dbus.fullExecutableName) + strlen(".desktop") + 1;
-    _grwl.dbus.desktopFilePath = _grwl_calloc(desktopFileLength, sizeof(char));
+    _grwl.dbus.desktopFilePath = (char*)_grwl_calloc(desktopFileLength, sizeof(char));
     if (!_grwl.dbus.desktopFilePath)
     {
         _grwlInputError(GRWL_OUT_OF_MEMORY, "Failed to allocate memory for .desktop file path");
