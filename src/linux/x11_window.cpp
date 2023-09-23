@@ -390,7 +390,7 @@ static char* convertLatin1toUTF8(const char* source)
         size += (*sp & 0x80) ? 2 : 1;
     }
 
-    char* target = _grwl_calloc(size, 1);
+    char* target = (char*)_grwl_calloc(size, 1);
     char* tp = target;
 
     for (sp = source; *sp; sp++)
@@ -556,7 +556,8 @@ static void _ximPreeditDrawCallback(XIC xic, XPointer clientData, XIMPreeditDraw
         }
         if (textBufferCount != preedit->textBufferCount)
         {
-            unsigned int* preeditText = _grwl_realloc(preedit->text, sizeof(unsigned int) * textBufferCount);
+            unsigned int* preeditText =
+                (unsigned int*)_grwl_realloc(preedit->text, sizeof(unsigned int) * textBufferCount);
             if (preeditText == NULL)
             {
                 return;
@@ -571,7 +572,7 @@ static void _ximPreeditDrawCallback(XIC xic, XPointer clientData, XIMPreeditDraw
         // realloc block sizes
         if (preedit->blockSizesBufferCount == 0)
         {
-            preedit->blockSizes = _grwl_calloc(4, sizeof(int));
+            preedit->blockSizes = (int*)_grwl_calloc(4, sizeof(int));
             preedit->blockSizesBufferCount = 4;
         }
 
@@ -1136,7 +1137,7 @@ static const char* getSelectionString(Atom selection)
                 if (itemCount)
                 {
                     size += itemCount;
-                    string = _grwl_realloc(string, size);
+                    string = (char*)_grwl_realloc(string, size);
                     string[size - itemCount - 1] = '\0';
                     strcat(string, data);
                 }
@@ -1297,7 +1298,7 @@ static void processEvent(XEvent* event)
             if (window && window->rawMouseMotion && event->xcookie.extension == _grwl.x11.xi.majorOpcode &&
                 XGetEventData(_grwl.x11.display, &event->xcookie) && event->xcookie.evtype == XI_RawMotion)
             {
-                XIRawEvent* re = event->xcookie.data;
+                XIRawEvent* re = (XIRawEvent*)event->xcookie.data;
                 if (re->valuators.mask_len)
                 {
                     const double* values = re->raw_values;
@@ -1381,7 +1382,7 @@ static void processEvent(XEvent* event)
 
                 if (status == XBufferOverflow)
                 {
-                    chars = _grwl_calloc(count + 1, 1);
+                    chars = (char*)_grwl_calloc(count + 1, 1);
                     count = Xutf8LookupString(window->x11.ic, &event->xkey, chars, count, NULL, &status);
                 }
 
@@ -2262,7 +2263,7 @@ void _grwlSetWindowIconX11(_GRWLwindow* window, int count, const GRWLimage* imag
             longCount += 2 + images[i].width * images[i].height;
         }
 
-        unsigned long* icon = _grwl_calloc(longCount, sizeof(unsigned long));
+        unsigned long* icon = (unsigned long*)_grwl_calloc(longCount, sizeof(unsigned long));
         unsigned long* target = icon;
 
         for (int i = 0; i < count; i++)
@@ -3427,7 +3428,7 @@ EGLenum _grwlGetEGLPlatformX11(EGLint** attribs)
 
         if (type)
         {
-            *attribs = _grwl_calloc(5, sizeof(EGLint));
+            *attribs = (EGLint*)_grwl_calloc(5, sizeof(EGLint));
             (*attribs)[0] = EGL_PLATFORM_ANGLE_TYPE_ANGLE;
             (*attribs)[1] = type;
             (*attribs)[2] = EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE;
