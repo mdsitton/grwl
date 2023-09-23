@@ -1191,7 +1191,6 @@ GLFWAPI void glfwPollEvents(void)
 {
     _GLFW_REQUIRE_INIT();
     _glfw.platform.pollEvents();
-    _glfwPlatformPollEvents();
 }
 
 GLFWAPI void glfwWaitEvents(void)
