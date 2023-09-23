@@ -25,7 +25,7 @@ void _grwlPlatformFreeModule(void* module)
 
 GRWLproc _grwlPlatformGetModuleSymbol(void* module, const char* name)
 {
-    return dlsym(module, name);
+    return (GRWLproc)dlsym(module, name);
 }
 
 #endif // GRWL_BUILD_POSIX_MODULE
