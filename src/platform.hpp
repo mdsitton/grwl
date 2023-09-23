@@ -139,7 +139,7 @@
     #define GRWL_PLATFORM_TLS_STATE GRWL_WIN32_TLS_STATE
     #define GRWL_PLATFORM_MUTEX_STATE GRWL_WIN32_MUTEX_STATE
 #elif defined(GRWL_BUILD_POSIX_THREAD)
-    #include "linux/posix_thread.hpp"
+    #include "posix_thread.hpp"
     #define GRWL_PLATFORM_TLS_STATE GRWL_POSIX_TLS_STATE
     #define GRWL_PLATFORM_MUTEX_STATE GRWL_POSIX_MUTEX_STATE
 #endif
