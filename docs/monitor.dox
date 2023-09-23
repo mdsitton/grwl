@@ -4,9 +4,9 @@
 
 @tableofcontents
 
-This guide introduces the monitor related functions of GLFW.  For details on
+This guide introduces the monitor related functions of GRWL.  For details on
 a specific function in this category, see the @ref monitor.  There are also
-guides for the other areas of GLFW.
+guides for the other areas of GRWL.
 
  - @ref intro_guide
  - @ref window_guide
@@ -19,7 +19,7 @@ guides for the other areas of GLFW.
 
 A monitor object represents a currently connected monitor and is represented as
 a pointer to the [opaque](https://en.wikipedia.org/wiki/Opaque_data_type) type
-@ref GLFWmonitor.  Monitor objects cannot be created or destroyed by the
+@ref GRWLmonitor.  Monitor objects cannot be created or destroyed by the
 application and retain their addresses until the monitors they represent are
 disconnected or until the library is [terminated](@ref intro_init_terminate).
 
@@ -32,7 +32,7 @@ The virtual position of a monitor is in
 video mode, describes the viewports that the connected monitors provide into the
 virtual desktop that spans them.
 
-To see how GLFW views your monitor setup and its available video modes, run the
+To see how GRWL views your monitor setup and its available video modes, run the
 `monitors` test program.
 
 
@@ -43,7 +43,7 @@ preferred monitor and is usually the one with global UI elements like task bar
 or menu bar.
 
 @code
-GLFWmonitor* primary = glfwGetPrimaryMonitor();
+GRWLmonitor* primary = glfwGetPrimaryMonitor();
 @endcode
 
 You can retrieve all currently connected monitors with @ref glfwGetMonitors.
@@ -51,7 +51,7 @@ See the reference documentation for the lifetime of the returned array.
 
 @code
 int count;
-GLFWmonitor** monitors = glfwGetMonitors(&count);
+GRWLmonitor** monitors = glfwGetMonitors(&count);
 @endcode
 
 The primary monitor is always the first monitor in the returned array, but other
@@ -72,13 +72,13 @@ The callback function receives the handle for the monitor that has been
 connected or disconnected and the event that occurred.
 
 @code
-void monitor_callback(GLFWmonitor* monitor, int event)
+void monitor_callback(GRWLmonitor* monitor, int event)
 {
-    if (event == GLFW_CONNECTED)
+    if (event == GRWL_CONNECTED)
     {
         // The monitor was connected
     }
-    else if (event == GLFW_DISCONNECTED)
+    else if (event == GRWL_DISCONNECTED)
     {
         // The monitor was disconnected
     }
@@ -100,25 +100,25 @@ estimated physical size and a gamma ramp.
 
 @subsection monitor_modes Video modes
 
-GLFW generally does a good job selecting a suitable video mode when you create
+GRWL generally does a good job selecting a suitable video mode when you create
 a full screen window, change its video mode or make a windowed one full
 screen, but it is sometimes useful to know exactly which video modes are
 supported.
 
-Video modes are represented as @ref GLFWvidmode structures.  You can get an
+Video modes are represented as @ref GRWLvidmode structures.  You can get an
 array of the video modes supported by a monitor with @ref glfwGetVideoModes.
 See the reference documentation for the lifetime of the returned array.
 
 @code
 int count;
-GLFWvidmode* modes = glfwGetVideoModes(monitor, &count);
+GRWLvidmode* modes = glfwGetVideoModes(monitor, &count);
 @endcode
 
 To get the current video mode of a monitor call @ref glfwGetVideoMode.  See the
 reference documentation for the lifetime of the returned pointer.
 
 @code
-const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+const GRWLvidmode* mode = glfwGetVideoMode(monitor);
 @endcode
 
 The resolution of a video mode is specified in
@@ -207,7 +207,7 @@ unique, and only until that monitor is disconnected.
 
 Each monitor has a user pointer that can be set with @ref
 glfwSetMonitorUserPointer and queried with @ref glfwGetMonitorUserPointer.  This
-can be used for any purpose you need and will not be modified by GLFW.  The
+can be used for any purpose you need and will not be modified by GRWL.  The
 value will be kept until the monitor is disconnected or until the library is
 terminated.
 
@@ -217,10 +217,10 @@ The initial value of the pointer is `NULL`.
 @subsection monitor_gamma Gamma ramp
 
 The gamma ramp of a monitor can be set with @ref glfwSetGammaRamp, which accepts
-a monitor handle and a pointer to a @ref GLFWgammaramp structure.
+a monitor handle and a pointer to a @ref GRWLgammaramp structure.
 
 @code
-GLFWgammaramp ramp;
+GRWLgammaramp ramp;
 unsigned short red[256], green[256], blue[256];
 
 ramp.size = 256;
@@ -246,10 +246,10 @@ The current gamma ramp for a monitor is returned by @ref glfwGetGammaRamp.  See
 the reference documentation for the lifetime of the returned structure.
 
 @code
-const GLFWgammaramp* ramp = glfwGetGammaRamp(monitor);
+const GRWLgammaramp* ramp = glfwGetGammaRamp(monitor);
 @endcode
 
-If you wish to set a regular gamma ramp, you can have GLFW calculate it for you
+If you wish to set a regular gamma ramp, you can have GRWL calculate it for you
 from the desired exponent with @ref glfwSetGamma, which in turn calls @ref
 glfwSetGammaRamp with the resulting ramp.
 

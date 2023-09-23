@@ -34,8 +34,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdarg.h>
 
@@ -55,8 +55,8 @@
 
 #include <nuklear.h>
 
-#define NK_GLFW_GL2_IMPLEMENTATION
-#include <nuklear_glfw_gl2.h>
+#define NK_GRWL_GL2_IMPLEMENTATION
+#include <nuklear_grwl_gl2.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -93,7 +93,7 @@ static char** fontFilePaths;
 static int fontNum = 0;
 static int currentFontIndex = 0;
 
-static int currentIMEStatus = GLFW_FALSE;
+static int currentIMEStatus = GRWL_FALSE;
 #define MAX_PREEDIT_LEN 128
 static char preeditBuf[MAX_PREEDIT_LEN] = "";
 
@@ -144,12 +144,12 @@ static int add_font(const char* familyName, const char* ttfFilePath, int checkEx
 {
     if (MAX_FONTS_LEN <= fontNum)
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
     if (MAX_FONT_FAMILY_NAME_LEN <= strlen(familyName) || MAX_FONT_FILEPATH_LEN <= strlen(ttfFilePath))
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
     if (checkExistence)
@@ -157,7 +157,7 @@ static int add_font(const char* familyName, const char* ttfFilePath, int checkEx
         FILE* fp = fopen(ttfFilePath, "rb");
         if (!fp)
         {
-            return GLFW_FALSE;
+            return GRWL_FALSE;
         }
         fclose(fp);
     }
@@ -172,18 +172,18 @@ static int add_font(const char* familyName, const char* ttfFilePath, int checkEx
 
     fontNum++;
 
-    return GLFW_TRUE;
+    return GRWL_TRUE;
 }
 
 static int replace_font(int index, const char* familyName, const char* ttfFilePath, int checkExistence)
 {
     if (index == 0 || fontNum <= index)
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
     if (MAX_FONT_FAMILY_NAME_LEN <= strlen(familyName) || MAX_FONT_FILEPATH_LEN <= strlen(ttfFilePath))
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
     if (checkExistence)
@@ -191,7 +191,7 @@ static int replace_font(int index, const char* familyName, const char* ttfFilePa
         FILE* fp = fopen(ttfFilePath, "rb");
         if (!fp)
         {
-            return GLFW_FALSE;
+            return GRWL_FALSE;
         }
         fclose(fp);
     }
@@ -207,7 +207,7 @@ static int replace_font(int index, const char* familyName, const char* ttfFilePa
     assert(fontFilePaths[index]);
     strcpy(fontFilePaths[index], ttfFilePath);
 
-    return GLFW_TRUE;
+    return GRWL_TRUE;
 }
 
 #if defined(TTF_FONT_FILEPATH)
@@ -215,14 +215,14 @@ static int load_custom_font()
 {
     if (MAX_FONTS_LEN <= fontNum)
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
     if (!(TTF_FONT_FILEPATH && *TTF_FONT_FILEPATH))
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
-    return add_font("Custom", TTF_FONT_FILEPATH, GLFW_TRUE);
+    return add_font("Custom", TTF_FONT_FILEPATH, GRWL_TRUE);
 }
 #endif
 
@@ -248,7 +248,7 @@ static void load_font_list_by_fontconfig()
             {
                 const char* familyName = (const char*)fvalue.u.s;
                 const char* filePath = (const char*)dvalue.u.s;
-                int existsFamily = GLFW_FALSE;
+                int existsFamily = GRWL_FALSE;
                 int existingIndex = 0;
 
                 if (!strstr(filePath, ".ttf"))
@@ -260,7 +260,7 @@ static void load_font_list_by_fontconfig()
                 {
                     if (strcmp(fontFamilyNames[j], familyName) == 0)
                     {
-                        existsFamily = GLFW_TRUE;
+                        existsFamily = GRWL_TRUE;
                         existingIndex = j;
                         break;
                     }
@@ -271,12 +271,12 @@ static void load_font_list_by_fontconfig()
                     // Prefer "regular" to the others.
                     if (strstr(filePath, "regular") || strstr(filePath, "Regular"))
                     {
-                        replace_font(existingIndex, familyName, filePath, GLFW_FALSE);
+                        replace_font(existingIndex, familyName, filePath, GRWL_FALSE);
                     }
                 }
                 else
                 {
-                    add_font(familyName, filePath, GLFW_FALSE);
+                    add_font(familyName, filePath, GRWL_FALSE);
                 }
 
                 if (MAX_FONTS_LEN <= fontNum)
@@ -294,17 +294,17 @@ static void load_font_list_by_fontconfig()
 
 static void load_default_font_for_each_platform()
 {
-    int hasSucceeded = GLFW_FALSE;
+    int hasSucceeded = GRWL_FALSE;
     if (MAX_FONTS_LEN <= fontNum)
     {
         return;
     }
 
-    if (glfwGetPlatform() == GLFW_PLATFORM_COCOA)
+    if (grwlGetPlatform() == GRWL_PLATFORM_COCOA)
     {
-        hasSucceeded = add_font("Arial Unicode MS", "/Library/Fonts/Arial Unicode.ttf", GLFW_TRUE);
+        hasSucceeded = add_font("Arial Unicode MS", "/Library/Fonts/Arial Unicode.ttf", GRWL_TRUE);
     }
-    else if (glfwGetPlatform() == GLFW_PLATFORM_WIN32)
+    else if (grwlGetPlatform() == GRWL_PLATFORM_WIN32)
     {
         // Use "Yu Mincho" since it is the only TTF for Japanese in the FOD packages on Windows10 and Windows11.
         // https://learn.microsoft.com/en-us/typography/fonts/windows_10_font_list#japanese-supplemental-fonts
@@ -318,7 +318,7 @@ static void load_default_font_for_each_platform()
         {
             strcpy(filepath, "C:\\Windows\\Fonts\\Yumin.ttf");
         }
-        hasSucceeded = add_font("Yu Mincho Regular", filepath, GLFW_TRUE);
+        hasSucceeded = add_font("Yu Mincho Regular", filepath, GRWL_TRUE);
     }
 
     if (hasSucceeded)
@@ -329,7 +329,7 @@ static void load_default_font_for_each_platform()
 
 static void init_font_list()
 {
-    int useCustomFont = GLFW_FALSE;
+    int useCustomFont = GRWL_FALSE;
     int customFontIndex = 0;
 
     fontFamilyNames = (char**)malloc(sizeof(char*) * MAX_FONTS_LEN);
@@ -337,7 +337,7 @@ static void init_font_list()
     fontFilePaths = (char**)malloc(sizeof(char*) * MAX_FONTS_LEN);
     assert(fontFilePaths);
 
-    fontFamilyNames[0] = "GLFW default";
+    fontFamilyNames[0] = "GRWL default";
     fontFilePaths[0] = "";
     fontNum++;
 
@@ -378,7 +378,7 @@ static void update_font(struct nk_context* nk, float height)
 {
     struct nk_font_atlas* atlas;
 
-    nk_glfw3_font_stash_begin(&atlas);
+    nk_grwl_font_stash_begin(&atlas);
 
     if (currentFontIndex == 0)
     {
@@ -406,41 +406,41 @@ static void update_font(struct nk_context* nk, float height)
         }
     }
 
-    nk_glfw3_font_stash_end();
+    nk_grwl_font_stash_end();
     nk_style_set_font(nk, &currentFont->handle);
 }
 
-static void set_menu_buttons(GLFWwindow* window, struct nk_context* nk, int height)
+static void set_menu_buttons(GRWLwindow* window, struct nk_context* nk, int height)
 {
     static int windowedX, windowedY, windowedWidth, windowedHeight;
 
     nk_layout_row_dynamic(nk, height, 2);
     if (nk_button_label(nk, "Toggle Fullscreen"))
     {
-        if (glfwGetWindowMonitor(window))
+        if (grwlGetWindowMonitor(window))
         {
-            glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
+            grwlSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
         }
         else
         {
-            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-            glfwGetWindowPos(window, &windowedX, &windowedY);
-            glfwGetWindowSize(window, &windowedWidth, &windowedHeight);
-            glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            GRWLmonitor* monitor = grwlGetPrimaryMonitor();
+            const GRWLvidmode* mode = grwlGetVideoMode(monitor);
+            grwlGetWindowPos(window, &windowedX, &windowedY);
+            grwlGetWindowSize(window, &windowedWidth, &windowedHeight);
+            grwlSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
         }
     }
 
     {
-        int auto_iconify = glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY);
+        int auto_iconify = grwlGetWindowAttrib(window, GRWL_AUTO_ICONIFY);
         if (nk_checkbox_label(nk, "Auto Iconify", &auto_iconify))
         {
-            glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, auto_iconify);
+            grwlSetWindowAttrib(window, GRWL_AUTO_ICONIFY, auto_iconify);
         }
     }
 }
 
-static int set_font_selecter(GLFWwindow* window, struct nk_context* nk, int height, int fontHeight)
+static int set_font_selecter(GRWLwindow* window, struct nk_context* nk, int height, int fontHeight)
 {
     int newSelectedIndex;
 
@@ -457,29 +457,29 @@ static int set_font_selecter(GLFWwindow* window, struct nk_context* nk, int heig
 
     if (newSelectedIndex == currentFontIndex)
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
     currentFontIndex = newSelectedIndex;
-    return GLFW_TRUE;
+    return GRWL_TRUE;
 }
 
-static void set_ime_buttons(GLFWwindow* window, struct nk_context* nk, int height)
+static void set_ime_buttons(GRWLwindow* window, struct nk_context* nk, int height)
 {
     nk_layout_row_dynamic(nk, height, 2);
 
     if (nk_button_label(nk, "Toggle IME status"))
     {
-        glfwSetInputMode(window, GLFW_IME, !currentIMEStatus);
+        grwlSetInputMode(window, GRWL_IME, !currentIMEStatus);
     }
 
     if (nk_button_label(nk, "Reset preedit text"))
     {
-        glfwResetPreeditText(window);
+        grwlResetPreeditText(window);
     }
 }
 
-static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, int height, int* isAutoUpdating)
+static void set_preedit_cursor_edit(GRWLwindow* window, struct nk_context* nk, int height, int* isAutoUpdating)
 {
     static int lastX = -1, lastY = -1, lastW = -1, lastH = -1;
     static char xBuf[12] = "", yBuf[12] = "", wBuf[12] = "", hBuf[12] = "";
@@ -488,7 +488,7 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     nk_flags events;
     int x, y, w, h;
 
-    glfwGetPreeditCursorRectangle(window, &x, &y, &w, &h);
+    grwlGetPreeditCursorRectangle(window, &x, &y, &w, &h);
 
     if (x != lastX)
     {
@@ -517,8 +517,8 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     if (events & NK_EDIT_COMMITED)
     {
         x = atoi(xBuf);
-        *isAutoUpdating = GLFW_FALSE;
-        glfwSetPreeditCursorRectangle(window, x, y, w, h);
+        *isAutoUpdating = GRWL_FALSE;
+        grwlSetPreeditCursorRectangle(window, x, y, w, h);
     }
     else if (events & NK_EDIT_DEACTIVATED)
     {
@@ -530,8 +530,8 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     if (events & NK_EDIT_COMMITED)
     {
         y = atoi(yBuf);
-        *isAutoUpdating = GLFW_FALSE;
-        glfwSetPreeditCursorRectangle(window, x, y, w, h);
+        *isAutoUpdating = GRWL_FALSE;
+        grwlSetPreeditCursorRectangle(window, x, y, w, h);
     }
     else if (events & NK_EDIT_DEACTIVATED)
     {
@@ -543,8 +543,8 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     if (events & NK_EDIT_COMMITED)
     {
         w = atoi(wBuf);
-        *isAutoUpdating = GLFW_FALSE;
-        glfwSetPreeditCursorRectangle(window, x, y, w, h);
+        *isAutoUpdating = GRWL_FALSE;
+        grwlSetPreeditCursorRectangle(window, x, y, w, h);
     }
     else if (events & NK_EDIT_DEACTIVATED)
     {
@@ -556,8 +556,8 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     if (events & NK_EDIT_COMMITED)
     {
         h = atoi(hBuf);
-        *isAutoUpdating = GLFW_FALSE;
-        glfwSetPreeditCursorRectangle(window, x, y, w, h);
+        *isAutoUpdating = GRWL_FALSE;
+        grwlSetPreeditCursorRectangle(window, x, y, w, h);
     }
     else if (events & NK_EDIT_DEACTIVATED)
     {
@@ -575,13 +575,13 @@ static void set_preedit_cursor_edit(GLFWwindow* window, struct nk_context* nk, i
     lastH = h;
 }
 
-static void set_ime_stauts_labels(GLFWwindow* window, struct nk_context* nk, int height)
+static void set_ime_stauts_labels(GRWLwindow* window, struct nk_context* nk, int height)
 {
     nk_layout_row_dynamic(nk, height, 1);
     nk_value_bool(nk, "IME status", currentIMEStatus);
 }
 
-static void set_preedit_labels(GLFWwindow* window, struct nk_context* nk, int height)
+static void set_preedit_labels(GRWLwindow* window, struct nk_context* nk, int height)
 {
     nk_layout_row_begin(nk, NK_DYNAMIC, height, 5);
 
@@ -594,7 +594,7 @@ static void set_preedit_labels(GLFWwindow* window, struct nk_context* nk, int he
     nk_layout_row_end(nk);
 }
 
-static void set_candidate_labels(GLFWwindow* window, struct nk_context* nk)
+static void set_candidate_labels(GRWLwindow* window, struct nk_context* nk)
 {
     for (int i = 0; i < 5; ++i)
     {
@@ -626,7 +626,7 @@ static void set_candidate_labels(GLFWwindow* window, struct nk_context* nk)
 // we can set preedit-cursor position more easily.
 // However, there doesn't seem to be a way to do that, so this does a simplified calculation only for the end
 // of the text. (Can not trace the cursor movement)
-static void update_cursor_pos(GLFWwindow* window, struct nk_context* nk, struct nk_user_font* f, char* boxBuffer,
+static void update_cursor_pos(GRWLwindow* window, struct nk_context* nk, struct nk_user_font* f, char* boxBuffer,
                               int boxLen, int boxX, int boxY)
 {
     float lineWidth = 0;
@@ -673,19 +673,19 @@ static void update_cursor_pos(GLFWwindow* window, struct nk_context* nk, struct 
         int cursorWidth;
 
         // Keep the value of width since it doesn't need to be updated.
-        glfwGetPreeditCursorRectangle(window, NULL, NULL, &cursorWidth, NULL);
+        grwlGetPreeditCursorRectangle(window, NULL, NULL, &cursorWidth, NULL);
 
-        glfwSetPreeditCursorRectangle(window, cursorPosX, cursorPosY, cursorWidth, cursorHeight);
+        grwlSetPreeditCursorRectangle(window, cursorPosX, cursorPosY, cursorWidth, cursorHeight);
     }
 }
 
-static void ime_callback(GLFWwindow* window)
+static void ime_callback(GRWLwindow* window)
 {
-    currentIMEStatus = glfwGetInputMode(window, GLFW_IME);
+    currentIMEStatus = grwlGetInputMode(window, GRWL_IME);
     printf("IME switched: %s\n", currentIMEStatus ? "ON" : "OFF");
 }
 
-static void preedit_callback(GLFWwindow* window, int preeditCount, unsigned int* preeditString, int blockCount,
+static void preedit_callback(GRWLwindow* window, int preeditCount, unsigned int* preeditString, int blockCount,
                              int* blockSizes, int focusedBlock, int caret)
 {
     int blockIndex = -1, remainingBlockSize = 0;
@@ -752,7 +752,7 @@ static void preedit_callback(GLFWwindow* window, int preeditCount, unsigned int*
     }
 }
 
-static void candidate_callback(GLFWwindow* window, int candidates_count, int selected_index, int page_start,
+static void candidate_callback(GRWLwindow* window, int candidates_count, int selected_index, int page_start,
                                int page_size)
 {
     int i, j;
@@ -761,7 +761,7 @@ static void candidate_callback(GLFWwindow* window, int candidates_count, int sel
     {
         int index = i + page_start;
         int textCount;
-        unsigned int* text = glfwGetPreeditCandidate(window, index, &textCount);
+        unsigned int* text = grwlGetPreeditCandidate(window, index, &textCount);
         if (index == selected_index)
         {
             strcpy(candidateBuf[i], "> ");
@@ -784,13 +784,13 @@ static void candidate_callback(GLFWwindow* window, int candidates_count, int sel
 
 int main(int argc, char** argv)
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
     struct nk_context* nk;
     int width, height;
     char boxBuffer[MAX_BUFFER_LEN] = "Input text here.";
     int boxLen = strlen(boxBuffer);
-    int isAutoUpdatingCursorPosEnabled = GLFW_TRUE;
-    int managePreeditCandidate = GLFW_FALSE;
+    int isAutoUpdatingCursorPosEnabled = GRWL_TRUE;
+    int managePreeditCandidate = GRWL_FALSE;
     int ch;
 
     while ((ch = getopt(argc, argv, "hsc")) != -1)
@@ -802,58 +802,58 @@ int main(int argc, char** argv)
                 exit(EXIT_SUCCESS);
 
             case 's':
-                glfwInitHint(GLFW_X11_ONTHESPOT, GLFW_TRUE);
+                grwlInitHint(GRWL_X11_ONTHESPOT, GRWL_TRUE);
                 break;
 
             case 'c':
-                glfwInitHint(GLFW_MANAGE_PREEDIT_CANDIDATE, GLFW_TRUE);
-                managePreeditCandidate = GLFW_TRUE;
+                grwlInitHint(GRWL_MANAGE_PREEDIT_CANDIDATE, GRWL_TRUE);
+                managePreeditCandidate = GRWL_TRUE;
                 break;
         }
     }
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
-    glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_TRUE);
-    glfwWindowHint(GLFW_SOFT_FULLSCREEN, GLFW_TRUE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    grwlWindowHint(GRWL_SCALE_TO_MONITOR, GRWL_TRUE);
+    grwlWindowHint(GRWL_WIN32_KEYBOARD_MENU, GRWL_TRUE);
+    grwlWindowHint(GRWL_SOFT_FULLSCREEN, GRWL_TRUE);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 1);
 
-    window = glfwCreateWindow(600, 600, "Input Text", NULL, NULL);
+    window = grwlCreateWindow(600, 600, "Input Text", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    currentIMEStatus = glfwGetInputMode(window, GLFW_IME);
-    glfwSetPreeditCursorRectangle(window, 0, 0, 1, 1);
-    glfwSetIMEStatusCallback(window, ime_callback);
-    glfwSetPreeditCallback(window, preedit_callback);
-    glfwSetPreeditCandidateCallback(window, candidate_callback);
+    currentIMEStatus = grwlGetInputMode(window, GRWL_IME);
+    grwlSetPreeditCursorRectangle(window, 0, 0, 1, 1);
+    grwlSetIMEStatusCallback(window, ime_callback);
+    grwlSetPreeditCallback(window, preedit_callback);
+    grwlSetPreeditCandidateCallback(window, candidate_callback);
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(0);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlSwapInterval(0);
 
-    nk = nk_glfw3_init(window, NK_GLFW3_INSTALL_CALLBACKS);
+    nk = nk_grwl_init(window, NK_GRWL_INSTALL_CALLBACKS);
     init_font_list();
     update_font(nk, 18);
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         struct nk_rect area;
 
-        glfwGetWindowSize(window, &width, &height);
+        grwlGetWindowSize(window, &width, &height);
 
         area = nk_rect(0.f, 0.f, (float)width, (float)height);
         nk_window_set_bounds(nk, "main", area);
 
-        nk_glfw3_new_frame();
+        nk_grwl_new_frame();
         if (nk_begin(nk, "main", area, 0))
         {
             set_menu_buttons(window, nk, 30);
@@ -876,8 +876,8 @@ int main(int argc, char** argv)
         nk_end(nk);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        nk_glfw3_render(NK_ANTI_ALIASING_ON);
-        glfwSwapBuffers(window);
+        nk_grwl_render(NK_ANTI_ALIASING_ON);
+        grwlSwapBuffers(window);
 
         if (isAutoUpdatingCursorPosEnabled)
         {
@@ -886,12 +886,12 @@ int main(int argc, char** argv)
                               managePreeditCandidate ? 385 : 220);
         }
 
-        glfwWaitEvents();
+        grwlWaitEvents();
     }
 
     deinit_font_list();
 
-    nk_glfw3_shutdown();
-    glfwTerminate();
+    nk_grwl_shutdown();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

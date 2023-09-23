@@ -6,8 +6,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,36 +89,36 @@ static void* reallocate(void* block, size_t size, void* user)
 int main(void)
 {
     struct allocator_stats stats = { 0 };
-    const GLFWallocator allocator = {
+    const GRWLallocator allocator = {
         .allocate = allocate, .deallocate = deallocate, .reallocate = reallocate, .user = &stats
     };
 
-    glfwSetErrorCallback(error_callback);
-    glfwInitAllocator(&allocator);
+    grwlSetErrorCallback(error_callback);
+    grwlInitAllocator(&allocator);
 
-    if (!CALL(glfwInit)())
+    if (!CALL(grwlInit)())
     {
         exit(EXIT_FAILURE);
     }
 
-    GLFWwindow* window = CALL(glfwCreateWindow)(400, 400, "Custom allocator test", NULL, NULL);
+    GRWLwindow* window = CALL(grwlCreateWindow)(400, 400, "Custom allocator test", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    CALL(glfwMakeContextCurrent)(window);
-    gladLoadGL(glfwGetProcAddress);
-    CALL(glfwSwapInterval)(1);
+    CALL(grwlMakeContextCurrent)(window);
+    gladLoadGL(grwlGetProcAddress);
+    CALL(grwlSwapInterval)(1);
 
-    while (!CALL(glfwWindowShouldClose)(window))
+    while (!CALL(grwlWindowShouldClose)(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        CALL(glfwSwapBuffers)(window);
-        CALL(glfwWaitEvents)();
+        CALL(grwlSwapBuffers)(window);
+        CALL(grwlWaitEvents)();
     }
 
-    CALL(glfwTerminate)();
+    CALL(grwlTerminate)();
     exit(EXIT_SUCCESS);
 }

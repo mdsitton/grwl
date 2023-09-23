@@ -7,19 +7,19 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_POSIX_POLL)
+#if defined(GRWL_BUILD_POSIX_POLL)
 
     #include <signal.h>
     #include <time.h>
     #include <errno.h>
 
-GLFWbool _glfwPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
+GRWLbool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
 {
     for (;;)
     {
         if (timeout)
         {
-            const uint64_t base = _glfwPlatformGetTimerValue();
+            const uint64_t base = _grwlPlatformGetTimerValue();
 
     #if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__CYGWIN__)
             const time_t seconds = (time_t)*timeout;
@@ -37,19 +37,19 @@ GLFWbool _glfwPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
     #endif
             const int error = errno; // clock_gettime may overwrite our error
 
-            *timeout -= (_glfwPlatformGetTimerValue() - base) / (double)_glfwPlatformGetTimerFrequency();
+            *timeout -= (_grwlPlatformGetTimerValue() - base) / (double)_grwlPlatformGetTimerFrequency();
 
             if (result > 0)
             {
-                return GLFW_TRUE;
+                return GRWL_TRUE;
             }
             else if (result == -1 && error != EINTR && error != EAGAIN)
             {
-                return GLFW_FALSE;
+                return GRWL_FALSE;
             }
             else if (*timeout <= 0.0)
             {
-                return GLFW_FALSE;
+                return GRWL_FALSE;
             }
         }
         else
@@ -57,14 +57,14 @@ GLFWbool _glfwPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
             const int result = poll(fds, count, -1);
             if (result > 0)
             {
-                return GLFW_TRUE;
+                return GRWL_TRUE;
             }
             else if (result == -1 && errno != EINTR && errno != EAGAIN)
             {
-                return GLFW_FALSE;
+                return GRWL_FALSE;
             }
         }
     }
 }
 
-#endif // GLFW_BUILD_POSIX_POLL
+#endif // GRWL_BUILD_POSIX_POLL

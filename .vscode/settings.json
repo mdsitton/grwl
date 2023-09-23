@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "internal.h": "c",
+        "stdbool.h": "c",
+        "stdlib.h": "c"
+    }
+}

@@ -25,8 +25,8 @@
 
 #define GLAD_GLES2_IMPLEMENTATION
 #include <glad/gles2.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include "linmath.h"
 
@@ -40,75 +40,74 @@ typedef struct Vertex
     vec3 col;
 } Vertex;
 
-static const Vertex vertices[3] =
-{
-    { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
-    { {  0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
-    { {   0.f,  0.6f }, { 0.f, 0.f, 1.f } }
-};
+static const Vertex vertices[3] = { { { -0.6f, -0.4f }, { 1.f, 0.f, 0.f } },
+                                    { { 0.6f, -0.4f }, { 0.f, 1.f, 0.f } },
+                                    { { 0.f, 0.6f }, { 0.f, 0.f, 1.f } } };
 
-static const char* vertex_shader_text =
-"#version 100\n"
-"precision mediump float;\n"
-"uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec2 vPos;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    color = vCol;\n"
-"}\n";
+static const char* vertex_shader_text = "#version 100\n"
+                                        "precision mediump float;\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec3 vCol;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "varying vec3 color;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "    color = vCol;\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 100\n"
-"precision mediump float;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color, 1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 100\n"
+                                          "precision mediump float;\n"
+                                          "varying vec3 color;\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(color, 1.0);\n"
+                                          "}\n";
 
 static void error_callback(int error, const char* description)
 {
-    fprintf(stderr, "GLFW Error: %s\n", description);
+    fprintf(stderr, "GRWL Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if (key == GRWL_KEY_ESCAPE && action == GRWL_PRESS)
+    {
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
+    }
 }
 
 int main(void)
 {
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+    grwlWindowHint(GRWL_CLIENT_API, GRWL_OPENGL_ES_API);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 0);
+    grwlWindowHint(GRWL_CONTEXT_CREATION_API, GRWL_EGL_CONTEXT_API);
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL ES 2.0 Triangle (EGL)", NULL, NULL);
+    GRWLwindow* window = grwlCreateWindow(640, 480, "OpenGL ES 2.0 Triangle (EGL)", NULL, NULL);
     if (!window)
     {
-        glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
-        window = glfwCreateWindow(640, 480, "OpenGL ES 2.0 Triangle", NULL, NULL);
+        grwlWindowHint(GRWL_CONTEXT_CREATION_API, GRWL_NATIVE_CONTEXT_API);
+        window = grwlCreateWindow(640, 480, "OpenGL ES 2.0 Triangle", NULL, NULL);
         if (!window)
         {
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
     }
 
-    glfwSetKeyCallback(window, key_callback);
+    grwlSetKeyCallback(window, key_callback);
 
-    glfwMakeContextCurrent(window);
-    gladLoadGLES2(glfwGetProcAddress);
-    glfwSwapInterval(1);
+    grwlMakeContextCurrent(window);
+    gladLoadGLES2(grwlGetProcAddress);
+    grwlSwapInterval(1);
 
     GLuint vertex_buffer;
     glGenBuffers(1, &vertex_buffer);
@@ -134,37 +133,34 @@ int main(void)
 
     glEnableVertexAttribArray(vpos_location);
     glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex), (void*) offsetof(Vertex, pos));
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(Vertex), (void*) offsetof(Vertex, col));
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, col));
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        const float ratio = width / (float) height;
+        grwlGetFramebufferSize(window, &width, &height);
+        const float ratio = width / (float)height;
 
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
 
         mat4x4 m, p, mvp;
         mat4x4_identity(m);
-        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+        mat4x4_rotate_Z(m, m, (float)grwlGetTime());
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
         mat4x4_mul(mvp, p, m);
 
         glUseProgram(program);
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) &mvp);
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)&mvp);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        grwlSwapBuffers(window);
+        grwlPollEvents();
     }
 
-    glfwDestroyWindow(window);
+    grwlDestroyWindow(window);
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }
-

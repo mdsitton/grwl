@@ -3,6 +3,6 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define GLFW_INVALID_CODEPOINT 0xffffffffu
+#define GRWL_INVALID_CODEPOINT 0xffffffffu
 
-uint32_t _glfwKeySym2Unicode(unsigned int keysym);
+uint32_t _grwlKeySym2Unicode(unsigned int keysym);

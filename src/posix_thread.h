@@ -5,21 +5,21 @@
 
 #include <pthread.h>
 
-#define GLFW_POSIX_TLS_STATE _GLFWtlsPOSIX posix;
-#define GLFW_POSIX_MUTEX_STATE _GLFWmutexPOSIX posix;
+#define GRWL_POSIX_TLS_STATE _GRWLtlsPOSIX posix;
+#define GRWL_POSIX_MUTEX_STATE _GRWLmutexPOSIX posix;
 
 // POSIX-specific thread local storage data
 //
-typedef struct _GLFWtlsPOSIX
+typedef struct _GRWLtlsPOSIX
 {
-    GLFWbool allocated;
+    GRWLbool allocated;
     pthread_key_t key;
-} _GLFWtlsPOSIX;
+} _GRWLtlsPOSIX;
 
 // POSIX-specific mutex data
 //
-typedef struct _GLFWmutexPOSIX
+typedef struct _GRWLmutexPOSIX
 {
-    GLFWbool allocated;
+    GRWLbool allocated;
     pthread_mutex_t handle;
-} _GLFWmutexPOSIX;
+} _GRWLmutexPOSIX;

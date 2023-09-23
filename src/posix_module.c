@@ -5,27 +5,27 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_POSIX_MODULE)
+#if defined(GRWL_BUILD_POSIX_MODULE)
 
     #include <dlfcn.h>
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void* _glfwPlatformLoadModule(const char* path)
+void* _grwlPlatformLoadModule(const char* path)
 {
     return dlopen(path, RTLD_LAZY | RTLD_LOCAL);
 }
 
-void _glfwPlatformFreeModule(void* module)
+void _grwlPlatformFreeModule(void* module)
 {
     dlclose(module);
 }
 
-GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name)
+GRWLproc _grwlPlatformGetModuleSymbol(void* module, const char* name)
 {
     return dlsym(module, name);
 }
 
-#endif // GLFW_BUILD_POSIX_MODULE
+#endif // GRWL_BUILD_POSIX_MODULE

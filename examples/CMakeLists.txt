@@ -1,7 +1,7 @@
 
-link_libraries(glfw)
+link_libraries(grwl)
 
-include_directories("${GLFW_SOURCE_DIR}/deps")
+include_directories("${GRWL_SOURCE_DIR}/deps")
 
 if (MATH_LIBRARY)
     link_libraries("${MATH_LIBRARY}")
@@ -13,17 +13,17 @@ if (MSVC OR CMAKE_C_SIMULATE_ID STREQUAL "MSVC")
 endif()
 
 if (WIN32)
-    set(ICON glfw.rc)
+    set(ICON grwl.rc)
 elseif (APPLE)
-    set(ICON glfw.icns)
+    set(ICON grwl.icns)
 endif()
 
-set(GLAD_GL "${GLFW_SOURCE_DIR}/deps/glad/gl.h")
-set(GLAD_GLES2 "${GLFW_SOURCE_DIR}/deps/glad/gles2.h")
-set(GETOPT "${GLFW_SOURCE_DIR}/deps/getopt.h"
-           "${GLFW_SOURCE_DIR}/deps/getopt.c")
-set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
-                "${GLFW_SOURCE_DIR}/deps/tinycthread.c")
+set(GLAD_GL "${GRWL_SOURCE_DIR}/deps/glad/gl.h")
+set(GLAD_GLES2 "${GRWL_SOURCE_DIR}/deps/glad/gles2.h")
+set(GETOPT "${GRWL_SOURCE_DIR}/deps/getopt.h"
+           "${GRWL_SOURCE_DIR}/deps/getopt.c")
+set(TINYCTHREAD "${GRWL_SOURCE_DIR}/deps/tinycthread.h"
+                "${GRWL_SOURCE_DIR}/deps/tinycthread.c")
 
 add_executable(boing WIN32 MACOSX_BUNDLE boing.c ${ICON} ${GLAD_GL})
 add_executable(gears WIN32 MACOSX_BUNDLE gears.c ${ICON} ${GLAD_GL})
@@ -48,7 +48,7 @@ set(CONSOLE_BINARIES offscreen)
 
 set_target_properties(${GUI_ONLY_BINARIES} ${CONSOLE_BINARIES} PROPERTIES
                       C_STANDARD 99
-                      FOLDER "GLFW3/Examples")
+                      FOLDER "GRWL/Examples")
 
 if (MSVC)
     # Tell MSVC to use main instead of WinMain
@@ -72,12 +72,12 @@ if (APPLE)
     set_target_properties(wave PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Wave")
     set_target_properties(windows PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Windows")
 
-    set_source_files_properties(glfw.icns PROPERTIES
+    set_source_files_properties(grwl.icns PROPERTIES
                                 MACOSX_PACKAGE_LOCATION "Resources")
     set_target_properties(${GUI_ONLY_BINARIES} PROPERTIES
-                          MACOSX_BUNDLE_SHORT_VERSION_STRING ${GLFW_VERSION}
-                          MACOSX_BUNDLE_LONG_VERSION_STRING ${GLFW_VERSION}
-                          MACOSX_BUNDLE_ICON_FILE glfw.icns
-                          MACOSX_BUNDLE_INFO_PLIST "${GLFW_SOURCE_DIR}/CMake/Info.plist.in")
+                          MACOSX_BUNDLE_SHORT_VERSION_STRING ${GRWL_VERSION}
+                          MACOSX_BUNDLE_LONG_VERSION_STRING ${GRWL_VERSION}
+                          MACOSX_BUNDLE_ICON_FILE grwl.icns
+                          MACOSX_BUNDLE_INFO_PLIST "${GRWL_SOURCE_DIR}/CMake/Info.plist.in")
 endif()
 

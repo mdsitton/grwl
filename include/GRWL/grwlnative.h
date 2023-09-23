@@ -3,6 +3,7 @@
  *------------------------------------------------------------------------
  * Copyright (c) 2002-2006 Marcus Geelnard
  * Copyright (c) 2006-2018 Camilla Löwy <elmindreda@glfw.org>
+ * Copyright (c) 2023 Matthew Sitton <matthewsitton@gmail.com>
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -25,8 +26,8 @@
  *
  *************************************************************************/
 
-#ifndef _glfw3_native_h_
-#define _glfw3_native_h_
+#ifndef _grwl_native_h_
+#define _grwl_native_h_
 
 #ifdef __cplusplus
 extern "C"
@@ -37,7 +38,7 @@ extern "C"
      * Doxygen documentation
      *************************************************************************/
 
-    /*! @file glfw3native.h
+    /*! @file grwlnative.h
      *  @brief The header of the native access functions.
      *
      *  This is the header file of the native access functions.  See @ref native for
@@ -50,24 +51,24 @@ extern "C"
      *  doing and how to fix problems caused by using them.  If you don't, you
      *  shouldn't be using them.**
      *
-     *  Before the inclusion of @ref glfw3native.h, you may define zero or more
+     *  Before the inclusion of @ref grwlnative.h, you may define zero or more
      *  window system API macro and zero or more context creation API macros.
      *
      *  The chosen backends must match those the library was compiled for.  Failure
      *  to do this will cause a link-time error.
      *
      *  The available window API macros are:
-     *  * `GLFW_EXPOSE_NATIVE_WIN32`
-     *  * `GLFW_EXPOSE_NATIVE_COCOA`
-     *  * `GLFW_EXPOSE_NATIVE_X11`
-     *  * `GLFW_EXPOSE_NATIVE_WAYLAND`
+     *  * `GRWL_EXPOSE_NATIVE_WIN32`
+     *  * `GRWL_EXPOSE_NATIVE_COCOA`
+     *  * `GRWL_EXPOSE_NATIVE_X11`
+     *  * `GRWL_EXPOSE_NATIVE_WAYLAND`
      *
      *  The available context API macros are:
-     *  * `GLFW_EXPOSE_NATIVE_WGL`
-     *  * `GLFW_EXPOSE_NATIVE_NSGL`
-     *  * `GLFW_EXPOSE_NATIVE_GLX`
-     *  * `GLFW_EXPOSE_NATIVE_EGL`
-     *  * `GLFW_EXPOSE_NATIVE_OSMESA`
+     *  * `GRWL_EXPOSE_NATIVE_WGL`
+     *  * `GRWL_EXPOSE_NATIVE_NSGL`
+     *  * `GRWL_EXPOSE_NATIVE_GLX`
+     *  * `GRWL_EXPOSE_NATIVE_EGL`
+     *  * `GRWL_EXPOSE_NATIVE_OSMESA`
      *
      *  These macros select which of the native access functions that are declared
      *  and which platform-specific headers to include.  It is then up your (by
@@ -75,13 +76,13 @@ extern "C"
      *  defined.
      *
      *  If you do not want the platform-specific headers to be included, define
-     *  `GLFW_NATIVE_INCLUDE_NONE` before including the @ref glfw3native.h header.
+     *  `GRWL_NATIVE_INCLUDE_NONE` before including the @ref grwlnative.h header.
      *
      *  @code
-     *  #define GLFW_EXPOSE_NATIVE_WIN32
-     *  #define GLFW_EXPOSE_NATIVE_WGL
-     *  #define GLFW_NATIVE_INCLUDE_NONE
-     *  #include <GLFW/glfw3native.h>
+     *  #define GRWL_EXPOSE_NATIVE_WIN32
+     *  #define GRWL_EXPOSE_NATIVE_WGL
+     *  #define GRWL_NATIVE_INCLUDE_NONE
+     *  #include <GRWL/grwlnative.h>
      *  @endcode
      */
 
@@ -89,21 +90,21 @@ extern "C"
      * System headers and types
      *************************************************************************/
 
-#if !defined(GLFW_NATIVE_INCLUDE_NONE)
+#if !defined(GRWL_NATIVE_INCLUDE_NONE)
 
-    #if defined(GLFW_EXPOSE_NATIVE_WIN32) || defined(GLFW_EXPOSE_NATIVE_WGL)
-        /* This is a workaround for the fact that glfw3.h needs to export APIENTRY (for
+    #if defined(GRWL_EXPOSE_NATIVE_WIN32) || defined(GRWL_EXPOSE_NATIVE_WGL)
+        /* This is a workaround for the fact that grwl.h needs to export APIENTRY (for
          * example to allow applications to correctly declare a GL_KHR_debug callback)
          * but windows.h assumes no one will define APIENTRY before it does
          */
-        #if defined(GLFW_APIENTRY_DEFINED)
+        #if defined(GRWL_APIENTRY_DEFINED)
             #undef APIENTRY
-            #undef GLFW_APIENTRY_DEFINED
+            #undef GRWL_APIENTRY_DEFINED
         #endif
         #include <windows.h>
     #endif
 
-    #if defined(GLFW_EXPOSE_NATIVE_COCOA) || defined(GLFW_EXPOSE_NATIVE_NSGL)
+    #if defined(GRWL_EXPOSE_NATIVE_COCOA) || defined(GRWL_EXPOSE_NATIVE_NSGL)
         #if defined(__OBJC__)
             #import <Cocoa/Cocoa.h>
         #else
@@ -112,70 +113,68 @@ extern "C"
         #endif
     #endif
 
-    #if defined(GLFW_EXPOSE_NATIVE_X11) || defined(GLFW_EXPOSE_NATIVE_GLX)
+    #if defined(GRWL_EXPOSE_NATIVE_X11) || defined(GRWL_EXPOSE_NATIVE_GLX)
         #include <X11/Xlib.h>
         #include <X11/extensions/Xrandr.h>
     #endif
 
-    #if defined(GLFW_EXPOSE_NATIVE_WAYLAND)
+    #if defined(GRWL_EXPOSE_NATIVE_WAYLAND)
         #include <wayland-client.h>
     #endif
 
-    #if defined(GLFW_EXPOSE_NATIVE_WGL)
+    #if defined(GRWL_EXPOSE_NATIVE_WGL)
             /* WGL is declared by windows.h */
     #endif
-    #if defined(GLFW_EXPOSE_NATIVE_NSGL)
+    #if defined(GRWL_EXPOSE_NATIVE_NSGL)
             /* NSGL is declared by Cocoa.h */
     #endif
-    #if defined(GLFW_EXPOSE_NATIVE_GLX)
-        /* This is a workaround for the fact that glfw3.h defines GLAPIENTRY because by
+    #if defined(GRWL_EXPOSE_NATIVE_GLX)
+        /* This is a workaround for the fact that grwl.h defines GLAPIENTRY because by
          * default it also acts as an OpenGL header
          * However, glx.h will include gl.h, which will define it unconditionally
          */
-        #if defined(GLFW_GLAPIENTRY_DEFINED)
+        #if defined(GRWL_GLAPIENTRY_DEFINED)
             #undef GLAPIENTRY
-            #undef GLFW_GLAPIENTRY_DEFINED
+            #undef GRWL_GLAPIENTRY_DEFINED
         #endif
         #include <GL/glx.h>
     #endif
-    #if defined(GLFW_EXPOSE_NATIVE_EGL)
+    #if defined(GRWL_EXPOSE_NATIVE_EGL)
         #include <EGL/egl.h>
     #endif
-    #if defined(GLFW_EXPOSE_NATIVE_OSMESA)
-        /* This is a workaround for the fact that glfw3.h defines GLAPIENTRY because by
+    #if defined(GRWL_EXPOSE_NATIVE_OSMESA)
+        /* This is a workaround for the fact that grwl.h defines GLAPIENTRY because by
          * default it also acts as an OpenGL header
          * However, osmesa.h will include gl.h, which will define it unconditionally
          */
-        #if defined(GLFW_GLAPIENTRY_DEFINED)
+        #if defined(GRWL_GLAPIENTRY_DEFINED)
             #undef GLAPIENTRY
-            #undef GLFW_GLAPIENTRY_DEFINED
+            #undef GRWL_GLAPIENTRY_DEFINED
         #endif
         #include <GL/osmesa.h>
     #endif
 
-#endif /*GLFW_NATIVE_INCLUDE_NONE*/
+#endif /*GRWL_NATIVE_INCLUDE_NONE*/
 
     /*************************************************************************
      * Functions
      *************************************************************************/
 
-#if defined(GLFW_EXPOSE_NATIVE_WIN32)
+#if defined(GRWL_EXPOSE_NATIVE_WIN32)
     /*! @brief Returns the adapter device name of the specified monitor.
      *
      *  @return The UTF-8 encoded adapter device name (for example `\\.\DISPLAY1`)
      *  of the specified monitor, or `NULL` if an [error](@ref error_handling)
      *  occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.1.
-     *
      *  @ingroup native
      */
-    GLFWAPI const char* glfwGetWin32Adapter(GLFWmonitor* monitor);
+    GRWLAPI const char* grwlGetWin32Adapter(GRWLmonitor* monitor);
 
     /*! @brief Returns the display device name of the specified monitor.
      *
@@ -183,193 +182,173 @@ extern "C"
      *  `\\.\DISPLAY1\Monitor0`) of the specified monitor, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.1.
-     *
      *  @ingroup native
      */
-    GLFWAPI const char* glfwGetWin32Monitor(GLFWmonitor* monitor);
+    GRWLAPI const char* grwlGetWin32Monitor(GRWLmonitor* monitor);
 
     /*! @brief Returns the `HWND` of the specified window.
      *
      *  @return The `HWND` of the specified window, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @remark The `HDC` associated with the window can be queried with the
      *  [GetDC](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
      *  function.
      *  @code
-     *  HDC dc = GetDC(glfwGetWin32Window(window));
+     *  HDC dc = GetDC(grwlGetWin32Window(window));
      *  @endcode
      *  This DC is private and does not need to be released.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI HWND glfwGetWin32Window(GLFWwindow* window);
+    GRWLAPI HWND grwlGetWin32Window(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_WGL)
+#if defined(GRWL_EXPOSE_NATIVE_WGL)
     /*! @brief Returns the `HGLRC` of the specified window.
      *
      *  @return The `HGLRC` of the specified window, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @remark The `HDC` associated with the window can be queried with the
      *  [GetDC](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
      *  function.
      *  @code
-     *  HDC dc = GetDC(glfwGetWin32Window(window));
+     *  HDC dc = GetDC(grwlGetWin32Window(window));
      *  @endcode
      *  This DC is private and does not need to be released.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI HGLRC glfwGetWGLContext(GLFWwindow* window);
+    GRWLAPI HGLRC grwlGetWGLContext(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_COCOA)
+#if defined(GRWL_EXPOSE_NATIVE_COCOA)
     /*! @brief Returns the `CGDirectDisplayID` of the specified monitor.
      *
      *  @return The `CGDirectDisplayID` of the specified monitor, or
      *  `kCGNullDirectDisplay` if an [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.1.
-     *
      *  @ingroup native
      */
-    GLFWAPI CGDirectDisplayID glfwGetCocoaMonitor(GLFWmonitor* monitor);
+    GRWLAPI CGDirectDisplayID grwlGetCocoaMonitor(GRWLmonitor* monitor);
 
     /*! @brief Returns the `NSWindow` of the specified window.
      *
      *  @return The `NSWindow` of the specified window, or `nil` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI id glfwGetCocoaWindow(GLFWwindow* window);
+    GRWLAPI id grwlGetCocoaWindow(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_NSGL)
+#if defined(GRWL_EXPOSE_NATIVE_NSGL)
     /*! @brief Returns the `NSOpenGLContext` of the specified window.
      *
      *  @return The `NSOpenGLContext` of the specified window, or `nil` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI id glfwGetNSGLContext(GLFWwindow* window);
+    GRWLAPI id grwlGetNSGLContext(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_X11)
-    /*! @brief Returns the `Display` used by GLFW.
+#if defined(GRWL_EXPOSE_NATIVE_X11)
+    /*! @brief Returns the `Display` used by GRWL.
      *
-     *  @return The `Display` used by GLFW, or `NULL` if an
+     *  @return The `Display` used by GRWL, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI Display* glfwGetX11Display(void);
+    GRWLAPI Display* grwlGetX11Display(void);
 
     /*! @brief Returns the `RRCrtc` of the specified monitor.
      *
      *  @return The `RRCrtc` of the specified monitor, or `None` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.1.
-     *
      *  @ingroup native
      */
-    GLFWAPI RRCrtc glfwGetX11Adapter(GLFWmonitor* monitor);
+    GRWLAPI RRCrtc grwlGetX11Adapter(GRWLmonitor* monitor);
 
     /*! @brief Returns the `RROutput` of the specified monitor.
      *
      *  @return The `RROutput` of the specified monitor, or `None` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.1.
-     *
      *  @ingroup native
      */
-    GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* monitor);
+    GRWLAPI RROutput grwlGetX11Monitor(GRWLmonitor* monitor);
 
     /*! @brief Returns the `Window` of the specified window.
      *
      *  @return The `Window` of the specified window, or `None` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI Window glfwGetX11Window(GLFWwindow* window);
+    GRWLAPI Window grwlGetX11Window(GRWLwindow* window);
 
     /*! @brief Sets the current primary selection to the specified string.
      *
      *  @param[in] string A UTF-8 encoded string.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
-     *  GLFW_PLATFORM_ERROR.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
+     *  GRWL_PLATFORM_ERROR.
      *
      *  @pointer_lifetime The specified string is copied before this function
      *  returns.
@@ -377,137 +356,123 @@ extern "C"
      *  @thread_safety This function must only be called from the main thread.
      *
      *  @sa @ref clipboard
-     *  @sa glfwGetX11SelectionString
-     *  @sa glfwSetClipboardString
-     *
-     *  @since Added in version 3.3.
+     *  @sa grwlGetX11SelectionString
+     *  @sa grwlSetClipboardString
      *
      *  @ingroup native
      */
-    GLFWAPI void glfwSetX11SelectionString(const char* string);
+    GRWLAPI void grwlSetX11SelectionString(const char* string);
 
     /*! @brief Returns the contents of the current primary selection as a string.
      *
      *  If the selection is empty or if its contents cannot be converted, `NULL`
-     *  is returned and a @ref GLFW_FORMAT_UNAVAILABLE error is generated.
+     *  is returned and a @ref GRWL_FORMAT_UNAVAILABLE error is generated.
      *
      *  @return The contents of the selection as a UTF-8 encoded string, or `NULL`
      *  if an [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
-     *  GLFW_PLATFORM_ERROR.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
+     *  GRWL_PLATFORM_ERROR.
      *
-     *  @pointer_lifetime The returned string is allocated and freed by GLFW. You
+     *  @pointer_lifetime The returned string is allocated and freed by GRWL. You
      *  should not free it yourself. It is valid until the next call to @ref
-     *  glfwGetX11SelectionString or @ref glfwSetX11SelectionString, or until the
+     *  grwlGetX11SelectionString or @ref grwlSetX11SelectionString, or until the
      *  library is terminated.
      *
      *  @thread_safety This function must only be called from the main thread.
      *
      *  @sa @ref clipboard
-     *  @sa glfwSetX11SelectionString
-     *  @sa glfwGetClipboardString
-     *
-     *  @since Added in version 3.3.
+     *  @sa grwlSetX11SelectionString
+     *  @sa grwlGetClipboardString
      *
      *  @ingroup native
      */
-    GLFWAPI const char* glfwGetX11SelectionString(void);
+    GRWLAPI const char* grwlGetX11SelectionString(void);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_GLX)
+#if defined(GRWL_EXPOSE_NATIVE_GLX)
     /*! @brief Returns the `GLXContext` of the specified window.
      *
      *  @return The `GLXContext` of the specified window, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI GLXContext glfwGetGLXContext(GLFWwindow* window);
+    GRWLAPI GLXContext grwlGetGLXContext(GRWLwindow* window);
 
     /*! @brief Returns the `GLXWindow` of the specified window.
      *
      *  @return The `GLXWindow` of the specified window, or `None` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.2.
-     *
      *  @ingroup native
      */
-    GLFWAPI GLXWindow glfwGetGLXWindow(GLFWwindow* window);
+    GRWLAPI GLXWindow grwlGetGLXWindow(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_WAYLAND)
-    /*! @brief Returns the `struct wl_display*` used by GLFW.
+#if defined(GRWL_EXPOSE_NATIVE_WAYLAND)
+    /*! @brief Returns the `struct wl_display*` used by GRWL.
      *
-     *  @return The `struct wl_display*` used by GLFW, or `NULL` if an
+     *  @return The `struct wl_display*` used by GRWL, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.2.
-     *
      *  @ingroup native
      */
-    GLFWAPI struct wl_display* glfwGetWaylandDisplay(void);
+    GRWLAPI struct wl_display* grwlGetWaylandDisplay(void);
 
     /*! @brief Returns the `struct wl_output*` of the specified monitor.
      *
      *  @return The `struct wl_output*` of the specified monitor, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.2.
-     *
      *  @ingroup native
      */
-    GLFWAPI struct wl_output* glfwGetWaylandMonitor(GLFWmonitor* monitor);
+    GRWLAPI struct wl_output* grwlGetWaylandMonitor(GRWLmonitor* monitor);
 
     /*! @brief Returns the main `struct wl_surface*` of the specified window.
      *
      *  @return The main `struct wl_surface*` of the specified window, or `NULL` if
      *  an [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.2.
-     *
      *  @ingroup native
      */
-    GLFWAPI struct wl_surface* glfwGetWaylandWindow(GLFWwindow* window);
+    GRWLAPI struct wl_surface* grwlGetWaylandWindow(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_EGL)
-    /*! @brief Returns the `EGLDisplay` used by GLFW.
+#if defined(GRWL_EXPOSE_NATIVE_EGL)
+    /*! @brief Returns the `EGLDisplay` used by GRWL.
      *
-     *  @return The `EGLDisplay` used by GLFW, or `EGL_NO_DISPLAY` if an
+     *  @return The `EGLDisplay` used by GRWL, or `EGL_NO_DISPLAY` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
      *  @remark Because EGL is initialized on demand, this function will return
      *  `EGL_NO_DISPLAY` until the first context has been created via EGL.
@@ -515,65 +480,57 @@ extern "C"
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI EGLDisplay glfwGetEGLDisplay(void);
+    GRWLAPI EGLDisplay grwlGetEGLDisplay(void);
 
     /*! @brief Returns the `EGLContext` of the specified window.
      *
      *  @return The `EGLContext` of the specified window, or `EGL_NO_CONTEXT` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI EGLContext glfwGetEGLContext(GLFWwindow* window);
+    GRWLAPI EGLContext grwlGetEGLContext(GRWLwindow* window);
 
     /*! @brief Returns the `EGLSurface` of the specified window.
      *
      *  @return The `EGLSurface` of the specified window, or `EGL_NO_SURFACE` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI EGLSurface glfwGetEGLSurface(GLFWwindow* window);
+    GRWLAPI EGLSurface grwlGetEGLSurface(GRWLwindow* window);
 
     /*! @brief Returns the `EGLConfig` of the specified window.
      *
      *  @return The `EGLConfig` of the specified window, or `EGL_NO_SURFACE` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.0.
-     *
      *  @ingroup native
      */
-    GLFWAPI EGLConfig glfwGetEGLConfig(GLFWwindow* window);
+    GRWLAPI EGLConfig grwlGetEGLConfig(GRWLwindow* window);
 #endif
 
-#if defined(GLFW_EXPOSE_NATIVE_OSMESA)
+#if defined(GRWL_EXPOSE_NATIVE_OSMESA)
     /*! @brief Retrieves the color buffer associated with the specified window.
      *
      *  @param[in] window The window whose color buffer to retrieve.
@@ -583,20 +540,18 @@ extern "C"
      *  buffer, or `NULL`.
      *  @param[out] buffer Where to store the address of the color buffer, or
      *  `NULL`.
-     *  @return `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
+     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.3.
-     *
      *  @ingroup native
      */
-    GLFWAPI int glfwGetOSMesaColorBuffer(GLFWwindow* window, int* width, int* height, int* format, void** buffer);
+    GRWLAPI int grwlGetOSMesaColorBuffer(GRWLwindow* window, int* width, int* height, int* format, void** buffer);
 
     /*! @brief Retrieves the depth buffer associated with the specified window.
      *
@@ -607,20 +562,18 @@ extern "C"
      *  buffer element, or `NULL`.
      *  @param[out] buffer Where to store the address of the depth buffer, or
      *  `NULL`.
-     *  @return `GLFW_TRUE` if successful, or `GLFW_FALSE` if an
+     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.3.
-     *
      *  @ingroup native
      */
-    GLFWAPI int glfwGetOSMesaDepthBuffer(GLFWwindow* window, int* width, int* height, int* bytesPerValue,
+    GRWLAPI int grwlGetOSMesaDepthBuffer(GRWLwindow* window, int* width, int* height, int* bytesPerValue,
                                          void** buffer);
 
     /*! @brief Returns the `OSMesaContext` of the specified window.
@@ -628,21 +581,19 @@ extern "C"
      *  @return The `OSMesaContext` of the specified window, or `NULL` if an
      *  [error](@ref error_handling) occurred.
      *
-     *  @errors Possible errors include @ref GLFW_NO_WINDOW_CONTEXT and @ref
-     *  GLFW_NOT_INITIALIZED.
+     *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
+     *  GRWL_NOT_INITIALIZED.
      *
      *  @thread_safety This function may be called from any thread.  Access is not
      *  synchronized.
      *
-     *  @since Added in version 3.3.
-     *
      *  @ingroup native
      */
-    GLFWAPI OSMesaContext glfwGetOSMesaContext(GLFWwindow* window);
+    GRWLAPI OSMesaContext grwlGetOSMesaContext(GRWLwindow* window);
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _glfw3_native_h_ */
+#endif /* _grwl_native_h_ */

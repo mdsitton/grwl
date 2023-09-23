@@ -9,8 +9,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #if defined(_MSC_VER)
     // Make MS math.h define M_PI
@@ -42,11 +42,11 @@ static const char* fragment_shader_text = "#version 110\n"
 static double cursor_x;
 static double cursor_y;
 static int swap_interval = 1;
-static int wait_events = GLFW_TRUE;
-static int animate_cursor = GLFW_FALSE;
-static int track_cursor = GLFW_FALSE;
-static GLFWcursor* standard_cursors[10];
-static GLFWcursor* tracking_cursor = NULL;
+static int wait_events = GRWL_TRUE;
+static int animate_cursor = GRWL_FALSE;
+static int track_cursor = GRWL_FALSE;
+static GRWLcursor* standard_cursors[10];
+static GRWLcursor* tracking_cursor = NULL;
 
 static void error_callback(int error, const char* description)
 {
@@ -69,11 +69,11 @@ static float star(int x, int y, float t)
     return (float)fmax(0.f, fmin(1.f, i * salpha * 0.2f + salpha * xalpha * yalpha));
 }
 
-static GLFWcursor* create_cursor_frame(float t)
+static GRWLcursor* create_cursor_frame(float t)
 {
     int i = 0, x, y;
     unsigned char buffer[64 * 64 * 4];
-    const GLFWimage image = { 64, 64, buffer };
+    const GRWLimage image = { 64, 64, buffer };
 
     for (y = 0; y < image.width; y++)
     {
@@ -86,14 +86,14 @@ static GLFWcursor* create_cursor_frame(float t)
         }
     }
 
-    return glfwCreateCursor(&image, image.width / 2, image.height / 2);
+    return grwlCreateCursor(&image, image.width / 2, image.height / 2);
 }
 
-static GLFWcursor* create_tracking_cursor(void)
+static GRWLcursor* create_tracking_cursor(void)
 {
     int i = 0, x, y;
     unsigned char buffer[32 * 32 * 4];
-    const GLFWimage image = { 32, 32, buffer };
+    const GRWLimage image = { 32, 32, buffer };
 
     for (y = 0; y < image.width; y++)
     {
@@ -116,123 +116,123 @@ static GLFWcursor* create_tracking_cursor(void)
         }
     }
 
-    return glfwCreateCursor(&image, 7, 7);
+    return grwlCreateCursor(&image, 7, 7);
 }
 
-static void cursor_position_callback(GLFWwindow* window, double x, double y)
+static void cursor_position_callback(GRWLwindow* window, double x, double y)
 {
-    printf("%0.3f: Cursor position: %f %f (%+f %+f)\n", glfwGetTime(), x, y, x - cursor_x, y - cursor_y);
+    printf("%0.3f: Cursor position: %f %f (%+f %+f)\n", grwlGetTime(), x, y, x - cursor_x, y - cursor_y);
 
     cursor_x = x;
     cursor_y = y;
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action != GLFW_PRESS)
+    if (action != GRWL_PRESS)
     {
         return;
     }
 
     switch (key)
     {
-        case GLFW_KEY_A:
+        case GRWL_KEY_A:
         {
             animate_cursor = !animate_cursor;
             if (!animate_cursor)
             {
-                glfwSetCursor(window, NULL);
+                grwlSetCursor(window, NULL);
             }
 
             break;
         }
 
-        case GLFW_KEY_ESCAPE:
+        case GRWL_KEY_ESCAPE:
         {
-            const int mode = glfwGetInputMode(window, GLFW_CURSOR);
-            if (mode != GLFW_CURSOR_DISABLED && mode != GLFW_CURSOR_CAPTURED)
+            const int mode = grwlGetInputMode(window, GRWL_CURSOR);
+            if (mode != GRWL_CURSOR_DISABLED && mode != GRWL_CURSOR_CAPTURED)
             {
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
+                grwlSetWindowShouldClose(window, GRWL_TRUE);
                 break;
             }
 
             /* FALLTHROUGH */
         }
 
-        case GLFW_KEY_N:
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            glfwGetCursorPos(window, &cursor_x, &cursor_y);
+        case GRWL_KEY_N:
+            grwlSetInputMode(window, GRWL_CURSOR, GRWL_CURSOR_NORMAL);
+            grwlGetCursorPos(window, &cursor_x, &cursor_y);
             printf("(( cursor is normal ))\n");
             break;
 
-        case GLFW_KEY_D:
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        case GRWL_KEY_D:
+            grwlSetInputMode(window, GRWL_CURSOR, GRWL_CURSOR_DISABLED);
             printf("(( cursor is disabled ))\n");
             break;
 
-        case GLFW_KEY_H:
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        case GRWL_KEY_H:
+            grwlSetInputMode(window, GRWL_CURSOR, GRWL_CURSOR_HIDDEN);
             printf("(( cursor is hidden ))\n");
             break;
 
-        case GLFW_KEY_C:
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+        case GRWL_KEY_C:
+            grwlSetInputMode(window, GRWL_CURSOR, GRWL_CURSOR_CAPTURED);
             printf("(( cursor is captured ))\n");
             break;
 
-        case GLFW_KEY_R:
-            if (!glfwRawMouseMotionSupported())
+        case GRWL_KEY_R:
+            if (!grwlRawMouseMotionSupported())
             {
                 break;
             }
 
-            if (glfwGetInputMode(window, GLFW_RAW_MOUSE_MOTION))
+            if (grwlGetInputMode(window, GRWL_RAW_MOUSE_MOTION))
             {
-                glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+                grwlSetInputMode(window, GRWL_RAW_MOUSE_MOTION, GRWL_FALSE);
                 printf("(( raw input is disabled ))\n");
             }
             else
             {
-                glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+                grwlSetInputMode(window, GRWL_RAW_MOUSE_MOTION, GRWL_TRUE);
                 printf("(( raw input is enabled ))\n");
             }
             break;
 
-        case GLFW_KEY_SPACE:
+        case GRWL_KEY_SPACE:
             swap_interval = 1 - swap_interval;
             printf("(( swap interval: %i ))\n", swap_interval);
-            glfwSwapInterval(swap_interval);
+            grwlSwapInterval(swap_interval);
             break;
 
-        case GLFW_KEY_W:
+        case GRWL_KEY_W:
             wait_events = !wait_events;
             printf("(( %sing for events ))\n", wait_events ? "wait" : "poll");
             break;
 
-        case GLFW_KEY_T:
+        case GRWL_KEY_T:
             track_cursor = !track_cursor;
             if (track_cursor)
             {
-                glfwSetCursor(window, tracking_cursor);
+                grwlSetCursor(window, tracking_cursor);
             }
             else
             {
-                glfwSetCursor(window, NULL);
+                grwlSetCursor(window, NULL);
             }
 
             break;
 
-        case GLFW_KEY_P:
+        case GRWL_KEY_P:
         {
             double x, y;
-            glfwGetCursorPos(window, &x, &y);
+            grwlGetCursorPos(window, &x, &y);
 
             printf("Query before set: %f %f (%+f %+f)\n", x, y, x - cursor_x, y - cursor_y);
             cursor_x = x;
             cursor_y = y;
 
-            glfwSetCursorPos(window, cursor_x, cursor_y);
-            glfwGetCursorPos(window, &x, &y);
+            grwlSetCursorPos(window, cursor_x, cursor_y);
+            grwlGetCursorPos(window, &x, &y);
 
             printf("Query after set: %f %f (%+f %+f)\n", x, y, x - cursor_x, y - cursor_y);
             cursor_x = x;
@@ -240,72 +240,72 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             break;
         }
 
-        case GLFW_KEY_UP:
-            glfwSetCursorPos(window, 0, 0);
-            glfwGetCursorPos(window, &cursor_x, &cursor_y);
+        case GRWL_KEY_UP:
+            grwlSetCursorPos(window, 0, 0);
+            grwlGetCursorPos(window, &cursor_x, &cursor_y);
             break;
 
-        case GLFW_KEY_DOWN:
+        case GRWL_KEY_DOWN:
         {
             int width, height;
-            glfwGetWindowSize(window, &width, &height);
-            glfwSetCursorPos(window, width - 1, height - 1);
-            glfwGetCursorPos(window, &cursor_x, &cursor_y);
+            grwlGetWindowSize(window, &width, &height);
+            grwlSetCursorPos(window, width - 1, height - 1);
+            grwlGetCursorPos(window, &cursor_x, &cursor_y);
             break;
         }
 
-        case GLFW_KEY_0:
-            glfwSetCursor(window, NULL);
+        case GRWL_KEY_0:
+            grwlSetCursor(window, NULL);
             break;
 
-        case GLFW_KEY_1:
-        case GLFW_KEY_2:
-        case GLFW_KEY_3:
-        case GLFW_KEY_4:
-        case GLFW_KEY_5:
-        case GLFW_KEY_6:
-        case GLFW_KEY_7:
-        case GLFW_KEY_8:
-        case GLFW_KEY_9:
+        case GRWL_KEY_1:
+        case GRWL_KEY_2:
+        case GRWL_KEY_3:
+        case GRWL_KEY_4:
+        case GRWL_KEY_5:
+        case GRWL_KEY_6:
+        case GRWL_KEY_7:
+        case GRWL_KEY_8:
+        case GRWL_KEY_9:
         {
-            int index = key - GLFW_KEY_1;
-            if (mods & GLFW_MOD_SHIFT)
+            int index = key - GRWL_KEY_1;
+            if (mods & GRWL_MOD_SHIFT)
             {
                 index += 9;
             }
 
             if (index < sizeof(standard_cursors) / sizeof(standard_cursors[0]))
             {
-                glfwSetCursor(window, standard_cursors[index]);
+                grwlSetCursor(window, standard_cursors[index]);
             }
 
             break;
         }
 
-        case GLFW_KEY_F11:
-        case GLFW_KEY_ENTER:
+        case GRWL_KEY_F11:
+        case GRWL_KEY_ENTER:
         {
             static int x, y, width, height;
 
-            if (mods != GLFW_MOD_ALT)
+            if (mods != GRWL_MOD_ALT)
             {
                 return;
             }
 
-            if (glfwGetWindowMonitor(window))
+            if (grwlGetWindowMonitor(window))
             {
-                glfwSetWindowMonitor(window, NULL, x, y, width, height, 0);
+                grwlSetWindowMonitor(window, NULL, x, y, width, height, 0);
             }
             else
             {
-                GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-                glfwGetWindowPos(window, &x, &y);
-                glfwGetWindowSize(window, &width, &height);
-                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+                GRWLmonitor* monitor = grwlGetPrimaryMonitor();
+                const GRWLvidmode* mode = grwlGetVideoMode(monitor);
+                grwlGetWindowPos(window, &x, &y);
+                grwlGetWindowSize(window, &width, &height);
+                grwlSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
             }
 
-            glfwGetCursorPos(window, &cursor_x, &cursor_y);
+            grwlGetCursorPos(window, &cursor_x, &cursor_y);
             break;
         }
     }
@@ -314,15 +314,15 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int main(void)
 {
     int i;
-    GLFWwindow* window;
-    GLFWcursor* star_cursors[CURSOR_FRAME_COUNT];
-    GLFWcursor* current_frame = NULL;
+    GRWLwindow* window;
+    GRWLcursor* star_cursors[CURSOR_FRAME_COUNT];
+    GRWLcursor* current_frame = NULL;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint mvp_location, vpos_location;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
@@ -330,7 +330,7 @@ int main(void)
     tracking_cursor = create_tracking_cursor();
     if (!tracking_cursor)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
@@ -339,33 +339,33 @@ int main(void)
         star_cursors[i] = create_cursor_frame(i / (float)CURSOR_FRAME_COUNT);
         if (!star_cursors[i])
         {
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
     }
 
     for (i = 0; i < sizeof(standard_cursors) / sizeof(standard_cursors[0]); i++)
     {
-        const int shapes[] = { GLFW_ARROW_CURSOR,         GLFW_IBEAM_CURSOR,       GLFW_CROSSHAIR_CURSOR,
-                               GLFW_POINTING_HAND_CURSOR, GLFW_RESIZE_EW_CURSOR,   GLFW_RESIZE_NS_CURSOR,
-                               GLFW_RESIZE_NWSE_CURSOR,   GLFW_RESIZE_NESW_CURSOR, GLFW_RESIZE_ALL_CURSOR,
-                               GLFW_NOT_ALLOWED_CURSOR };
+        const int shapes[] = { GRWL_ARROW_CURSOR,         GRWL_IBEAM_CURSOR,       GRWL_CROSSHAIR_CURSOR,
+                               GRWL_POINTING_HAND_CURSOR, GRWL_RESIZE_EW_CURSOR,   GRWL_RESIZE_NS_CURSOR,
+                               GRWL_RESIZE_NWSE_CURSOR,   GRWL_RESIZE_NESW_CURSOR, GRWL_RESIZE_ALL_CURSOR,
+                               GRWL_NOT_ALLOWED_CURSOR };
 
-        standard_cursors[i] = glfwCreateStandardCursor(shapes[i]);
+        standard_cursors[i] = grwlCreateStandardCursor(shapes[i]);
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 0);
 
-    window = glfwCreateWindow(640, 480, "Cursor Test", NULL, NULL);
+    window = grwlCreateWindow(640, 480, "Cursor Test", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -390,13 +390,13 @@ int main(void)
     glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), (void*)0);
     glUseProgram(program);
 
-    glfwGetCursorPos(window, &cursor_x, &cursor_y);
+    grwlGetCursorPos(window, &cursor_x, &cursor_y);
     printf("Cursor position: %f %f\n", cursor_x, cursor_y);
 
-    glfwSetCursorPosCallback(window, cursor_position_callback);
-    glfwSetKeyCallback(window, key_callback);
+    grwlSetCursorPosCallback(window, cursor_position_callback);
+    grwlSetKeyCallback(window, key_callback);
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -407,8 +407,8 @@ int main(void)
             vec2 vertices[4];
             mat4x4 mvp;
 
-            glfwGetWindowSize(window, &wnd_width, &wnd_height);
-            glfwGetFramebufferSize(window, &fb_width, &fb_height);
+            grwlGetWindowSize(window, &wnd_width, &wnd_height);
+            grwlGetFramebufferSize(window, &fb_width, &fb_height);
 
             glViewport(0, 0, fb_width, fb_height);
 
@@ -430,14 +430,14 @@ int main(void)
             glDrawArrays(GL_LINES, 0, 4);
         }
 
-        glfwSwapBuffers(window);
+        grwlSwapBuffers(window);
 
         if (animate_cursor)
         {
-            const int i = (int)(glfwGetTime() * 30.0) % CURSOR_FRAME_COUNT;
+            const int i = (int)(grwlGetTime() * 30.0) % CURSOR_FRAME_COUNT;
             if (current_frame != star_cursors[i])
             {
-                glfwSetCursor(window, star_cursors[i]);
+                grwlSetCursor(window, star_cursors[i]);
                 current_frame = star_cursors[i];
             }
         }
@@ -450,34 +450,34 @@ int main(void)
         {
             if (animate_cursor)
             {
-                glfwWaitEventsTimeout(1.0 / 30.0);
+                grwlWaitEventsTimeout(1.0 / 30.0);
             }
             else
             {
-                glfwWaitEvents();
+                grwlWaitEvents();
             }
         }
         else
         {
-            glfwPollEvents();
+            grwlPollEvents();
         }
 
         // Workaround for an issue with msvcrt and mintty
         fflush(stdout);
     }
 
-    glfwDestroyWindow(window);
+    grwlDestroyWindow(window);
 
     for (i = 0; i < CURSOR_FRAME_COUNT; i++)
     {
-        glfwDestroyCursor(star_cursors[i]);
+        grwlDestroyCursor(star_cursors[i]);
     }
 
     for (i = 0; i < sizeof(standard_cursors) / sizeof(standard_cursors[0]); i++)
     {
-        glfwDestroyCursor(standard_cursors[i]);
+        grwlDestroyCursor(standard_cursors[i]);
     }
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

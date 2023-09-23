@@ -46,12 +46,12 @@ jobs:
                   sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev wayland-protocols libwayland-dev libxkbcommon-dev
 
             - name: Configure static library
-              run: cmake -S . -B build-static -D GLFW_BUILD_WAYLAND=ON
+              run: cmake -S . -B build-static -D GRWL_BUILD_WAYLAND=ON
             - name: Build static library
               run: cmake --build build-static --parallel
 
             - name: Configure shared library
-              run: cmake -S . -B build-shared -D GLFW_BUILD_WAYLAND=ON -D BUILD_SHARED_LIBS=ON
+              run: cmake -S . -B build-shared -D GRWL_BUILD_WAYLAND=ON -D BUILD_SHARED_LIBS=ON
             - name: Build shared library
               run: cmake --build build-shared --parallel
 

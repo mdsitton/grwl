@@ -19,8 +19,8 @@ RelWithDebInfo
 *.opensdf
 
 # Xcode clutter
-GLFW.build
-GLFW.xcodeproj
+GRWL.build
+GRWL.xcodeproj
 
 # macOS clutter
 .DS_Store
@@ -48,24 +48,24 @@ docs/Doxyfile
 docs/html
 docs/warnings.txt
 docs/doxygen_sqlite3.db
-src/glfw_config.h
-src/glfw3.pc
-src/glfw3Config.cmake
-src/glfw3ConfigVersion.cmake
+src/grwl_config.h
+src/grwl.pc
+src/grwlConfig.cmake
+src/grwlConfigVersion.cmake
 
 # Compiled binaries
-src/libglfw.so
-src/libglfw.so.3
-src/libglfw.so.3.4
-src/libglfw.dylib
-src/libglfw.dylib
-src/libglfw.3.dylib
-src/libglfw.3.4.dylib
-src/libglfw3.a
-src/glfw3.lib
-src/glfw3.dll
-src/glfw3dll.lib
-src/libglfw3dll.a
+src/libgrwl.so
+src/libgrwl.so.3
+src/libgrwl.so.3.4
+src/libgrwl.dylib
+src/libgrwl.dylib
+src/libgrwl.3.dylib
+src/libgrwl.3.4.dylib
+src/libgrwl.a
+src/grwl.lib
+src/grwl.dll
+src/grwldll.lib
+src/libgrwldll.a
 examples/*.app
 examples/*.exe
 examples/boing
@@ -85,7 +85,7 @@ tests/cursor
 tests/empty
 tests/events
 tests/gamma
-tests/glfwinfo
+tests/grwlinfo
 tests/icon
 tests/iconify
 tests/inputlag

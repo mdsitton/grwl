@@ -5,76 +5,76 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_WIN32_THREAD)
+#if defined(GRWL_BUILD_WIN32_THREAD)
 
     #include <assert.h>
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
+GRWLbool _grwlPlatformCreateTls(_GRWLtls* tls)
 {
-    assert(tls->win32.allocated == GLFW_FALSE);
+    assert(tls->win32.allocated == GRWL_FALSE);
 
     tls->win32.index = TlsAlloc();
     if (tls->win32.index == TLS_OUT_OF_INDEXES)
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR, "Win32: Failed to allocate TLS index");
-        return GLFW_FALSE;
+        _grwlInputError(GRWL_PLATFORM_ERROR, "Win32: Failed to allocate TLS index");
+        return GRWL_FALSE;
     }
 
-    tls->win32.allocated = GLFW_TRUE;
-    return GLFW_TRUE;
+    tls->win32.allocated = GRWL_TRUE;
+    return GRWL_TRUE;
 }
 
-void _glfwPlatformDestroyTls(_GLFWtls* tls)
+void _grwlPlatformDestroyTls(_GRWLtls* tls)
 {
     if (tls->win32.allocated)
     {
         TlsFree(tls->win32.index);
     }
-    memset(tls, 0, sizeof(_GLFWtls));
+    memset(tls, 0, sizeof(_GRWLtls));
 }
 
-void* _glfwPlatformGetTls(_GLFWtls* tls)
+void* _grwlPlatformGetTls(_GRWLtls* tls)
 {
-    assert(tls->win32.allocated == GLFW_TRUE);
+    assert(tls->win32.allocated == GRWL_TRUE);
     return TlsGetValue(tls->win32.index);
 }
 
-void _glfwPlatformSetTls(_GLFWtls* tls, void* value)
+void _grwlPlatformSetTls(_GRWLtls* tls, void* value)
 {
-    assert(tls->win32.allocated == GLFW_TRUE);
+    assert(tls->win32.allocated == GRWL_TRUE);
     TlsSetValue(tls->win32.index, value);
 }
 
-GLFWbool _glfwPlatformCreateMutex(_GLFWmutex* mutex)
+GRWLbool _grwlPlatformCreateMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->win32.allocated == GLFW_FALSE);
+    assert(mutex->win32.allocated == GRWL_FALSE);
     InitializeCriticalSection(&mutex->win32.section);
-    return mutex->win32.allocated = GLFW_TRUE;
+    return mutex->win32.allocated = GRWL_TRUE;
 }
 
-void _glfwPlatformDestroyMutex(_GLFWmutex* mutex)
+void _grwlPlatformDestroyMutex(_GRWLmutex* mutex)
 {
     if (mutex->win32.allocated)
     {
         DeleteCriticalSection(&mutex->win32.section);
     }
-    memset(mutex, 0, sizeof(_GLFWmutex));
+    memset(mutex, 0, sizeof(_GRWLmutex));
 }
 
-void _glfwPlatformLockMutex(_GLFWmutex* mutex)
+void _grwlPlatformLockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->win32.allocated == GLFW_TRUE);
+    assert(mutex->win32.allocated == GRWL_TRUE);
     EnterCriticalSection(&mutex->win32.section);
 }
 
-void _glfwPlatformUnlockMutex(_GLFWmutex* mutex)
+void _grwlPlatformUnlockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->win32.allocated == GLFW_TRUE);
+    assert(mutex->win32.allocated == GRWL_TRUE);
     LeaveCriticalSection(&mutex->win32.section);
 }
 
-#endif // GLFW_BUILD_WIN32_THREAD
+#endif // GRWL_BUILD_WIN32_THREAD

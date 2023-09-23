@@ -3,8 +3,8 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-GLFWbool _glfwInitJoysticksNull(void);
-void _glfwTerminateJoysticksNull(void);
-GLFWbool _glfwPollJoystickNull(_GLFWjoystick* js, int mode);
-const char* _glfwGetMappingNameNull(void);
-void _glfwUpdateGamepadGUIDNull(char* guid);
+GRWLbool _grwlInitJoysticksNull(void);
+void _grwlTerminateJoysticksNull(void);
+GRWLbool _grwlPollJoystickNull(_GRWLjoystick* js, int mode);
+const char* _grwlGetMappingNameNull(void);
+void _grwlUpdateGamepadGUIDNull(char* guid);

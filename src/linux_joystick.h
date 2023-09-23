@@ -7,12 +7,12 @@
 #include <linux/limits.h>
 #include <regex.h>
 
-#define GLFW_LINUX_JOYSTICK_STATE _GLFWjoystickLinux linjs;
-#define GLFW_LINUX_LIBRARY_JOYSTICK_STATE _GLFWlibraryLinux linjs;
+#define GRWL_LINUX_JOYSTICK_STATE _GRWLjoystickLinux linjs;
+#define GRWL_LINUX_LIBRARY_JOYSTICK_STATE _GRWLlibraryLinux linjs;
 
 // Linux-specific joystick data
 //
-typedef struct _GLFWjoystickLinux
+typedef struct _GRWLjoystickLinux
 {
     int fd;
     char path[PATH_MAX];
@@ -20,22 +20,22 @@ typedef struct _GLFWjoystickLinux
     int absMap[ABS_CNT];
     struct input_absinfo absInfo[ABS_CNT];
     int hats[4][2];
-} _GLFWjoystickLinux;
+} _GRWLjoystickLinux;
 
 // Linux-specific joystick API data
 //
-typedef struct _GLFWlibraryLinux
+typedef struct _GRWLlibraryLinux
 {
     int inotify;
     int watch;
     regex_t regex;
-    GLFWbool dropped;
-} _GLFWlibraryLinux;
+    GRWLbool dropped;
+} _GRWLlibraryLinux;
 
-void _glfwDetectJoystickConnectionLinux(void);
+void _grwlDetectJoystickConnectionLinux(void);
 
-GLFWbool _glfwInitJoysticksLinux(void);
-void _glfwTerminateJoysticksLinux(void);
-GLFWbool _glfwPollJoystickLinux(_GLFWjoystick* js, int mode);
-const char* _glfwGetMappingNameLinux(void);
-void _glfwUpdateGamepadGUIDLinux(char* guid);
+GRWLbool _grwlInitJoysticksLinux(void);
+void _grwlTerminateJoysticksLinux(void);
+GRWLbool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode);
+const char* _grwlGetMappingNameLinux(void);
+void _grwlUpdateGamepadGUIDLinux(char* guid);

@@ -75,26 +75,26 @@ typedef dbus_bool_t (*PFN_dbus_message_iter_open_container)(struct DBusMessageIt
                                                             struct DBusMessageIter*);
 typedef dbus_bool_t (*PFN_dbus_message_iter_close_container)(struct DBusMessageIter*, struct DBusMessageIter*);
 
-#define dbus_error_init _glfw.dbus.error_init
-#define dbus_error_is_set _glfw.dbus.error_is_set
-#define dbus_error_free _glfw.dbus.error_free
-#define dbus_connection_unref _glfw.dbus.connection_unref
-#define dbus_connection_send _glfw.dbus.connection_send
-#define dbus_connection_flush _glfw.dbus.connection_flush
-#define dbus_bus_request_name _glfw.dbus.bus_request_name
-#define dbus_bus_get _glfw.dbus.bus_get
-#define dbus_message_unref _glfw.dbus.message_unref
-#define dbus_message_new_signal _glfw.dbus.message_new_signal
-#define dbus_message_iter_init_append _glfw.dbus.message_iter_init_append
-#define dbus_message_iter_append_basic _glfw.dbus.message_iter_append_basic
-#define dbus_message_iter_open_container _glfw.dbus.message_iter_open_container
-#define dbus_message_iter_close_container _glfw.dbus.message_iter_close_container
+#define dbus_error_init _grwl.dbus.error_init
+#define dbus_error_is_set _grwl.dbus.error_is_set
+#define dbus_error_free _grwl.dbus.error_free
+#define dbus_connection_unref _grwl.dbus.connection_unref
+#define dbus_connection_send _grwl.dbus.connection_send
+#define dbus_connection_flush _grwl.dbus.connection_flush
+#define dbus_bus_request_name _grwl.dbus.bus_request_name
+#define dbus_bus_get _grwl.dbus.bus_get
+#define dbus_message_unref _grwl.dbus.message_unref
+#define dbus_message_new_signal _grwl.dbus.message_new_signal
+#define dbus_message_iter_init_append _grwl.dbus.message_iter_init_append
+#define dbus_message_iter_append_basic _grwl.dbus.message_iter_append_basic
+#define dbus_message_iter_open_container _grwl.dbus.message_iter_open_container
+#define dbus_message_iter_close_container _grwl.dbus.message_iter_close_container
 
-#define GLFW_POSIX_LIBRARY_DBUS_STATE _GLFWDBusPOSIX dbus;
+#define GRWL_POSIX_LIBRARY_DBUS_STATE _GRWLDBusPOSIX dbus;
 
 // POSIX-specific dbus data
 //
-typedef struct _GLFWDBusPOSIX
+typedef struct _GRWLDBusPOSIX
 {
     void* handle;
 
@@ -120,23 +120,23 @@ typedef struct _GLFWDBusPOSIX
     char* fullExecutableName;
     char* legalExecutableName;
     char* signalName;
-} _GLFWDBusPOSIX;
+} _GRWLDBusPOSIX;
 
-void _glfwInitDBusPOSIX(void);
-void _glfwCacheSignalNameDBusPOSIX(void);
-void _glfwCacheFullExecutableNameDBusPOSIX(void);
-void _glfwCacheLegalExecutableNameDBusPOSIX(void);
-void _glfwCacheDesktopFilePathDBusPOSIX(void);
-void _glfwTerminateDBusPOSIX(void);
-void _glfwUpdateTaskbarProgressDBusPOSIX(dbus_bool_t progressVisible, double progressValue);
-void _glfwUpdateBadgeDBusPOSIX(dbus_bool_t badgeVisible, int badgeCount);
+void _grwlInitDBusPOSIX(void);
+void _grwlCacheSignalNameDBusPOSIX(void);
+void _grwlCacheFullExecutableNameDBusPOSIX(void);
+void _grwlCacheLegalExecutableNameDBusPOSIX(void);
+void _grwlCacheDesktopFilePathDBusPOSIX(void);
+void _grwlTerminateDBusPOSIX(void);
+void _grwlUpdateTaskbarProgressDBusPOSIX(dbus_bool_t progressVisible, double progressValue);
+void _grwlUpdateBadgeDBusPOSIX(dbus_bool_t badgeVisible, int badgeCount);
 
-dbus_bool_t _glfwNewMessageSignalDBusPOSIX(const char* objectPath, const char* interfaceName, const char* signalName,
+dbus_bool_t _grwlNewMessageSignalDBusPOSIX(const char* objectPath, const char* interfaceName, const char* signalName,
                                            struct DBusMessage** outMessage);
-dbus_bool_t _glfwOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const char* signature,
+dbus_bool_t _grwlOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const char* signature,
                                         struct DBusMessageIter* subIterator);
-dbus_bool_t _glfwCloseContainerDBusPOSIX(struct DBusMessageIter* iterator, struct DBusMessageIter* subIterator);
-dbus_bool_t _glfwAppendDataDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const void* data);
-dbus_bool_t _glfwAppendDictDataDBusPOSIX(struct DBusMessageIter* iterator, int keyType, const void* keyData,
+dbus_bool_t _grwlCloseContainerDBusPOSIX(struct DBusMessageIter* iterator, struct DBusMessageIter* subIterator);
+dbus_bool_t _grwlAppendDataDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const void* data);
+dbus_bool_t _grwlAppendDictDataDBusPOSIX(struct DBusMessageIter* iterator, int keyType, const void* keyData,
                                          int valueType, const void* valueData);
-dbus_bool_t _glfwSendMessageDBusPOSIX(struct DBusMessage* message);
+dbus_bool_t _grwlSendMessageDBusPOSIX(struct DBusMessage* message);

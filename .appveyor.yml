@@ -38,7 +38,7 @@ for:
             - GENERATOR: Visual Studio 10 2010
     build_script:
         - cmake -S . -B build -G "%GENERATOR%" -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS%
-        - cmake --build build --target glfw
+        - cmake --build build --target grwl
 notifications:
     - provider: Email
       to:

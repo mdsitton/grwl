@@ -5,21 +5,21 @@
 
 #include <windows.h>
 
-#define GLFW_WIN32_TLS_STATE _GLFWtlsWin32 win32;
-#define GLFW_WIN32_MUTEX_STATE _GLFWmutexWin32 win32;
+#define GRWL_WIN32_TLS_STATE _GRWLtlsWin32 win32;
+#define GRWL_WIN32_MUTEX_STATE _GRWLmutexWin32 win32;
 
 // Win32-specific thread local storage data
 //
-typedef struct _GLFWtlsWin32
+typedef struct _GRWLtlsWin32
 {
-    GLFWbool allocated;
+    GRWLbool allocated;
     DWORD index;
-} _GLFWtlsWin32;
+} _GRWLtlsWin32;
 
 // Win32-specific mutex data
 //
-typedef struct _GLFWmutexWin32
+typedef struct _GRWLmutexWin32
 {
-    GLFWbool allocated;
+    GRWLbool allocated;
     CRITICAL_SECTION section;
-} _GLFWmutexWin32;
+} _GRWLmutexWin32;

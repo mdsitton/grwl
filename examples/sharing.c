@@ -25,8 +25,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,78 +34,74 @@
 #include "getopt.h"
 #include "linmath.h"
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec2 vPos;\n"
-"varying vec2 texcoord;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    texcoord = vPos;\n"
-"}\n";
+static const char* vertex_shader_text = "#version 110\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "varying vec2 texcoord;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "    texcoord = vPos;\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"uniform sampler2D texture;\n"
-"uniform vec3 color;\n"
-"varying vec2 texcoord;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color * texture2D(texture, texcoord).rgb, 1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 110\n"
+                                          "uniform sampler2D texture;\n"
+                                          "uniform vec3 color;\n"
+                                          "varying vec2 texcoord;\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(color * texture2D(texture, texcoord).rgb, 1.0);\n"
+                                          "}\n";
 
-static const vec2 vertices[4] =
-{
-    { 0.f, 0.f },
-    { 1.f, 0.f },
-    { 1.f, 1.f },
-    { 0.f, 1.f }
-};
+static const vec2 vertices[4] = { { 0.f, 0.f }, { 1.f, 0.f }, { 1.f, 1.f }, { 0.f, 1.f } };
 
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if (action == GRWL_PRESS && key == GRWL_KEY_ESCAPE)
+    {
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
+    }
 }
 
-int main(int argc, char** argv)
+int main(int argc, char** GRWLv)
 {
-    GLFWwindow* windows[2];
+    GRWLwindow* windows[2];
     GLuint texture, program, vertex_buffer;
     GLint mvp_location, vpos_location, color_location, texture_location;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
-    windows[0] = glfwCreateWindow(400, 400, "First", NULL, NULL);
-    if (!windows[0])
+    if (!grwlInit())
     {
-        glfwTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwSetKeyCallback(windows[0], key_callback);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 0);
 
-    glfwMakeContextCurrent(windows[0]);
+    windows[0] = grwlCreateWindow(400, 400, "First", NULL, NULL);
+    if (!windows[0])
+    {
+        grwlTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    grwlSetKeyCallback(windows[0], key_callback);
+
+    grwlMakeContextCurrent(windows[0]);
 
     // Only enable vsync for the first of the windows to be swapped to
     // avoid waiting out the interval for each window
-    glfwSwapInterval(1);
+    grwlSwapInterval(1);
 
     // The contexts are created with the same APIs so the function
     // pointers should be re-usable between them
-    gladLoadGL(glfwGetProcAddress);
+    gladLoadGL(grwlGetProcAddress);
 
     // Create the OpenGL objects inside the first context, created above
     // All objects will be shared with the second context, created below
@@ -117,12 +113,14 @@ int main(int argc, char** argv)
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
-        srand((unsigned int) glfwGetTimerValue());
+        srand((unsigned int)grwlGetTimerValue());
 
-        for (y = 0;  y < 16;  y++)
+        for (y = 0; y < 16; y++)
         {
-            for (x = 0;  x < 16;  x++)
+            for (x = 0; x < 16; x++)
+            {
                 pixels[y * 16 + x] = rand() % 256;
+            }
         }
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 16, 16, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pixels);
@@ -160,13 +158,12 @@ int main(int argc, char** argv)
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
 
-    windows[1] = glfwCreateWindow(400, 400, "Second", NULL, windows[0]);
+    windows[1] = grwlCreateWindow(400, 400, "Second", NULL, windows[0]);
     if (!windows[1])
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
@@ -174,16 +171,16 @@ int main(int argc, char** argv)
     {
         int xpos, ypos, left, right, width;
 
-        glfwGetWindowSize(windows[0], &width, NULL);
-        glfwGetWindowFrameSize(windows[0], &left, NULL, &right, NULL);
-        glfwGetWindowPos(windows[0], &xpos, &ypos);
+        grwlGetWindowSize(windows[0], &width, NULL);
+        grwlGetWindowFrameSize(windows[0], &left, NULL, &right, NULL);
+        grwlGetWindowPos(windows[0], &xpos, &ypos);
 
-        glfwSetWindowPos(windows[1], xpos + width + left + right, ypos);
+        grwlSetWindowPos(windows[1], xpos + width + left + right, ypos);
     }
 
-    glfwSetKeyCallback(windows[1], key_callback);
+    grwlSetKeyCallback(windows[1], key_callback);
 
-    glfwMakeContextCurrent(windows[1]);
+    grwlMakeContextCurrent(windows[1]);
 
     // While objects are shared, the global context state is not and will
     // need to be set up for each context
@@ -195,41 +192,34 @@ int main(int argc, char** argv)
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
 
-    while (!glfwWindowShouldClose(windows[0]) &&
-           !glfwWindowShouldClose(windows[1]))
+    while (!grwlWindowShouldClose(windows[0]) && !grwlWindowShouldClose(windows[1]))
     {
         int i;
-        const vec3 colors[2] =
-        {
-            { 0.8f, 0.4f, 1.f },
-            { 0.3f, 0.4f, 1.f }
-        };
+        const vec3 colors[2] = { { 0.8f, 0.4f, 1.f }, { 0.3f, 0.4f, 1.f } };
 
-        for (i = 0;  i < 2;  i++)
+        for (i = 0; i < 2; i++)
         {
             int width, height;
             mat4x4 mvp;
 
-            glfwGetFramebufferSize(windows[i], &width, &height);
-            glfwMakeContextCurrent(windows[i]);
+            grwlGetFramebufferSize(windows[i], &width, &height);
+            grwlMakeContextCurrent(windows[i]);
 
             glViewport(0, 0, width, height);
 
             mat4x4_ortho(mvp, 0.f, 1.f, 0.f, 1.f, 0.f, 1.f);
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
             glUniform3fv(color_location, 1, colors[i]);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-            glfwSwapBuffers(windows[i]);
+            grwlSwapBuffers(windows[i]);
         }
 
-        glfwWaitEvents();
+        grwlWaitEvents();
     }
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }
-

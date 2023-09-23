@@ -5,7 +5,7 @@
 @tableofcontents
 
 This guide is intended to fill the gaps between the official [Vulkan
-resources](https://www.khronos.org/vulkan/) and the rest of the GLFW
+resources](https://www.khronos.org/vulkan/) and the rest of the GRWL
 documentation and is not a replacement for either.  It assumes some familiarity
 with Vulkan concepts like loaders, devices, queues and surfaces and leaves it to
 the Vulkan documentation to explain the details of Vulkan functions.
@@ -15,12 +15,12 @@ SDK](https://vulkan.lunarg.com/) for your platform.  Apart from headers and link
 libraries, they also provide the validation layers necessary for development.
 
 The [Vulkan Tutorial](https://vulkan-tutorial.com/) has more information on how
-to use GLFW and Vulkan.  The [Khronos Vulkan
-Samples](https://github.com/KhronosGroup/Vulkan-Samples) also use GLFW, although
+to use GRWL and Vulkan.  The [Khronos Vulkan
+Samples](https://github.com/KhronosGroup/Vulkan-Samples) also use GRWL, although
 with a small framework in between.
 
 For details on a specific Vulkan support function, see the @ref vulkan.  There
-are also guides for the other areas of the GLFW API.
+are also guides for the other areas of the GRWL API.
 
  - @ref intro_guide
  - @ref window_guide
@@ -31,19 +31,19 @@ are also guides for the other areas of the GLFW API.
 
 @section vulkan_loader Finding the Vulkan loader
 
-GLFW itself does not ever need to be linked against the Vulkan loader.
+GRWL itself does not ever need to be linked against the Vulkan loader.
 
-By default, GLFW will load the Vulkan loader dynamically at runtime via its standard name:
+By default, GRWL will load the Vulkan loader dynamically at runtime via its standard name:
 `vulkan-1.dll` on Windows, `libvulkan.so.1` on Linux and other Unix-like systems and
 `libvulkan.1.dylib` on macOS.
 
-@macos GLFW will also look up and search the `Frameworks` subdirectory of your
+@macos GRWL will also look up and search the `Frameworks` subdirectory of your
 application bundle.
 
 If your code is using a Vulkan loader with a different name or in a non-standard location
-you will need to direct GLFW to it.  Pass your version of `vkGetInstanceProcAddr` to @ref
-glfwInitVulkanLoader before initializing GLFW and it will use that function for all Vulkan
-entry point retrieval.  This prevents GLFW from dynamically loading the Vulkan loader.
+you will need to direct GRWL to it.  Pass your version of `vkGetInstanceProcAddr` to @ref
+glfwInitVulkanLoader before initializing GRWL and it will use that function for all Vulkan
+entry point retrieval.  This prevents GRWL from dynamically loading the Vulkan loader.
 
 @code
 glfwInitVulkanLoader(vkGetInstanceProcAddr);
@@ -56,24 +56,24 @@ bundle according to the LunarG SDK documentation.  This is explained in more det
 
 @section vulkan_include Including the Vulkan header file
 
-To have GLFW include the Vulkan header, define @ref GLFW_INCLUDE_VULKAN before including
-the GLFW header.
+To have GRWL include the Vulkan header, define @ref GRWL_INCLUDE_VULKAN before including
+the GRWL header.
 
 @code
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_VULKAN
+#include <GRWL/glfw3.h>
 @endcode
 
 If you instead want to include the Vulkan header from a custom location or use
-your own custom Vulkan header then do this before the GLFW header.
+your own custom Vulkan header then do this before the GRWL header.
 
 @code
 #include <path/to/vulkan.h>
-#include <GLFW/glfw3.h>
+#include <GRWL/glfw3.h>
 @endcode
 
-Unless a Vulkan header is included, either by the GLFW header or above it, the following
-GLFW functions will not be declared, as depend on Vulkan types.
+Unless a Vulkan header is included, either by the GRWL header or above it, the following
+GRWL functions will not be declared, as depend on Vulkan types.
 
  - @ref glfwInitVulkanLoader
  - @ref glfwGetInstanceProcAddress
@@ -81,7 +81,7 @@ GLFW functions will not be declared, as depend on Vulkan types.
  - @ref glfwCreateWindowSurface
 
 The `VK_USE_PLATFORM_*_KHR` macros do not need to be defined for the Vulkan part
-of GLFW to work.  Define them only if you are using these extensions directly.
+of GRWL to work.  Define them only if you are using these extensions directly.
 
 
 @section vulkan_support Querying for Vulkan support
@@ -101,11 +101,11 @@ if (glfwVulkanSupported())
 }
 @endcode
 
-This function returns `GLFW_TRUE` if the Vulkan loader and any minimally
+This function returns `GRWL_TRUE` if the Vulkan loader and any minimally
 functional ICD was found.
 
-If one or both were not found, calling any other Vulkan related GLFW function
-will generate a @ref GLFW_API_UNAVAILABLE error.
+If one or both were not found, calling any other Vulkan related GRWL function
+will generate a @ref GRWL_API_UNAVAILABLE error.
 
 
 @subsection vulkan_proc Querying Vulkan function pointers
@@ -151,7 +151,7 @@ about `vkGetDeviceProcAddr`, see the Vulkan documentation.
 
 To do anything useful with Vulkan you need to create an instance.  If you want
 to use Vulkan to render to a window, you must enable the instance extensions
-GLFW requires to create Vulkan surfaces.
+GRWL requires to create Vulkan surfaces.
 
 To query the instance extensions required, call @ref
 glfwGetRequiredInstanceExtensions.
@@ -166,7 +166,7 @@ be passed to @ref glfwGetPhysicalDevicePresentationSupport and @ref
 glfwCreateWindowSurface.  The set of extensions will vary depending on platform
 and may also vary depending on graphics drivers and other factors.
 
-If it fails it will return `NULL` and GLFW will not be able to create Vulkan
+If it fails it will return `NULL` and GRWL will not be able to create Vulkan
 window surfaces.  You can still use Vulkan for off-screen rendering and compute
 work.
 
@@ -183,7 +183,7 @@ ici.ppEnabledExtensionNames = extensions;
 ...
 @endcode
 
-Additional extensions may be required by future versions of GLFW.  You should
+Additional extensions may be required by future versions of GRWL.  You should
 check whether any extensions you wish to enable are already in the returned
 array, as it is an error to specify an extension more than once in the
 `VkInstanceCreateInfo` struct.
@@ -219,11 +219,11 @@ an existing Vulkan surface.
 
 Unless you will be using OpenGL or OpenGL ES with the same window as Vulkan,
 there is no need to create a context.  You can disable context creation with the
-[GLFW_CLIENT_API](@ref GLFW_CLIENT_API_hint) hint.
+[GRWL_CLIENT_API](@ref GRWL_CLIENT_API_hint) hint.
 
 @code
-glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-GLFWwindow* window = glfwCreateWindow(640, 480, "Window Title", NULL, NULL);
+glfwWindowHint(GRWL_CLIENT_API, GRWL_NO_API);
+GRWLwindow* window = glfwCreateWindow(640, 480, "Window Title", NULL, NULL);
 @endcode
 
 See @ref context_less for more information.
@@ -232,7 +232,7 @@ See @ref context_less for more information.
 @section vulkan_surface Creating a Vulkan window surface
 
 You can create a Vulkan surface (as defined by the `VK_KHR_surface` extension)
-for a GLFW window with @ref glfwCreateWindowSurface.
+for a GRWL window with @ref glfwCreateWindowSurface.
 
 @code
 VkSurfaceKHR surface;
@@ -247,7 +247,7 @@ If an OpenGL or OpenGL ES context was created on the window, the context has
 ownership of the presentation on the window and a Vulkan surface cannot be
 created.
 
-It is your responsibility to destroy the surface.  GLFW does not destroy it for
+It is your responsibility to destroy the surface.  GRWL does not destroy it for
 you.  Call `vkDestroySurfaceKHR` function from the same extension to destroy it.
 
 */

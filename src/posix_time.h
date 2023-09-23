@@ -3,15 +3,15 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define GLFW_POSIX_LIBRARY_TIMER_STATE _GLFWtimerPOSIX posix;
+#define GRWL_POSIX_LIBRARY_TIMER_STATE _GRWLtimerPOSIX posix;
 
 #include <stdint.h>
 #include <time.h>
 
 // POSIX-specific global timer data
 //
-typedef struct _GLFWtimerPOSIX
+typedef struct _GRWLtimerPOSIX
 {
     clockid_t clock;
     uint64_t frequency;
-} _GLFWtimerPOSIX;
+} _GRWLtimerPOSIX;

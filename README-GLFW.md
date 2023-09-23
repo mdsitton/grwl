@@ -126,49 +126,49 @@ information on what to include when reporting a bug.
  - Added OpenGL and OpenGL ES user contexts for multiple window contexts via
          `GLFWusercontext`, `glfwCreateUserContext`, `glfwDestroyUserContext`,
          `glfwMakeUserContextCurrent`, `glfwGetCurrentUserContext` (#1687)
- - Added `GLFW_PLATFORM` init hint for runtime platform selection (#1958)
- - Added `GLFW_ANGLE_PLATFORM_TYPE` init hint and `GLFW_ANGLE_PLATFORM_TYPE_*`
+ - Added `GRWL_PLATFORM` init hint for runtime platform selection (#1958)
+ - Added `GRWL_ANGLE_PLATFORM_TYPE` init hint and `GRWL_ANGLE_PLATFORM_TYPE_*`
    values to select ANGLE backend (#1380)
- - Added `GLFW_ANY_PLATFORM`, `GLFW_PLATFORM_WIN32`, `GLFW_PLATFORM_COCOA`,
-   `GLFW_PLATFORM_WAYLAND`, `GLFW_PLATFORM_X11` and `GLFW_PLATFORM_NULL` symbols
+ - Added `GRWL_ANY_PLATFORM`, `GRWL_PLATFORM_WIN32`, `GRWL_PLATFORM_COCOA`,
+   `GRWL_PLATFORM_WAYLAND`, `GRWL_PLATFORM_X11` and `GRWL_PLATFORM_NULL` symbols
    to specify the desired platform (#1958)
- - Added `GLFW_ANY_POSITION` hint value for letting the window manager choose
+ - Added `GRWL_ANY_POSITION` hint value for letting the window manager choose
    (#1603,#1747)
- - Added `GLFW_BUILD_COCOA` CMake option for enabling Cocoa support (#1958)
- - Added `GLFW_BUILD_WIN32` CMake option for enabling Win32 support (#1958)
- - Added `GLFW_BUILD_X11` CMake option for enabling X11 support (#1958)
- - Added `GLFW_CURSOR_CAPTURED` cursor mode to confine the cursor to the window
+ - Added `GRWL_BUILD_COCOA` CMake option for enabling Cocoa support (#1958)
+ - Added `GRWL_BUILD_WIN32` CMake option for enabling Win32 support (#1958)
+ - Added `GRWL_BUILD_X11` CMake option for enabling X11 support (#1958)
+ - Added `GRWL_CURSOR_CAPTURED` cursor mode to confine the cursor to the window
    content area (#58)
- - Added `GLFW_FEATURE_UNAVAILABLE` error for platform limitations (#1692)
- - Added `GLFW_FEATURE_UNIMPLEMENTED` error for incomplete backends (#1692)
- - Added `GLFW_IME` input mode for `glfwGetInputMode` and `glfwSetInputMode`
+ - Added `GRWL_FEATURE_UNAVAILABLE` error for platform limitations (#1692)
+ - Added `GRWL_FEATURE_UNIMPLEMENTED` error for incomplete backends (#1692)
+ - Added `GRWL_IME` input mode for `glfwGetInputMode` and `glfwSetInputMode`
    (#2130)
- - Added `GLFW_LIBRARY_TYPE` CMake variable for overriding the library type
+ - Added `GRWL_LIBRARY_TYPE` CMake variable for overriding the library type
    (#279,#1307,#1497,#1574,#1928)
- - Added `GLFW_MANAGE_PREEDIT_CANDIDATE` init hint for displaying preedit
+ - Added `GRWL_MANAGE_PREEDIT_CANDIDATE` init hint for displaying preedit
    candidates on the application side (supported only on Windows currently)
    (#2130)
- - Added `GLFW_MOUSE_PASSTHROUGH` window hint for letting mouse input pass
+ - Added `GRWL_MOUSE_PASSTHROUGH` window hint for letting mouse input pass
    through the window (#1236,#1568)
- - Added `GLFW_NATIVE_INCLUDE_NONE` for disabling inclusion of native headers
+ - Added `GRWL_NATIVE_INCLUDE_NONE` for disabling inclusion of native headers
    (#1348)
- - Added `GLFW_PKG_CONFIG_REQUIRES_PRIVATE` and `GLFW_PKG_CONFIG_LIBS_PRIVATE`
+ - Added `GRWL_PKG_CONFIG_REQUIRES_PRIVATE` and `GRWL_PKG_CONFIG_LIBS_PRIVATE`
    CMake variables exposing pkg-config dependencies (#1307)
- - Added `GLFW_PLATFORM_UNAVAILABLE` error for platform detection failures
+ - Added `GRWL_PLATFORM_UNAVAILABLE` error for platform detection failures
    (#1958)
- - Added `GLFW_PLATFORM` init hint for runtime platform selection (#1958)
- - Added `GLFW_POINTING_HAND_CURSOR` alias for `GLFW_HAND_CURSOR` (#427)
- - Added `GLFW_POSITION_X` and `GLFW_POSITION_Y` window hints for initial
+ - Added `GRWL_PLATFORM` init hint for runtime platform selection (#1958)
+ - Added `GRWL_POINTING_HAND_CURSOR` alias for `GRWL_HAND_CURSOR` (#427)
+ - Added `GRWL_POSITION_X` and `GRWL_POSITION_Y` window hints for initial
    position (#1603,#1747)
- - Added `GLFW_RESIZE_EW_CURSOR` alias for `GLFW_HRESIZE_CURSOR` (#427)
- - Added `GLFW_RESIZE_NS_CURSOR` alias for `GLFW_VRESIZE_CURSOR` (#427)
- - Added `GLFW_RESIZE_NWSE_CURSOR`, `GLFW_RESIZE_NESW_CURSOR`,
-   `GLFW_RESIZE_ALL_CURSOR` and `GLFW_NOT_ALLOWED_CURSOR` cursor shapes (#427)
- - Added `GLFW_WAYLAND_APP_ID` window hint string for Wayland app\_id selection
+ - Added `GRWL_RESIZE_EW_CURSOR` alias for `GRWL_HRESIZE_CURSOR` (#427)
+ - Added `GRWL_RESIZE_NS_CURSOR` alias for `GRWL_VRESIZE_CURSOR` (#427)
+ - Added `GRWL_RESIZE_NWSE_CURSOR`, `GRWL_RESIZE_NESW_CURSOR`,
+   `GRWL_RESIZE_ALL_CURSOR` and `GRWL_NOT_ALLOWED_CURSOR` cursor shapes (#427)
+ - Added `GRWL_WAYLAND_APP_ID` window hint string for Wayland app\_id selection
    (#2121,#2122)
- - Added `GLFW_X11_ONTHESPOT` init hint for using on-the-spot input method style
+ - Added `GRWL_X11_ONTHESPOT` init hint for using on-the-spot input method style
    on X11 (#2130)
- - Added `GLFW_X11_XCB_VULKAN_SURFACE` init hint for selecting X11 Vulkan
+ - Added `GRWL_X11_XCB_VULKAN_SURFACE` init hint for selecting X11 Vulkan
    surface extension (#1793)
  - Added `GLFWallocator` struct and `GLFWallocatefun`, `GLFWreallocatefun` and
    `GLFWdeallocatefun` types (#544,#1628,#1947)
@@ -208,12 +208,12 @@ information on what to include when reporting a bug.
  - Bugfix: `glfwGetJoystickUserPointer` returned `NULL` during disconnection
    (#2092)
  - Bugfix: `glfwMakeContextCurrent` would access TLS slot before initialization
- - Bugfix: `glfwSetGammaRamp` could emit `GLFW_INVALID_VALUE` before
+ - Bugfix: `glfwSetGammaRamp` could emit `GRWL_INVALID_VALUE` before
    initialization
  - Bugfix: Buffers were swapped at creation on single-buffered windows (#1873)
  - Bugfix: Built-in mappings failed because some OEMs re-used VID/PID (#1583)
  - Bugfix: Compiling with -Wextra-semi caused warnings (#1440)
- - Bugfix: Gamepad mapping updates could spam `GLFW_INVALID_VALUE` due to
+ - Bugfix: Gamepad mapping updates could spam `GRWL_INVALID_VALUE` due to
    incompatible controllers sharing hardware ID (#1763)
  - Bugfix: Native access functions for context handles did not check that the
    API matched
@@ -223,16 +223,16 @@ information on what to include when reporting a bug.
    relocatable (#1470)
  - Bugfix: Video modes with a duplicate screen area were discarded (#1555,#1556)
  - Disabled tests and examples by default when built as a CMake subdirectory
- - Made `GLFW_DOUBLEBUFFER` a read-only window attribute
+ - Made `GRWL_DOUBLEBUFFER` a read-only window attribute
  - Made joystick subsystem initialize at first use (#1284,#1646)
- - Removed `GLFW_USE_OSMESA` CMake option enabling the Null platform (#1958)
+ - Removed `GRWL_USE_OSMESA` CMake option enabling the Null platform (#1958)
  - Removed CMake generated configuration header
- - Renamed `GLFW_USE_WAYLAND` CMake option to `GLFW_BUILD_WAYLAND` (#1958)
+ - Renamed `GRWL_USE_WAYLAND` CMake option to `GRWL_BUILD_WAYLAND` (#1958)
  - Updated gamepad mappings from upstream
  - Updated the minimum required CMake version to 3.1
  - [Cocoa] Added locating the Vulkan loader at runtime in an application bundle
  - [Cocoa] Added support for `VK_EXT_metal_surface` (#1619)
- - [Cocoa] Bugfix: `GLFW_MAXIMIZED` was always true when `GLFW_RESIZABLE` was
+ - [Cocoa] Bugfix: `GRWL_MAXIMIZED` was always true when `GRWL_RESIZABLE` was
    false
  - [Cocoa] Bugfix: `glfwSetWindowSize` used a bottom-left anchor point (#1553)
  - [Cocoa] Bugfix: `kIOMasterPortDefault` was deprecated in macOS 12.0 (#1980)
@@ -240,7 +240,7 @@ information on what to include when reporting a bug.
  - [Cocoa] Bugfix: A connected Apple AirPlay would emit a useless error (#1791)
  - [Cocoa] Bugfix: A connected joystick, for which input monitoring permissions
    have not been granted, would cause a segfault (#2320).
- - [Cocoa] Bugfix: Changing `GLFW_DECORATED` in macOS fullscreen would abort
+ - [Cocoa] Bugfix: Changing `GRWL_DECORATED` in macOS fullscreen would abort
    application (#1886)
  - [Cocoa] Bugfix: Duplicate video modes were not filtered out (#1830)
  - [Cocoa] Bugfix: Event processing before window creation would assert (#1543)
@@ -270,7 +270,7 @@ information on what to include when reporting a bug.
  - [Cocoa] Changed `EGLNativeWindowType` from `NSView` to `CALayer` (#1169)
  - [Cocoa] Changed F13 key to report Print Screen for cross-platform consistency
    (#1786)
- - [Cocoa] Disabled macOS fullscreen when `GLFW_RESIZABLE` is false
+ - [Cocoa] Disabled macOS fullscreen when `GRWL_RESIZABLE` is false
  - [Cocoa] Moved main menu creation to GLFW initialization time (#1649)
  - [Cocoa] Removed dependency on the CoreVideo framework
  - [EGL] Added ANGLE backend selection via `EGL_ANGLE_platform_angle` extension
@@ -278,14 +278,14 @@ information on what to include when reporting a bug.
  - [EGL] Added loading of glvnd `libOpenGL.so.0` where available for OpenGL
  - [EGL] Added platform selection via the `EGL_EXT_platform_base` extension
    (#442)
- - [EGL] Bugfix: The `GLFW_DOUBLEBUFFER` context attribute was ignored (#1843)
+ - [EGL] Bugfix: The `GRWL_DOUBLEBUFFER` context attribute was ignored (#1843)
  - [EGL] Made it possible to query the `EGLConfig` that was chosen to create a
    given window via `glfwGetEGLConfig`
  - [GLX] Added loading of glvnd `libGLX.so.0` where available
  - [GLX] Bugfix: Context creation failed if GLX 1.4 was not exported by GLX
    library
  - [Linux] Bugfix: Joysticks without buttons were ignored (#2042,#2043)
- - [NSGL] Bugfix: `GLFW_COCOA_RETINA_FRAMEBUFFER` had no effect on newer macOS
+ - [NSGL] Bugfix: `GRWL_COCOA_RETINA_FRAMEBUFFER` had no effect on newer macOS
    versions (#1442)
  - [NSGL] Bugfix: Defining `GL_SILENCE_DEPRECATION` externally caused a
    duplicate definition warning (#1840)
@@ -300,10 +300,10 @@ information on what to include when reporting a bug.
  - [Wayland] Added support for key names via xkbcommon
  - [Wayland] Added support for more human-readable monitor names where available
  - [Wayland] Bugfix: `CLOCK_MONOTONIC` was not correctly enabled
- - [Wayland] Bugfix: `GLFW_DECORATED` was ignored when showing a window with XDG
+ - [Wayland] Bugfix: `GRWL_DECORATED` was ignored when showing a window with XDG
    decorations
- - [Wayland] Bugfix: `GLFW_MAXIMIZED` window hint had no effect
- - [Wayland] Bugfix: `glfwCreateWindow` could emit `GLFW_FEATURE_UNAVAILABLE`
+ - [Wayland] Bugfix: `GRWL_MAXIMIZED` window hint had no effect
+ - [Wayland] Bugfix: `glfwCreateWindow` could emit `GRWL_FEATURE_UNAVAILABLE`
  - [Wayland] Bugfix: `glfwPostEmptyEvent` sometimes had no effect (#1520,#1521)
  - [Wayland] Bugfix: `glfwRestoreWindow` assumed it was always in windowed mode
  - [Wayland] Bugfix: `glfwRestoreWindow` had no effect before first show
@@ -336,9 +336,9 @@ information on what to include when reporting a bug.
    termination
  - [Wayland] Bugfix: Disable key repeat mechanism when window loses input focus
  - [Wayland] Bugfix: Drag and drop data was misinterpreted as clipboard string
- - [Wayland] Bugfix: Fallback decorations emitted `GLFW_CURSOR_UNAVAILABLE`
+ - [Wayland] Bugfix: Fallback decorations emitted `GRWL_CURSOR_UNAVAILABLE`
    errors
- - [Wayland] Bugfix: Full screen window creation did not ignore `GLFW_VISIBLE`
+ - [Wayland] Bugfix: Full screen window creation did not ignore `GRWL_VISIBLE`
  - [Wayland] Bugfix: Hiding and then showing a window caused program abort on
    wlroots compositors (#1268)
  - [Wayland] Bugfix: If `glfwInit` failed it would close stdin
@@ -362,12 +362,12 @@ information on what to include when reporting a bug.
  - [Wayland] Bugfix: Size limits included frame size for fallback decorations
  - [Wayland] Bugfix: Some errors would cause clipboard string transfer to hang
  - [Wayland] Bugfix: Some keys were not repeating in Wayland (#1908)
- - [Wayland] Bugfix: Some keys were reported as wrong key or `GLFW_KEY_UNKNOWN`
+ - [Wayland] Bugfix: Some keys were reported as wrong key or `GRWL_KEY_UNKNOWN`
  - [Wayland] Bugfix: Text input did not repeat along with key repeat
- - [Wayland] Bugfix: The `GLFW_HAND_CURSOR` shape used the wrong image (#1432)
+ - [Wayland] Bugfix: The `GRWL_HAND_CURSOR` shape used the wrong image (#1432)
  - [Wayland] Bugfix: The `O_CLOEXEC` flag was not defined on FreeBSD
  - [Wayland] Bugfix: The OSMesa library was not unloaded on termination
- - [Wayland] Bugfix: Updating `GLFW_DECORATED` had no effect on server-side
+ - [Wayland] Bugfix: Updating `GRWL_DECORATED` had no effect on server-side
    decorations
  - [Wayland] Bugfix: Window content scale events were not emitted when monitor
    scale changed
@@ -378,15 +378,15 @@ information on what to include when reporting a bug.
  - [Wayland] Removed support for `wl_shell` (#1443)
  - [WGL] Disabled the DWM swap interval hack for Windows 8 and later (#1072)
  - [Win32] Added a version info resource to the GLFW DLL
- - [Win32] Added the `GLFW_WIN32_KEYBOARD_MENU` window hint for enabling access
+ - [Win32] Added the `GRWL_WIN32_KEYBOARD_MENU` window hint for enabling access
    to the window menu
- - [Win32] Bugfix: `Alt+PrtSc` would emit `GLFW_KEY_UNKNOWN` and a different
+ - [Win32] Bugfix: `Alt+PrtSc` would emit `GRWL_KEY_UNKNOWN` and a different
    scancode than `PrtSc` (#1993)
- - [Win32] Bugfix: `GLFW_INCLUDE_VULKAN` plus `VK_USE_PLATFORM_WIN32_KHR` caused
+ - [Win32] Bugfix: `GRWL_INCLUDE_VULKAN` plus `VK_USE_PLATFORM_WIN32_KHR` caused
    symbol redefinition (#1524)
- - [Win32] Bugfix: `GLFW_KEY_PAUSE` scancode from `glfwGetKeyScancode` did not
+ - [Win32] Bugfix: `GRWL_KEY_PAUSE` scancode from `glfwGetKeyScancode` did not
    match event scancode (#1993)
- - [Win32] Bugfix: `GLFW_SCALE_TO_MONITOR` had no effect on systems older than
+ - [Win32] Bugfix: `GRWL_SCALE_TO_MONITOR` had no effect on systems older than
    Windows 10 version 1703 (#1511)
  - [Win32] Bugfix: `glfwGetKeyName` could access out of bounds and return an
    invalid pointer
@@ -411,9 +411,9 @@ information on what to include when reporting a bug.
  - [Win32] Bugfix: Monitor functions could return invalid values after
    configuration change (#1761)
  - [Win32] Bugfix: Non-BMP Unicode codepoint input was reported as UTF-16
- - [Win32] Bugfix: Right shift emitted `GLFW_KEY_UNKNOWN` when using a CJK IME
+ - [Win32] Bugfix: Right shift emitted `GRWL_KEY_UNKNOWN` when using a CJK IME
    (#2050)
- - [Win32] Bugfix: Some synthetic key events were reported as `GLFW_KEY_UNKNOWN`
+ - [Win32] Bugfix: Some synthetic key events were reported as `GRWL_KEY_UNKNOWN`
    (#1623)
  - [Win32] Bugfix: Super key was not released after Win+V hotkey (#1622)
  - [Win32] Bugfix: The cursor position event was emitted before its cursor enter
@@ -422,10 +422,10 @@ information on what to include when reporting a bug.
    maximized window
  - [Win32] Bugfix: The foreground lock timeout was overridden, ignoring the user
  - [Win32] Bugfix: The OSMesa library was not unloaded on termination
- - [Win32] Bugfix: The window hint `GLFW_MAXIMIZED` did not move or resize the
+ - [Win32] Bugfix: The window hint `GRWL_MAXIMIZED` did not move or resize the
    window (#1499)
  - [Win32] Bugfix: Worker threads are now able to correctly detect if the GLFW
-   window has focus by getting the `GLFW_FOCUSED` attribute.
+   window has focus by getting the `GRWL_FOCUSED` attribute.
  - [Win32] Disabled framebuffer transparency on Windows 7 when DWM windows are
    opaque (#1512)
  - [Win32] Made hidden helper window use its own window class
@@ -439,15 +439,15 @@ information on what to include when reporting a bug.
  - [X11] Bugfix: A malformed response during selection transfer could cause a
    segfault
  - [X11] Bugfix: Any IM started after initialization would not be detected
- - [X11] Bugfix: Changing `GLFW_FLOATING` could leak memory
- - [X11] Bugfix: Changing `GLFW_FLOATING` on a hidden window could silently fail
- - [X11] Bugfix: Clearing `GLFW_FLOATING` on a hidden window caused invalid read
+ - [X11] Bugfix: Changing `GRWL_FLOATING` could leak memory
+ - [X11] Bugfix: Changing `GRWL_FLOATING` on a hidden window could silently fail
+ - [X11] Bugfix: Clearing `GRWL_FLOATING` on a hidden window caused invalid read
  - [X11] Bugfix: Content scale fallback value could be inconsistent (#1578)
  - [X11] Bugfix: Decorations could not be enabled after window creation (#1566)
  - [X11] Bugfix: Disabled cursor mode was interrupted by indicator windows
  - [X11] Bugfix: Dynamic loading on NetBSD failed due to soname differences
  - [X11] Bugfix: Dynamic loading on OpenBSD failed due to soname differences
- - [X11] Bugfix: Function keys were mapped to `GLFW_KEY_UNKNOWN` for some layout
+ - [X11] Bugfix: Function keys were mapped to `GRWL_KEY_UNKNOWN` for some layout
    combinations (#1598)
  - [X11] Bugfix: Icon pixel format conversion worked only by accident, relying
    on undefined behavior (#1986)

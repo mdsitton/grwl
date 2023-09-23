@@ -20,15 +20,15 @@ set(source_files
 set(extra_files DoxygenLayout.xml header.html footer.html extra.css spaces.svg)
 
 set(header_paths
-    "${GLFW_SOURCE_DIR}/include/GLFW/glfw3.h"
-    "${GLFW_SOURCE_DIR}/include/GLFW/glfw3native.h")
+    "${GRWL_SOURCE_DIR}/include/GRWL/grwl.h"
+    "${GRWL_SOURCE_DIR}/include/GRWL/grwlnative.h")
 
 # Format the source list into a Doxyfile INPUT value that Doxygen can parse
 foreach(path IN LISTS header_paths)
-    string(APPEND GLFW_DOXYGEN_INPUT " \\\n\"${path}\"")
+    string(APPEND GRWL_DOXYGEN_INPUT " \\\n\"${path}\"")
 endforeach()
 foreach(file IN LISTS source_files)
-    string(APPEND GLFW_DOXYGEN_INPUT " \\\n\"${CMAKE_CURRENT_SOURCE_DIR}/${file}\"")
+    string(APPEND GRWL_DOXYGEN_INPUT " \\\n\"${CMAKE_CURRENT_SOURCE_DIR}/${file}\"")
 endforeach()
 
 configure_file(Doxyfile.in Doxyfile @ONLY)
@@ -42,5 +42,5 @@ add_custom_command(OUTPUT "html/index.html"
                    VERBATIM)
 
 add_custom_target(docs ALL SOURCES "html/index.html")
-set_target_properties(docs PROPERTIES FOLDER "GLFW3")
+set_target_properties(docs PROPERTIES FOLDER "GRWL")
 

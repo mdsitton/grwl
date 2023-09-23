@@ -3,7 +3,7 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#if defined(_GLFW_BUILD_WEBGPU)
+#if defined(_GRWL_BUILD_WEBGPU)
 
     #include <webgpu/webgpu.h>
 
@@ -16,7 +16,7 @@
         #define WGPU_TARGET WGPU_TARGET_WINDOWS
     #elif defined(__APPLE__)
         #define WGPU_TARGET WGPU_TARGET_MACOS
-    #elif defined(_GLFW_WAYLAND)
+    #elif defined(_GRWL_WAYLAND)
         #define WGPU_TARGET WGPU_TARGET_LINUX_WAYLAND
     #else
         #define WGPU_TARGET WGPU_TARGET_LINUX_X11
@@ -27,28 +27,28 @@
         #include <QuartzCore/CAMetalLayer.h>
     #endif
 
-    #include <GLFW/glfw3.h>
+    #include <GRWL/grwl.h>
     #if WGPU_TARGET == WGPU_TARGET_MACOS
-        #define GLFW_EXPOSE_NATIVE_COCOA
+        #define GRWL_EXPOSE_NATIVE_COCOA
     #elif WGPU_TARGET == WGPU_TARGET_LINUX_X11
-        #define GLFW_EXPOSE_NATIVE_X11
+        #define GRWL_EXPOSE_NATIVE_X11
     #elif WGPU_TARGET == WGPU_TARGET_LINUX_WAYLAND
-        #define GLFW_EXPOSE_NATIVE_WAYLAND
+        #define GRWL_EXPOSE_NATIVE_WAYLAND
     #elif WGPU_TARGET == WGPU_TARGET_WINDOWS
-        #define GLFW_EXPOSE_NATIVE_WIN32
+        #define GRWL_EXPOSE_NATIVE_WIN32
     #endif
-    #include <GLFW/glfw3native.h>
+    #include <GRWL/grwlnative.h>
 
 //////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
+//////                        GRWL public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWAPI WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindow* window)
+GRWLAPI WGPUSurface grwlCreateWindowWGPUSurface(WGPUInstance instance, GRWLwindow* window)
 {
     #if WGPU_TARGET == WGPU_TARGET_MACOS
     {
         id metal_layer = NULL;
-        NSWindow* ns_window = glfwGetCocoaWindow(window);
+        NSWindow* ns_window = grwlGetCocoaWindow(window);
         [ns_window.contentView setWantsLayer:YES];
         metal_layer = [CAMetalLayer layer];
         [ns_window.contentView setLayer:metal_layer];
@@ -68,8 +68,8 @@ GLFWAPI WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindo
     }
     #elif WGPU_TARGET == WGPU_TARGET_LINUX_X11
     {
-        Display* x11_display = glfwGetX11Display();
-        Window x11_window = glfwGetX11Window(window);
+        Display* x11_display = grwlGetX11Display();
+        Window x11_window = grwlGetX11Window(window);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
                                              .label = NULL,
@@ -87,8 +87,8 @@ GLFWAPI WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindo
     }
     #elif WGPU_TARGET == WGPU_TARGET_LINUX_WAYLAND
     {
-        struct wl_display* wayland_display = glfwGetWaylandDisplay();
-        struct wl_surface* wayland_surface = glfwGetWaylandWindow(window);
+        struct wl_display* wayland_display = grwlGetWaylandDisplay();
+        struct wl_surface* wayland_surface = grwlGetWaylandWindow(window);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
                                              .label = NULL,
@@ -106,7 +106,7 @@ GLFWAPI WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindo
     }
     #elif WGPU_TARGET == WGPU_TARGET_WINDOWS
     {
-        HWND hwnd = glfwGetWin32Window(window);
+        HWND hwnd = grwlGetWin32Window(window);
         HINSTANCE hinstance = GetModuleHandle(NULL);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
@@ -127,4 +127,4 @@ GLFWAPI WGPUSurface glfwCreateWindowWGPUSurface(WGPUInstance instance, GLFWwindo
         #error "Unsupported WGPU_TARGET"
     #endif
 }
-#endif /* _GLFW_BUILD_WEBGPU */
+#endif /* _GRWL_BUILD_WEBGPU */

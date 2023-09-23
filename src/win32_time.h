@@ -5,11 +5,11 @@
 
 #include <windows.h>
 
-#define GLFW_WIN32_LIBRARY_TIMER_STATE _GLFWtimerWin32 win32;
+#define GRWL_WIN32_LIBRARY_TIMER_STATE _GRWLtimerWin32 win32;
 
 // Win32-specific global timer data
 //
-typedef struct _GLFWtimerWin32
+typedef struct _GRWLtimerWin32
 {
     uint64_t frequency;
-} _GLFWtimerWin32;
+} _GRWLtimerWin32;

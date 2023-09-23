@@ -6,8 +6,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,62 +30,62 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    printf("%0.2f Key %s\n", glfwGetTime(), action == GLFW_PRESS ? "pressed" : "released");
+    printf("%0.2f Key %s\n", grwlGetTime(), action == GRWL_PRESS ? "pressed" : "released");
 
-    if (action != GLFW_PRESS)
+    if (action != GRWL_PRESS)
     {
         return;
     }
 
     switch (key)
     {
-        case GLFW_KEY_I:
-            glfwIconifyWindow(window);
+        case GRWL_KEY_I:
+            grwlIconifyWindow(window);
             break;
-        case GLFW_KEY_M:
-            glfwMaximizeWindow(window);
+        case GRWL_KEY_M:
+            grwlMaximizeWindow(window);
             break;
-        case GLFW_KEY_R:
-            glfwRestoreWindow(window);
+        case GRWL_KEY_R:
+            grwlRestoreWindow(window);
             break;
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        case GRWL_KEY_ESCAPE:
+            grwlSetWindowShouldClose(window, GRWL_TRUE);
             break;
-        case GLFW_KEY_A:
-            glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, !glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY));
+        case GRWL_KEY_A:
+            grwlSetWindowAttrib(window, GRWL_AUTO_ICONIFY, !grwlGetWindowAttrib(window, GRWL_AUTO_ICONIFY));
             break;
-        case GLFW_KEY_B:
-            glfwSetWindowAttrib(window, GLFW_RESIZABLE, !glfwGetWindowAttrib(window, GLFW_RESIZABLE));
+        case GRWL_KEY_B:
+            grwlSetWindowAttrib(window, GRWL_RESIZABLE, !grwlGetWindowAttrib(window, GRWL_RESIZABLE));
             break;
-        case GLFW_KEY_D:
-            glfwSetWindowAttrib(window, GLFW_DECORATED, !glfwGetWindowAttrib(window, GLFW_DECORATED));
+        case GRWL_KEY_D:
+            grwlSetWindowAttrib(window, GRWL_DECORATED, !grwlGetWindowAttrib(window, GRWL_DECORATED));
             break;
-        case GLFW_KEY_F:
-            glfwSetWindowAttrib(window, GLFW_FLOATING, !glfwGetWindowAttrib(window, GLFW_FLOATING));
+        case GRWL_KEY_F:
+            grwlSetWindowAttrib(window, GRWL_FLOATING, !grwlGetWindowAttrib(window, GRWL_FLOATING));
             break;
-        case GLFW_KEY_F11:
-        case GLFW_KEY_ENTER:
+        case GRWL_KEY_F11:
+        case GRWL_KEY_ENTER:
         {
-            if (mods != GLFW_MOD_ALT)
+            if (mods != GRWL_MOD_ALT)
             {
                 return;
             }
 
-            if (glfwGetWindowMonitor(window))
+            if (grwlGetWindowMonitor(window))
             {
-                glfwSetWindowMonitor(window, NULL, windowed_xpos, windowed_ypos, windowed_width, windowed_height, 0);
+                grwlSetWindowMonitor(window, NULL, windowed_xpos, windowed_ypos, windowed_width, windowed_height, 0);
             }
             else
             {
-                GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+                GRWLmonitor* monitor = grwlGetPrimaryMonitor();
                 if (monitor)
                 {
-                    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-                    glfwGetWindowPos(window, &windowed_xpos, &windowed_ypos);
-                    glfwGetWindowSize(window, &windowed_width, &windowed_height);
-                    glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+                    const GRWLvidmode* mode = grwlGetVideoMode(monitor);
+                    grwlGetWindowPos(window, &windowed_xpos, &windowed_ypos);
+                    grwlGetWindowSize(window, &windowed_width, &windowed_height);
+                    grwlSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
                 }
             }
 
@@ -94,54 +94,54 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-static void window_size_callback(GLFWwindow* window, int width, int height)
+static void window_size_callback(GRWLwindow* window, int width, int height)
 {
-    printf("%0.2f Window resized to %ix%i\n", glfwGetTime(), width, height);
+    printf("%0.2f Window resized to %ix%i\n", grwlGetTime(), width, height);
 }
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+static void framebuffer_size_callback(GRWLwindow* window, int width, int height)
 {
-    printf("%0.2f Framebuffer resized to %ix%i\n", glfwGetTime(), width, height);
+    printf("%0.2f Framebuffer resized to %ix%i\n", grwlGetTime(), width, height);
 }
 
-static void window_focus_callback(GLFWwindow* window, int focused)
+static void window_focus_callback(GRWLwindow* window, int focused)
 {
-    printf("%0.2f Window %s\n", glfwGetTime(), focused ? "focused" : "defocused");
+    printf("%0.2f Window %s\n", grwlGetTime(), focused ? "focused" : "defocused");
 }
 
-static void window_iconify_callback(GLFWwindow* window, int iconified)
+static void window_iconify_callback(GRWLwindow* window, int iconified)
 {
-    printf("%0.2f Window %s\n", glfwGetTime(), iconified ? "iconified" : "uniconified");
+    printf("%0.2f Window %s\n", grwlGetTime(), iconified ? "iconified" : "uniconified");
 }
 
-static void window_maximize_callback(GLFWwindow* window, int maximized)
+static void window_maximize_callback(GRWLwindow* window, int maximized)
 {
-    printf("%0.2f Window %s\n", glfwGetTime(), maximized ? "maximized" : "unmaximized");
+    printf("%0.2f Window %s\n", grwlGetTime(), maximized ? "maximized" : "unmaximized");
 }
 
-static void window_refresh_callback(GLFWwindow* window)
+static void window_refresh_callback(GRWLwindow* window)
 {
-    printf("%0.2f Window refresh\n", glfwGetTime());
+    printf("%0.2f Window refresh\n", grwlGetTime());
 
-    glfwMakeContextCurrent(window);
+    grwlMakeContextCurrent(window);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    glfwSwapBuffers(window);
+    grwlSwapBuffers(window);
 }
 
-static GLFWwindow* create_window(GLFWmonitor* monitor)
+static GRWLwindow* create_window(GRWLmonitor* monitor)
 {
     int width, height;
-    GLFWwindow* window;
+    GRWLwindow* window;
 
     if (monitor)
     {
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        const GRWLvidmode* mode = grwlGetVideoMode(monitor);
 
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        grwlWindowHint(GRWL_REFRESH_RATE, mode->refreshRate);
+        grwlWindowHint(GRWL_RED_BITS, mode->redBits);
+        grwlWindowHint(GRWL_GREEN_BITS, mode->greenBits);
+        grwlWindowHint(GRWL_BLUE_BITS, mode->blueBits);
 
         width = mode->width;
         height = mode->height;
@@ -152,15 +152,15 @@ static GLFWwindow* create_window(GLFWmonitor* monitor)
         height = windowed_height;
     }
 
-    window = glfwCreateWindow(width, height, "Iconify", monitor, NULL);
+    window = grwlCreateWindow(width, height, "Iconify", monitor, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
     return window;
 }
@@ -168,15 +168,15 @@ static GLFWwindow* create_window(GLFWmonitor* monitor)
 int main(int argc, char** argv)
 {
     int ch, i, window_count;
-    int fullscreen = GLFW_FALSE, all_monitors = GLFW_FALSE;
-    GLFWwindow** windows;
+    int fullscreen = GRWL_FALSE, all_monitors = GRWL_FALSE;
+    GRWLwindow** windows;
 
     while ((ch = getopt(argc, argv, "afhn")) != -1)
     {
         switch (ch)
         {
             case 'a':
-                all_monitors = GLFW_TRUE;
+                all_monitors = GRWL_TRUE;
                 break;
 
             case 'h':
@@ -184,7 +184,7 @@ int main(int argc, char** argv)
                 exit(EXIT_SUCCESS);
 
             case 'f':
-                fullscreen = GLFW_TRUE;
+                fullscreen = GRWL_TRUE;
                 break;
 
             default:
@@ -193,9 +193,9 @@ int main(int argc, char** argv)
         }
     }
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
@@ -203,10 +203,10 @@ int main(int argc, char** argv)
     if (fullscreen && all_monitors)
     {
         int monitor_count;
-        GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
+        GRWLmonitor** monitors = grwlGetMonitors(&monitor_count);
 
         window_count = monitor_count;
-        windows = calloc(window_count, sizeof(GLFWwindow*));
+        windows = calloc(window_count, sizeof(GRWLwindow*));
 
         for (i = 0; i < monitor_count; i++)
         {
@@ -219,41 +219,41 @@ int main(int argc, char** argv)
     }
     else
     {
-        GLFWmonitor* monitor = NULL;
+        GRWLmonitor* monitor = NULL;
 
         if (fullscreen)
         {
-            monitor = glfwGetPrimaryMonitor();
+            monitor = grwlGetPrimaryMonitor();
         }
 
         window_count = 1;
-        windows = calloc(window_count, sizeof(GLFWwindow*));
+        windows = calloc(window_count, sizeof(GRWLwindow*));
         windows[0] = create_window(monitor);
     }
 
     for (i = 0; i < window_count; i++)
     {
-        glfwSetKeyCallback(windows[i], key_callback);
-        glfwSetFramebufferSizeCallback(windows[i], framebuffer_size_callback);
-        glfwSetWindowSizeCallback(windows[i], window_size_callback);
-        glfwSetWindowFocusCallback(windows[i], window_focus_callback);
-        glfwSetWindowIconifyCallback(windows[i], window_iconify_callback);
-        glfwSetWindowMaximizeCallback(windows[i], window_maximize_callback);
-        glfwSetWindowRefreshCallback(windows[i], window_refresh_callback);
+        grwlSetKeyCallback(windows[i], key_callback);
+        grwlSetFramebufferSizeCallback(windows[i], framebuffer_size_callback);
+        grwlSetWindowSizeCallback(windows[i], window_size_callback);
+        grwlSetWindowFocusCallback(windows[i], window_focus_callback);
+        grwlSetWindowIconifyCallback(windows[i], window_iconify_callback);
+        grwlSetWindowMaximizeCallback(windows[i], window_maximize_callback);
+        grwlSetWindowRefreshCallback(windows[i], window_refresh_callback);
 
         window_refresh_callback(windows[i]);
 
-        printf("Window is %s and %s\n", glfwGetWindowAttrib(windows[i], GLFW_ICONIFIED) ? "iconified" : "restored",
-               glfwGetWindowAttrib(windows[i], GLFW_FOCUSED) ? "focused" : "defocused");
+        printf("Window is %s and %s\n", grwlGetWindowAttrib(windows[i], GRWL_ICONIFIED) ? "iconified" : "restored",
+               grwlGetWindowAttrib(windows[i], GRWL_FOCUSED) ? "focused" : "defocused");
     }
 
     for (;;)
     {
-        glfwWaitEvents();
+        grwlWaitEvents();
 
         for (i = 0; i < window_count; i++)
         {
-            if (glfwWindowShouldClose(windows[i]))
+            if (grwlWindowShouldClose(windows[i]))
             {
                 break;
             }
@@ -268,6 +268,6 @@ int main(int argc, char** argv)
         fflush(stdout);
     }
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

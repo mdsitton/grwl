@@ -5,7 +5,7 @@
 
 #include "internal.h"
 
-#if defined(_GLFW_X11) || defined(_GLFW_WAYLAND)
+#if defined(_GRWL_X11) || defined(_GRWL_WAYLAND)
 
 /*
  * Marcus: This code was originally written by Markus G. Kuhn.
@@ -19,7 +19,7 @@
  *
  * The array keysymtab[] contains pairs of X11 keysym values for graphical
  * characters and the corresponding Unicode value. The function
- * _glfwKeySym2Unicode() maps a keysym onto a Unicode value using a binary
+ * _grwlKeySym2Unicode() maps a keysym onto a Unicode value using a binary
  * search, therefore keysymtab[] must remain SORTED by keysym value.
  *
  * We allow to represent any UCS character in the range U-00000000 to
@@ -876,12 +876,12 @@ static const struct codepair
                   { 0xffbd /*XKB_KEY_KP_Equal*/, '=' } };
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW internal API                      //////
+//////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
 // Convert XKB KeySym to Unicode
 //
-uint32_t _glfwKeySym2Unicode(unsigned int keysym)
+uint32_t _grwlKeySym2Unicode(unsigned int keysym)
 {
     int min = 0;
     int max = sizeof(keysymtab) / sizeof(struct codepair) - 1;
@@ -918,7 +918,7 @@ uint32_t _glfwKeySym2Unicode(unsigned int keysym)
     }
 
     // No matching Unicode value found
-    return GLFW_INVALID_CODEPOINT;
+    return GRWL_INVALID_CODEPOINT;
 }
 
-#endif // _GLFW_WAYLAND or _GLFW_X11
+#endif // _GRWL_WAYLAND or _GRWL_X11

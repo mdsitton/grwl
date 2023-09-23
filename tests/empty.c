@@ -8,14 +8,14 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static volatile int running = GLFW_TRUE;
+static volatile int running = GRWL_TRUE;
 
 static void error_callback(int error, const char* description)
 {
@@ -32,17 +32,17 @@ static int thread_main(void* data)
         time.tv_sec += 1;
         thrd_sleep(&time, NULL);
 
-        glfwPostEmptyEvent();
+        grwlPostEmptyEvent();
     }
 
     return 0;
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GRWL_KEY_ESCAPE && action == GRWL_PRESS)
     {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
     }
 }
 
@@ -55,33 +55,33 @@ int main(void)
 {
     int result;
     thrd_t thread;
-    GLFWwindow* window;
+    GRWLwindow* window;
 
     srand((unsigned int)time(NULL));
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(640, 480, "Empty Event Test", NULL, NULL);
+    window = grwlCreateWindow(640, 480, "Empty Event Test", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSetKeyCallback(window, key_callback);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlSetKeyCallback(window, key_callback);
 
     if (thrd_create(&thread, thread_main, NULL) != thrd_success)
     {
         fprintf(stderr, "Failed to create secondary thread\n");
 
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
@@ -91,25 +91,25 @@ int main(void)
         float r = nrand(), g = nrand(), b = nrand();
         float l = (float)sqrt(r * r + g * g + b * b);
 
-        glfwGetFramebufferSize(window, &width, &height);
+        grwlGetFramebufferSize(window, &width, &height);
 
         glViewport(0, 0, width, height);
         glClearColor(r / l, g / l, b / l, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
+        grwlSwapBuffers(window);
 
-        glfwWaitEvents();
+        grwlWaitEvents();
 
-        if (glfwWindowShouldClose(window))
+        if (grwlWindowShouldClose(window))
         {
-            running = GLFW_FALSE;
+            running = GRWL_FALSE;
         }
     }
 
-    glfwHideWindow(window);
+    grwlHideWindow(window);
     thrd_join(thread, &result);
-    glfwDestroyWindow(window);
+    grwlDestroyWindow(window);
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

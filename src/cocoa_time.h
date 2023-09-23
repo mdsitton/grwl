@@ -3,10 +3,10 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define GLFW_COCOA_LIBRARY_TIMER_STATE _GLFWtimerNS ns;
+#define GRWL_COCOA_LIBRARY_TIMER_STATE _GRWLtimerNS ns;
 
 // Cocoa-specific global timer data
-typedef struct _GLFWtimerNS
+typedef struct _GRWLtimerNS
 {
     uint64_t frequency;
-} _GLFWtimerNS;
+} _GRWLtimerNS;

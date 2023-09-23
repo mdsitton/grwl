@@ -5,30 +5,30 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_COCOA_TIMER)
+#if defined(GRWL_BUILD_COCOA_TIMER)
 
     #include <mach/mach_time.h>
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _glfwPlatformInitTimer(void)
+void _grwlPlatformInitTimer(void)
 {
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
 
-    _glfw.timer.ns.frequency = (info.denom * 1e9) / info.numer;
+    _grwl.timer.ns.frequency = (info.denom * 1e9) / info.numer;
 }
 
-uint64_t _glfwPlatformGetTimerValue(void)
+uint64_t _grwlPlatformGetTimerValue(void)
 {
     return mach_absolute_time();
 }
 
-uint64_t _glfwPlatformGetTimerFrequency(void)
+uint64_t _grwlPlatformGetTimerFrequency(void)
 {
-    return _glfw.timer.ns.frequency;
+    return _grwl.timer.ns.frequency;
 }
 
-#endif // GLFW_BUILD_COCOA_TIMER
+#endif // GRWL_BUILD_COCOA_TIMER

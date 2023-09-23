@@ -3,27 +3,27 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#define GLFW_WIN32_JOYSTICK_STATE _GLFWjoystickWin32 win32;
-#define GLFW_WIN32_LIBRARY_JOYSTICK_STATE
+#define GRWL_WIN32_JOYSTICK_STATE _GRWLjoystickWin32 win32;
+#define GRWL_WIN32_LIBRARY_JOYSTICK_STATE
 
 // Joystick element (axis, button or slider)
 //
-typedef struct _GLFWjoyobjectWin32
+typedef struct _GRWLjoyobjectWin32
 {
     int offset;
     int type;
-} _GLFWjoyobjectWin32;
+} _GRWLjoyobjectWin32;
 
 // Win32-specific per-joystick data
 //
-typedef struct _GLFWjoystickWin32
+typedef struct _GRWLjoystickWin32
 {
-    _GLFWjoyobjectWin32* objects;
+    _GRWLjoyobjectWin32* objects;
     int objectCount;
     IDirectInputDevice8W* device;
     DWORD index;
     GUID guid;
-} _GLFWjoystickWin32;
+} _GRWLjoystickWin32;
 
-void _glfwDetectJoystickConnectionWin32(void);
-void _glfwDetectJoystickDisconnectionWin32(void);
+void _grwlDetectJoystickConnectionWin32(void);
+void _grwlDetectJoystickDisconnectionWin32(void);

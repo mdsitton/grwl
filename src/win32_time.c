@@ -5,27 +5,27 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_WIN32_TIMER)
+#if defined(GRWL_BUILD_WIN32_TIMER)
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _glfwPlatformInitTimer(void)
+void _grwlPlatformInitTimer(void)
 {
-    QueryPerformanceFrequency((LARGE_INTEGER*)&_glfw.timer.win32.frequency);
+    QueryPerformanceFrequency((LARGE_INTEGER*)&_grwl.timer.win32.frequency);
 }
 
-uint64_t _glfwPlatformGetTimerValue(void)
+uint64_t _grwlPlatformGetTimerValue(void)
 {
     uint64_t value;
     QueryPerformanceCounter((LARGE_INTEGER*)&value);
     return value;
 }
 
-uint64_t _glfwPlatformGetTimerFrequency(void)
+uint64_t _grwlPlatformGetTimerFrequency(void)
 {
-    return _glfw.timer.win32.frequency;
+    return _grwl.timer.win32.frequency;
 }
 
-#endif // GLFW_BUILD_WIN32_TIMER
+#endif // GRWL_BUILD_WIN32_TIMER

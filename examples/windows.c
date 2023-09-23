@@ -25,8 +25,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,72 +35,69 @@ int main(int argc, char** argv)
 {
     int xpos, ypos, height;
     const char* description;
-    GLFWwindow* windows[4];
+    GRWLwindow* windows[4];
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
-        glfwGetError(&description);
+        grwlGetError(&description);
         printf("Error: %s\n", description);
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+    grwlWindowHint(GRWL_DECORATED, GRWL_FALSE);
 
-    glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &xpos, &ypos, NULL, &height);
+    grwlGetMonitorWorkarea(grwlGetPrimaryMonitor(), &xpos, &ypos, NULL, &height);
 
-    for (int i = 0;  i < 4;  i++)
+    for (int i = 0; i < 4; i++)
     {
         const int size = height / 5;
+
         const struct
         {
             float r, g, b;
-        } colors[] =
-        {
-            { 0.95f, 0.32f, 0.11f },
-            { 0.50f, 0.80f, 0.16f },
-            {   0.f, 0.68f, 0.94f },
-            { 0.98f, 0.74f, 0.04f }
+        } colors[] = {
+            { 0.95f, 0.32f, 0.11f }, { 0.50f, 0.80f, 0.16f }, { 0.f, 0.68f, 0.94f }, { 0.98f, 0.74f, 0.04f }
         };
 
         if (i > 0)
-            glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
+        {
+            grwlWindowHint(GRWL_FOCUS_ON_SHOW, GRWL_FALSE);
+        }
 
-        glfwWindowHint(GLFW_POSITION_X, xpos + size * (1 + (i & 1)));
-        glfwWindowHint(GLFW_POSITION_Y, ypos + size * (1 + (i >> 1)));
+        grwlWindowHint(GRWL_POSITION_X, xpos + size * (1 + (i & 1)));
+        grwlWindowHint(GRWL_POSITION_Y, ypos + size * (1 + (i >> 1)));
 
-        windows[i] = glfwCreateWindow(size, size, "Multi-Window Example", NULL, NULL);
+        windows[i] = grwlCreateWindow(size, size, "Multi-Window Example", NULL, NULL);
         if (!windows[i])
         {
-            glfwGetError(&description);
+            grwlGetError(&description);
             printf("Error: %s\n", description);
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
 
-        glfwSetInputMode(windows[i], GLFW_STICKY_KEYS, GLFW_TRUE);
+        grwlSetInputMode(windows[i], GRWL_STICKY_KEYS, GRWL_TRUE);
 
-        glfwMakeContextCurrent(windows[i]);
-        gladLoadGL(glfwGetProcAddress);
+        grwlMakeContextCurrent(windows[i]);
+        gladLoadGL(grwlGetProcAddress);
         glClearColor(colors[i].r, colors[i].g, colors[i].b, 1.f);
     }
 
     for (;;)
     {
-        for (int i = 0;  i < 4;  i++)
+        for (int i = 0; i < 4; i++)
         {
-            glfwMakeContextCurrent(windows[i]);
+            grwlMakeContextCurrent(windows[i]);
             glClear(GL_COLOR_BUFFER_BIT);
-            glfwSwapBuffers(windows[i]);
+            grwlSwapBuffers(windows[i]);
 
-            if (glfwWindowShouldClose(windows[i]) ||
-                glfwGetKey(windows[i], GLFW_KEY_ESCAPE))
+            if (grwlWindowShouldClose(windows[i]) || grwlGetKey(windows[i], GRWL_KEY_ESCAPE))
             {
-                glfwTerminate();
+                grwlTerminate();
                 exit(EXIT_SUCCESS);
             }
         }
 
-        glfwWaitEvents();
+        grwlWaitEvents();
     }
 }
-

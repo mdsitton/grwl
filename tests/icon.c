@@ -6,14 +6,14 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// a simple glfw logo
+// a simple grwl logo
 const char* const logo[] = { "................", "................", "...0000..0......", "...0.....0......",
                              "...0.00..0......", "...0..0..0......", "...0000..0000...", "................",
                              "................", "...000..0...0...", "...0....0...0...", "...000..0.0.0...",
@@ -29,12 +29,12 @@ const unsigned char icon_colors[5][4] = {
 
 static int cur_icon_color = 0;
 
-static void set_icon(GLFWwindow* window, int icon_color)
+static void set_icon(GRWLwindow* window, int icon_color)
 {
     int x, y;
     unsigned char pixels[16 * 16 * 4];
     unsigned char* target = pixels;
-    GLFWimage img = { 16, 16, pixels };
+    GRWLimage img = { 16, 16, pixels };
 
     for (y = 0; y < img.width; y++)
     {
@@ -53,64 +53,64 @@ static void set_icon(GLFWwindow* window, int icon_color)
         }
     }
 
-    glfwSetWindowIcon(window, 1, &img);
+    grwlSetWindowIcon(window, 1, &img);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action != GLFW_PRESS)
+    if (action != GRWL_PRESS)
     {
         return;
     }
 
     switch (key)
     {
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        case GRWL_KEY_ESCAPE:
+            grwlSetWindowShouldClose(window, GRWL_TRUE);
             break;
-        case GLFW_KEY_SPACE:
+        case GRWL_KEY_SPACE:
             cur_icon_color = (cur_icon_color + 1) % 5;
             set_icon(window, cur_icon_color);
             break;
-        case GLFW_KEY_X:
-            glfwSetWindowIcon(window, 0, NULL);
+        case GRWL_KEY_X:
+            grwlSetWindowIcon(window, 0, NULL);
             break;
     }
 }
 
 int main(int argc, char** argv)
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
-        fprintf(stderr, "Failed to initialize GLFW\n");
+        fprintf(stderr, "Failed to initialize GRWL\n");
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(200, 200, "Window Icon", NULL, NULL);
+    window = grwlCreateWindow(200, 200, "Window Icon", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
 
-        fprintf(stderr, "Failed to open GLFW window\n");
+        fprintf(stderr, "Failed to open GRWL window\n");
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
-    glfwSetKeyCallback(window, key_callback);
+    grwlSetKeyCallback(window, key_callback);
     set_icon(window, cur_icon_color);
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
-        glfwWaitEvents();
+        grwlSwapBuffers(window);
+        grwlWaitEvents();
     }
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
+    grwlDestroyWindow(window);
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

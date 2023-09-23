@@ -8,8 +8,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,33 +21,33 @@ static void error_callback(int error, const char* description)
 
 int main(void)
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(400, 400, "English 日本語 русский язык 官話", NULL, NULL);
+    window = grwlCreateWindow(400, 400, "English 日本語 русский язык 官話", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(1);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlSwapInterval(1);
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(window);
-        glfwWaitEvents();
+        grwlSwapBuffers(window);
+        grwlWaitEvents();
     }
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

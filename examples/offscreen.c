@@ -25,8 +25,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include "linmath.h"
 
@@ -40,32 +40,25 @@ static const struct
 {
     float x, y;
     float r, g, b;
-} vertices[3] =
-{
-    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
-    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
-    {   0.f,  0.6f, 0.f, 0.f, 1.f }
-};
+} vertices[3] = { { -0.6f, -0.4f, 1.f, 0.f, 0.f }, { 0.6f, -0.4f, 0.f, 1.f, 0.f }, { 0.f, 0.6f, 0.f, 0.f, 1.f } };
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec3 vCol;\n"
-"attribute vec2 vPos;\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"    color = vCol;\n"
-"}\n";
+static const char* vertex_shader_text = "#version 110\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec3 vCol;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "varying vec3 color;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "    color = vCol;\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"varying vec3 color;\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(color, 1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 110\n"
+                                          "varying vec3 color;\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(color, 1.0);\n"
+                                          "}\n";
 
 static void error_callback(int error, const char* description)
 {
@@ -74,7 +67,7 @@ static void error_callback(int error, const char* description)
 
 int main(void)
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
     GLuint vertex_buffer, vertex_shader, fragment_shader, program;
     GLint mvp_location, vpos_location, vcol_location;
     float ratio;
@@ -82,26 +75,28 @@ int main(void)
     mat4x4 mvp;
     char* buffer;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
+    grwlInitHint(GRWL_COCOA_MENUBAR, GRWL_FALSE);
 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-
-    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
-    if (!window)
+    if (!grwlInit())
     {
-        glfwTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 0);
+    grwlWindowHint(GRWL_VISIBLE, GRWL_FALSE);
+
+    window = grwlCreateWindow(640, 480, "Simple example", NULL, NULL);
+    if (!window)
+    {
+        grwlTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
     // NOTE: OpenGL error checks have been omitted for brevity
 
@@ -127,14 +122,12 @@ int main(void)
     vcol_location = glGetAttribLocation(program, "vCol");
 
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
     glEnableVertexAttribArray(vcol_location);
-    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) (sizeof(float) * 2));
+    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)(sizeof(float) * 2));
 
-    glfwGetFramebufferSize(window, &width, &height);
-    ratio = width / (float) height;
+    grwlGetFramebufferSize(window, &width, &height);
+    ratio = width / (float)height;
 
     glViewport(0, 0, width, height);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -142,7 +135,7 @@ int main(void)
     mat4x4_ortho(mvp, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 
     glUseProgram(program);
-    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+    glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glFinish();
 
@@ -150,16 +143,12 @@ int main(void)
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
     // Write image Y-flipped because OpenGL
-    stbi_write_png("offscreen.png",
-                   width, height, 4,
-                   buffer + (width * 4 * (height - 1)),
-                   -width * 4);
+    stbi_write_png("offscreen.png", width, height, 4, buffer + (width * 4 * (height - 1)), -width * 4);
 
     free(buffer);
 
-    glfwDestroyWindow(window);
+    grwlDestroyWindow(window);
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }
-

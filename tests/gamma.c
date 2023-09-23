@@ -7,8 +7,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #define NK_IMPLEMENTATION
 #define NK_INCLUDE_FIXED_TYPES
@@ -20,8 +20,8 @@
 #define NK_BUTTON_TRIGGER_ON_RELEASE
 #include <nuklear.h>
 
-#define NK_GLFW_GL2_IMPLEMENTATION
-#include <nuklear_glfw_gl2.h>
+#define NK_GRWL_GL2_IMPLEMENTATION
+#include <nuklear_grwl_gl2.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,11 +32,11 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
+    if (action == GRWL_PRESS && key == GRWL_KEY_ESCAPE)
     {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
     }
 }
 
@@ -61,37 +61,37 @@ static void chart_ramp_array(struct nk_context* nk, struct nk_color color, int c
 
 int main(int argc, char** argv)
 {
-    GLFWmonitor* monitor = NULL;
-    GLFWwindow* window;
-    GLFWgammaramp orig_ramp;
+    GRWLmonitor* monitor = NULL;
+    GRWLwindow* window;
+    GRWLgammaramp orig_ramp;
     struct nk_context* nk;
     struct nk_font_atlas* atlas;
     float gamma_value = 1.f;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
-    monitor = glfwGetPrimaryMonitor();
+    monitor = grwlGetPrimaryMonitor();
 
-    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
-    glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_TRUE);
+    grwlWindowHint(GRWL_SCALE_TO_MONITOR, GRWL_TRUE);
+    grwlWindowHint(GRWL_WIN32_KEYBOARD_MENU, GRWL_TRUE);
 
-    window = glfwCreateWindow(800, 400, "Gamma Test", NULL, NULL);
+    window = grwlCreateWindow(800, 400, "Gamma Test", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
     {
-        const GLFWgammaramp* ramp = glfwGetGammaRamp(monitor);
+        const GRWLgammaramp* ramp = grwlGetGammaRamp(monitor);
         if (!ramp)
         {
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
 
@@ -105,43 +105,43 @@ int main(int argc, char** argv)
         memcpy(orig_ramp.blue, ramp->blue, array_size);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(1);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlSwapInterval(1);
 
-    nk = nk_glfw3_init(window, NK_GLFW3_INSTALL_CALLBACKS);
-    nk_glfw3_font_stash_begin(&atlas);
-    nk_glfw3_font_stash_end();
+    nk = nk_grwl_init(window, NK_GRWL_INSTALL_CALLBACKS);
+    nk_grwl_font_stash_begin(&atlas);
+    nk_grwl_font_stash_end();
 
-    glfwSetKeyCallback(window, key_callback);
+    grwlSetKeyCallback(window, key_callback);
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         int width, height;
         struct nk_rect area;
 
-        glfwGetWindowSize(window, &width, &height);
+        grwlGetWindowSize(window, &width, &height);
         area = nk_rect(0.f, 0.f, (float)width, (float)height);
         nk_window_set_bounds(nk, "", area);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        nk_glfw3_new_frame();
+        nk_grwl_new_frame();
         if (nk_begin(nk, "", area, 0))
         {
-            const GLFWgammaramp* ramp;
+            const GRWLgammaramp* ramp;
 
             nk_layout_row_dynamic(nk, 30, 3);
             if (nk_slider_float(nk, 0.1f, &gamma_value, 5.f, 0.1f))
             {
-                glfwSetGamma(monitor, gamma_value);
+                grwlSetGamma(monitor, gamma_value);
             }
             nk_labelf(nk, NK_TEXT_LEFT, "%0.1f", gamma_value);
             if (nk_button_label(nk, "Revert"))
             {
-                glfwSetGammaRamp(monitor, &orig_ramp);
+                grwlSetGammaRamp(monitor, &orig_ramp);
             }
 
-            ramp = glfwGetGammaRamp(monitor);
+            ramp = grwlGetGammaRamp(monitor);
 
             nk_layout_row_dynamic(nk, height - 60.f, 3);
             chart_ramp_array(nk, nk_rgb(255, 0, 0), ramp->size, ramp->red);
@@ -150,17 +150,17 @@ int main(int argc, char** argv)
         }
 
         nk_end(nk);
-        nk_glfw3_render(NK_ANTI_ALIASING_ON);
+        nk_grwl_render(NK_ANTI_ALIASING_ON);
 
-        glfwSwapBuffers(window);
-        glfwWaitEventsTimeout(1.0);
+        grwlSwapBuffers(window);
+        grwlWaitEventsTimeout(1.0);
     }
 
     free(orig_ramp.red);
     free(orig_ramp.green);
     free(orig_ramp.blue);
 
-    nk_glfw3_shutdown();
-    glfwTerminate();
+    nk_grwl_shutdown();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

@@ -1,13 +1,13 @@
 //===========================================================================
-// This file is part of GRWL(a fork of GLFW) licensed under the Zlib license.
+// This file is part of GRWL(a fork of GRWL) licensed under the Zlib license.
 // See file LICENSE.md for full license details
 //===========================================================================
 // Test user context creation
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 #include <stdio.h>
 
 static void error_callback(int error, const char* description)
@@ -17,86 +17,86 @@ static void error_callback(int error, const char* description)
 
 int main(void)
 {
-    GLFWwindow* window;
-    GLFWusercontext* usercontext;
+    GRWLwindow* window;
+    GRWLusercontext* usercontext;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
     /* Initialize the library */
-    if (!glfwInit())
+    if (!grwlInit())
     {
         return -1;
     }
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "User Context", NULL, NULL);
+    window = grwlCreateWindow(640, 480, "User Context", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         return -1;
     }
 
     /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
     /* make a new context */
-    usercontext = glfwCreateUserContext(window);
+    usercontext = grwlCreateUserContext(window);
     if (!usercontext)
     {
         fprintf(stderr, "Failed to create user context\n");
-        glfwTerminate();
+        grwlTerminate();
         return -1;
     }
 
     /* set the user context current */
-    glfwMakeUserContextCurrent(usercontext);
+    grwlMakeUserContextCurrent(usercontext);
 
-    if (glfwGetCurrentContext() != NULL)
+    if (grwlGetCurrentContext() != NULL)
     {
-        fprintf(stderr, "Current glfw window context not NULL after glfwMakeUserContextCurrent\n");
-        glfwTerminate();
+        fprintf(stderr, "Current grwl window context not NULL after grwlMakeUserContextCurrent\n");
+        grwlTerminate();
         return -1;
     }
-    if (glfwGetCurrentUserContext() != usercontext)
+    if (grwlGetCurrentUserContext() != usercontext)
     {
-        fprintf(stderr, "Current user context not correct after glfwMakeUserContextCurrent\n");
-        glfwTerminate();
+        fprintf(stderr, "Current user context not correct after grwlMakeUserContextCurrent\n");
+        grwlTerminate();
         return -1;
     }
 
     /* set the window context current */
-    glfwMakeContextCurrent(window);
+    grwlMakeContextCurrent(window);
 
-    if (glfwGetCurrentUserContext() != NULL)
+    if (grwlGetCurrentUserContext() != NULL)
     {
-        fprintf(stderr, "Current user context not NULL after glfwMakeContextCurrent\n");
-        glfwTerminate();
+        fprintf(stderr, "Current user context not NULL after grwlMakeContextCurrent\n");
+        grwlTerminate();
         return -1;
     }
-    if (glfwGetCurrentContext() != window)
+    if (grwlGetCurrentContext() != window)
     {
-        fprintf(stderr, "Current glfw window context not correct after glfwMakeContextCurrent\n");
-        glfwTerminate();
+        fprintf(stderr, "Current grwl window context not correct after grwlMakeContextCurrent\n");
+        grwlTerminate();
         return -1;
     }
 
     glClearColor(0.4f, 0.3f, 0.4f, 1.0f);
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        grwlSwapBuffers(window);
 
         /* Poll for and process events */
-        glfwPollEvents();
+        grwlPollEvents();
     }
 
-    glfwDestroyUserContext(usercontext);
-    glfwTerminate();
+    grwlDestroyUserContext(usercontext);
+    grwlTerminate();
     return 0;
 }

@@ -5,25 +5,25 @@
 
 #include "internal.h"
 
-#if defined(GLFW_BUILD_WIN32_MODULE)
+#if defined(GRWL_BUILD_WIN32_MODULE)
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void* _glfwPlatformLoadModule(const char* path)
+void* _grwlPlatformLoadModule(const char* path)
 {
     return LoadLibraryA(path);
 }
 
-void _glfwPlatformFreeModule(void* module)
+void _grwlPlatformFreeModule(void* module)
 {
     FreeLibrary((HMODULE)module);
 }
 
-GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name)
+GRWLproc _grwlPlatformGetModuleSymbol(void* module, const char* name)
 {
-    return (GLFWproc)GetProcAddress((HMODULE)module, name);
+    return (GRWLproc)GetProcAddress((HMODULE)module, name);
 }
 
-#endif // GLFW_BUILD_WIN32_MODULE
+#endif // GRWL_BUILD_WIN32_MODULE

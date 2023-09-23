@@ -3,7 +3,7 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#if defined(_GLFW_X11)
+#if defined(_GRWL_X11)
     #include <unistd.h>
     #include <signal.h>
     #include <stdint.h>
@@ -189,110 +189,110 @@ typedef Bool (*PFN_XUnregisterIMInstantiateCallback)(Display*, void*, char*, cha
 typedef int (*PFN_Xutf8LookupString)(XIC, XKeyPressedEvent*, char*, int, KeySym*, Status*);
 typedef void (*PFN_Xutf8SetWMProperties)(Display*, Window, const char*, const char*, char**, int, XSizeHints*,
                                          XWMHints*, XClassHint*);
-    #define XAllocClassHint _glfw.x11.xlib.AllocClassHint
-    #define XAllocSizeHints _glfw.x11.xlib.AllocSizeHints
-    #define XAllocWMHints _glfw.x11.xlib.AllocWMHints
-    #define XChangeProperty _glfw.x11.xlib.ChangeProperty
-    #define XChangeWindowAttributes _glfw.x11.xlib.ChangeWindowAttributes
-    #define XCheckIfEvent _glfw.x11.xlib.CheckIfEvent
-    #define XCheckTypedWindowEvent _glfw.x11.xlib.CheckTypedWindowEvent
-    #define XCloseDisplay _glfw.x11.xlib.CloseDisplay
-    #define XCloseIM _glfw.x11.xlib.CloseIM
-    #define XConvertSelection _glfw.x11.xlib.ConvertSelection
-    #define XCreateColormap _glfw.x11.xlib.CreateColormap
-    #define XCreateFontCursor _glfw.x11.xlib.CreateFontCursor
-    #define XCreateIC _glfw.x11.xlib.CreateIC
-    #define XCreateRegion _glfw.x11.xlib.CreateRegion
-    #define XCreateWindow _glfw.x11.xlib.CreateWindow
-    #define XDefineCursor _glfw.x11.xlib.DefineCursor
-    #define XDeleteContext _glfw.x11.xlib.DeleteContext
-    #define XDeleteProperty _glfw.x11.xlib.DeleteProperty
-    #define XDestroyIC _glfw.x11.xlib.DestroyIC
-    #define XDestroyRegion _glfw.x11.xlib.DestroyRegion
-    #define XDestroyWindow _glfw.x11.xlib.DestroyWindow
-    #define XDisplayKeycodes _glfw.x11.xlib.DisplayKeycodes
-    #define XEventsQueued _glfw.x11.xlib.EventsQueued
-    #define XFilterEvent _glfw.x11.xlib.FilterEvent
-    #define XFindContext _glfw.x11.xlib.FindContext
-    #define XFlush _glfw.x11.xlib.Flush
-    #define XFree _glfw.x11.xlib.Free
-    #define XFreeColormap _glfw.x11.xlib.FreeColormap
-    #define XFreeCursor _glfw.x11.xlib.FreeCursor
-    #define XFreeEventData _glfw.x11.xlib.FreeEventData
-    #define XGetAtomName _glfw.x11.xlib.GetAtomName
-    #define XGetErrorText _glfw.x11.xlib.GetErrorText
-    #define XGetEventData _glfw.x11.xlib.GetEventData
-    #define XGetICValues _glfw.x11.xlib.GetICValues
-    #define XGetIMValues _glfw.x11.xlib.GetIMValues
-    #define XGetInputFocus _glfw.x11.xlib.GetInputFocus
-    #define XGetKeyboardMapping _glfw.x11.xlib.GetKeyboardMapping
-    #define XGetScreenSaver _glfw.x11.xlib.GetScreenSaver
-    #define XGetSelectionOwner _glfw.x11.xlib.GetSelectionOwner
-    #define XGetVisualInfo _glfw.x11.xlib.GetVisualInfo
-    #define XGetWMNormalHints _glfw.x11.xlib.GetWMNormalHints
-    #define XGetWindowAttributes _glfw.x11.xlib.GetWindowAttributes
-    #define XGetWindowProperty _glfw.x11.xlib.GetWindowProperty
-    #define XGrabPointer _glfw.x11.xlib.GrabPointer
-    #define XIconifyWindow _glfw.x11.xlib.IconifyWindow
-    #define XInternAtom _glfw.x11.xlib.InternAtom
-    #define XLookupString _glfw.x11.xlib.LookupString
-    #define XMapRaised _glfw.x11.xlib.MapRaised
-    #define XMapWindow _glfw.x11.xlib.MapWindow
-    #define XMoveResizeWindow _glfw.x11.xlib.MoveResizeWindow
-    #define XMoveWindow _glfw.x11.xlib.MoveWindow
-    #define XNextEvent _glfw.x11.xlib.NextEvent
-    #define XOpenIM _glfw.x11.xlib.OpenIM
-    #define XPeekEvent _glfw.x11.xlib.PeekEvent
-    #define XPending _glfw.x11.xlib.Pending
-    #define XQueryExtension _glfw.x11.xlib.QueryExtension
-    #define XQueryPointer _glfw.x11.xlib.QueryPointer
-    #define XRaiseWindow _glfw.x11.xlib.RaiseWindow
-    #define XRegisterIMInstantiateCallback _glfw.x11.xlib.RegisterIMInstantiateCallback
-    #define XResizeWindow _glfw.x11.xlib.ResizeWindow
-    #define XResourceManagerString _glfw.x11.xlib.ResourceManagerString
-    #define XSaveContext _glfw.x11.xlib.SaveContext
-    #define XSelectInput _glfw.x11.xlib.SelectInput
-    #define XSendEvent _glfw.x11.xlib.SendEvent
-    #define XSetClassHint _glfw.x11.xlib.SetClassHint
-    #define XSetErrorHandler _glfw.x11.xlib.SetErrorHandler
-    #define XSetICFocus _glfw.x11.xlib.SetICFocus
-    #define XSetICValues _glfw.x11.xlib.SetICValues
-    #define XSetIMValues _glfw.x11.xlib.SetIMValues
-    #define XSetInputFocus _glfw.x11.xlib.SetInputFocus
-    #define XSetLocaleModifiers _glfw.x11.xlib.SetLocaleModifiers
-    #define XSetScreenSaver _glfw.x11.xlib.SetScreenSaver
-    #define XSetSelectionOwner _glfw.x11.xlib.SetSelectionOwner
-    #define XSetWMHints _glfw.x11.xlib.SetWMHints
-    #define XSetWMNormalHints _glfw.x11.xlib.SetWMNormalHints
-    #define XSetWMProtocols _glfw.x11.xlib.SetWMProtocols
-    #define XSupportsLocale _glfw.x11.xlib.SupportsLocale
-    #define XSync _glfw.x11.xlib.Sync
-    #define XTranslateCoordinates _glfw.x11.xlib.TranslateCoordinates
-    #define XUndefineCursor _glfw.x11.xlib.UndefineCursor
-    #define XUngrabPointer _glfw.x11.xlib.UngrabPointer
-    #define XUnmapWindow _glfw.x11.xlib.UnmapWindow
-    #define XUnsetICFocus _glfw.x11.xlib.UnsetICFocus
-    #define XVaCreateNestedList _glfw.x11.xlib.VaCreateNestedList
-    #define XVisualIDFromVisual _glfw.x11.xlib.VisualIDFromVisual
-    #define XWarpPointer _glfw.x11.xlib.WarpPointer
-    #define XkbAllocKeyboard _glfw.x11.xkb.AllocKeyboard
-    #define XkbFreeKeyboard _glfw.x11.xkb.FreeKeyboard
-    #define XkbFreeNames _glfw.x11.xkb.FreeNames
-    #define XkbGetMap _glfw.x11.xkb.GetMap
-    #define XkbGetNames _glfw.x11.xkb.GetNames
-    #define XkbGetState _glfw.x11.xkb.GetState
-    #define XkbKeycodeToKeysym _glfw.x11.xkb.KeycodeToKeysym
-    #define XkbQueryExtension _glfw.x11.xkb.QueryExtension
-    #define XkbSelectEventDetails _glfw.x11.xkb.SelectEventDetails
-    #define XkbSetDetectableAutoRepeat _glfw.x11.xkb.SetDetectableAutoRepeat
-    #define XmbResetIC _glfw.x11.xlib.mbResetIC
-    #define XrmDestroyDatabase _glfw.x11.xrm.DestroyDatabase
-    #define XrmGetResource _glfw.x11.xrm.GetResource
-    #define XrmGetStringDatabase _glfw.x11.xrm.GetStringDatabase
-    #define XrmUniqueQuark _glfw.x11.xrm.UniqueQuark
-    #define XUnregisterIMInstantiateCallback _glfw.x11.xlib.UnregisterIMInstantiateCallback
-    #define Xutf8LookupString _glfw.x11.xlib.utf8LookupString
-    #define Xutf8SetWMProperties _glfw.x11.xlib.utf8SetWMProperties
+    #define XAllocClassHint _grwl.x11.xlib.AllocClassHint
+    #define XAllocSizeHints _grwl.x11.xlib.AllocSizeHints
+    #define XAllocWMHints _grwl.x11.xlib.AllocWMHints
+    #define XChangeProperty _grwl.x11.xlib.ChangeProperty
+    #define XChangeWindowAttributes _grwl.x11.xlib.ChangeWindowAttributes
+    #define XCheckIfEvent _grwl.x11.xlib.CheckIfEvent
+    #define XCheckTypedWindowEvent _grwl.x11.xlib.CheckTypedWindowEvent
+    #define XCloseDisplay _grwl.x11.xlib.CloseDisplay
+    #define XCloseIM _grwl.x11.xlib.CloseIM
+    #define XConvertSelection _grwl.x11.xlib.ConvertSelection
+    #define XCreateColormap _grwl.x11.xlib.CreateColormap
+    #define XCreateFontCursor _grwl.x11.xlib.CreateFontCursor
+    #define XCreateIC _grwl.x11.xlib.CreateIC
+    #define XCreateRegion _grwl.x11.xlib.CreateRegion
+    #define XCreateWindow _grwl.x11.xlib.CreateWindow
+    #define XDefineCursor _grwl.x11.xlib.DefineCursor
+    #define XDeleteContext _grwl.x11.xlib.DeleteContext
+    #define XDeleteProperty _grwl.x11.xlib.DeleteProperty
+    #define XDestroyIC _grwl.x11.xlib.DestroyIC
+    #define XDestroyRegion _grwl.x11.xlib.DestroyRegion
+    #define XDestroyWindow _grwl.x11.xlib.DestroyWindow
+    #define XDisplayKeycodes _grwl.x11.xlib.DisplayKeycodes
+    #define XEventsQueued _grwl.x11.xlib.EventsQueued
+    #define XFilterEvent _grwl.x11.xlib.FilterEvent
+    #define XFindContext _grwl.x11.xlib.FindContext
+    #define XFlush _grwl.x11.xlib.Flush
+    #define XFree _grwl.x11.xlib.Free
+    #define XFreeColormap _grwl.x11.xlib.FreeColormap
+    #define XFreeCursor _grwl.x11.xlib.FreeCursor
+    #define XFreeEventData _grwl.x11.xlib.FreeEventData
+    #define XGetAtomName _grwl.x11.xlib.GetAtomName
+    #define XGetErrorText _grwl.x11.xlib.GetErrorText
+    #define XGetEventData _grwl.x11.xlib.GetEventData
+    #define XGetICValues _grwl.x11.xlib.GetICValues
+    #define XGetIMValues _grwl.x11.xlib.GetIMValues
+    #define XGetInputFocus _grwl.x11.xlib.GetInputFocus
+    #define XGetKeyboardMapping _grwl.x11.xlib.GetKeyboardMapping
+    #define XGetScreenSaver _grwl.x11.xlib.GetScreenSaver
+    #define XGetSelectionOwner _grwl.x11.xlib.GetSelectionOwner
+    #define XGetVisualInfo _grwl.x11.xlib.GetVisualInfo
+    #define XGetWMNormalHints _grwl.x11.xlib.GetWMNormalHints
+    #define XGetWindowAttributes _grwl.x11.xlib.GetWindowAttributes
+    #define XGetWindowProperty _grwl.x11.xlib.GetWindowProperty
+    #define XGrabPointer _grwl.x11.xlib.GrabPointer
+    #define XIconifyWindow _grwl.x11.xlib.IconifyWindow
+    #define XInternAtom _grwl.x11.xlib.InternAtom
+    #define XLookupString _grwl.x11.xlib.LookupString
+    #define XMapRaised _grwl.x11.xlib.MapRaised
+    #define XMapWindow _grwl.x11.xlib.MapWindow
+    #define XMoveResizeWindow _grwl.x11.xlib.MoveResizeWindow
+    #define XMoveWindow _grwl.x11.xlib.MoveWindow
+    #define XNextEvent _grwl.x11.xlib.NextEvent
+    #define XOpenIM _grwl.x11.xlib.OpenIM
+    #define XPeekEvent _grwl.x11.xlib.PeekEvent
+    #define XPending _grwl.x11.xlib.Pending
+    #define XQueryExtension _grwl.x11.xlib.QueryExtension
+    #define XQueryPointer _grwl.x11.xlib.QueryPointer
+    #define XRaiseWindow _grwl.x11.xlib.RaiseWindow
+    #define XRegisterIMInstantiateCallback _grwl.x11.xlib.RegisterIMInstantiateCallback
+    #define XResizeWindow _grwl.x11.xlib.ResizeWindow
+    #define XResourceManagerString _grwl.x11.xlib.ResourceManagerString
+    #define XSaveContext _grwl.x11.xlib.SaveContext
+    #define XSelectInput _grwl.x11.xlib.SelectInput
+    #define XSendEvent _grwl.x11.xlib.SendEvent
+    #define XSetClassHint _grwl.x11.xlib.SetClassHint
+    #define XSetErrorHandler _grwl.x11.xlib.SetErrorHandler
+    #define XSetICFocus _grwl.x11.xlib.SetICFocus
+    #define XSetICValues _grwl.x11.xlib.SetICValues
+    #define XSetIMValues _grwl.x11.xlib.SetIMValues
+    #define XSetInputFocus _grwl.x11.xlib.SetInputFocus
+    #define XSetLocaleModifiers _grwl.x11.xlib.SetLocaleModifiers
+    #define XSetScreenSaver _grwl.x11.xlib.SetScreenSaver
+    #define XSetSelectionOwner _grwl.x11.xlib.SetSelectionOwner
+    #define XSetWMHints _grwl.x11.xlib.SetWMHints
+    #define XSetWMNormalHints _grwl.x11.xlib.SetWMNormalHints
+    #define XSetWMProtocols _grwl.x11.xlib.SetWMProtocols
+    #define XSupportsLocale _grwl.x11.xlib.SupportsLocale
+    #define XSync _grwl.x11.xlib.Sync
+    #define XTranslateCoordinates _grwl.x11.xlib.TranslateCoordinates
+    #define XUndefineCursor _grwl.x11.xlib.UndefineCursor
+    #define XUngrabPointer _grwl.x11.xlib.UngrabPointer
+    #define XUnmapWindow _grwl.x11.xlib.UnmapWindow
+    #define XUnsetICFocus _grwl.x11.xlib.UnsetICFocus
+    #define XVaCreateNestedList _grwl.x11.xlib.VaCreateNestedList
+    #define XVisualIDFromVisual _grwl.x11.xlib.VisualIDFromVisual
+    #define XWarpPointer _grwl.x11.xlib.WarpPointer
+    #define XkbAllocKeyboard _grwl.x11.xkb.AllocKeyboard
+    #define XkbFreeKeyboard _grwl.x11.xkb.FreeKeyboard
+    #define XkbFreeNames _grwl.x11.xkb.FreeNames
+    #define XkbGetMap _grwl.x11.xkb.GetMap
+    #define XkbGetNames _grwl.x11.xkb.GetNames
+    #define XkbGetState _grwl.x11.xkb.GetState
+    #define XkbKeycodeToKeysym _grwl.x11.xkb.KeycodeToKeysym
+    #define XkbQueryExtension _grwl.x11.xkb.QueryExtension
+    #define XkbSelectEventDetails _grwl.x11.xkb.SelectEventDetails
+    #define XkbSetDetectableAutoRepeat _grwl.x11.xkb.SetDetectableAutoRepeat
+    #define XmbResetIC _grwl.x11.xlib.mbResetIC
+    #define XrmDestroyDatabase _grwl.x11.xrm.DestroyDatabase
+    #define XrmGetResource _grwl.x11.xrm.GetResource
+    #define XrmGetStringDatabase _grwl.x11.xrm.GetStringDatabase
+    #define XrmUniqueQuark _grwl.x11.xrm.UniqueQuark
+    #define XUnregisterIMInstantiateCallback _grwl.x11.xlib.UnregisterIMInstantiateCallback
+    #define Xutf8LookupString _grwl.x11.xlib.utf8LookupString
+    #define Xutf8SetWMProperties _grwl.x11.xlib.utf8SetWMProperties
 
 typedef XRRCrtcGamma* (*PFN_XRRAllocGamma)(int);
 typedef void (*PFN_XRRFreeCrtcInfo)(XRRCrtcInfo*);
@@ -312,23 +312,23 @@ typedef Status (*PFN_XRRSetCrtcConfig)(Display*, XRRScreenResources*, RRCrtc, Ti
                                        RROutput*, int);
 typedef void (*PFN_XRRSetCrtcGamma)(Display*, RRCrtc, XRRCrtcGamma*);
 typedef int (*PFN_XRRUpdateConfiguration)(XEvent*);
-    #define XRRAllocGamma _glfw.x11.randr.AllocGamma
-    #define XRRFreeCrtcInfo _glfw.x11.randr.FreeCrtcInfo
-    #define XRRFreeGamma _glfw.x11.randr.FreeGamma
-    #define XRRFreeOutputInfo _glfw.x11.randr.FreeOutputInfo
-    #define XRRFreeScreenResources _glfw.x11.randr.FreeScreenResources
-    #define XRRGetCrtcGamma _glfw.x11.randr.GetCrtcGamma
-    #define XRRGetCrtcGammaSize _glfw.x11.randr.GetCrtcGammaSize
-    #define XRRGetCrtcInfo _glfw.x11.randr.GetCrtcInfo
-    #define XRRGetOutputInfo _glfw.x11.randr.GetOutputInfo
-    #define XRRGetOutputPrimary _glfw.x11.randr.GetOutputPrimary
-    #define XRRGetScreenResourcesCurrent _glfw.x11.randr.GetScreenResourcesCurrent
-    #define XRRQueryExtension _glfw.x11.randr.QueryExtension
-    #define XRRQueryVersion _glfw.x11.randr.QueryVersion
-    #define XRRSelectInput _glfw.x11.randr.SelectInput
-    #define XRRSetCrtcConfig _glfw.x11.randr.SetCrtcConfig
-    #define XRRSetCrtcGamma _glfw.x11.randr.SetCrtcGamma
-    #define XRRUpdateConfiguration _glfw.x11.randr.UpdateConfiguration
+    #define XRRAllocGamma _grwl.x11.randr.AllocGamma
+    #define XRRFreeCrtcInfo _grwl.x11.randr.FreeCrtcInfo
+    #define XRRFreeGamma _grwl.x11.randr.FreeGamma
+    #define XRRFreeOutputInfo _grwl.x11.randr.FreeOutputInfo
+    #define XRRFreeScreenResources _grwl.x11.randr.FreeScreenResources
+    #define XRRGetCrtcGamma _grwl.x11.randr.GetCrtcGamma
+    #define XRRGetCrtcGammaSize _grwl.x11.randr.GetCrtcGammaSize
+    #define XRRGetCrtcInfo _grwl.x11.randr.GetCrtcInfo
+    #define XRRGetOutputInfo _grwl.x11.randr.GetOutputInfo
+    #define XRRGetOutputPrimary _grwl.x11.randr.GetOutputPrimary
+    #define XRRGetScreenResourcesCurrent _grwl.x11.randr.GetScreenResourcesCurrent
+    #define XRRQueryExtension _grwl.x11.randr.QueryExtension
+    #define XRRQueryVersion _grwl.x11.randr.QueryVersion
+    #define XRRSelectInput _grwl.x11.randr.SelectInput
+    #define XRRSetCrtcConfig _grwl.x11.randr.SetCrtcConfig
+    #define XRRSetCrtcGamma _grwl.x11.randr.SetCrtcGamma
+    #define XRRUpdateConfiguration _grwl.x11.randr.UpdateConfiguration
 
 typedef XcursorImage* (*PFN_XcursorImageCreate)(int, int);
 typedef void (*PFN_XcursorImageDestroy)(XcursorImage*);
@@ -336,56 +336,56 @@ typedef Cursor (*PFN_XcursorImageLoadCursor)(Display*, const XcursorImage*);
 typedef char* (*PFN_XcursorGetTheme)(Display*);
 typedef int (*PFN_XcursorGetDefaultSize)(Display*);
 typedef XcursorImage* (*PFN_XcursorLibraryLoadImage)(const char*, const char*, int);
-    #define XcursorImageCreate _glfw.x11.xcursor.ImageCreate
-    #define XcursorImageDestroy _glfw.x11.xcursor.ImageDestroy
-    #define XcursorImageLoadCursor _glfw.x11.xcursor.ImageLoadCursor
-    #define XcursorGetTheme _glfw.x11.xcursor.GetTheme
-    #define XcursorGetDefaultSize _glfw.x11.xcursor.GetDefaultSize
-    #define XcursorLibraryLoadImage _glfw.x11.xcursor.LibraryLoadImage
+    #define XcursorImageCreate _grwl.x11.xcursor.ImageCreate
+    #define XcursorImageDestroy _grwl.x11.xcursor.ImageDestroy
+    #define XcursorImageLoadCursor _grwl.x11.xcursor.ImageLoadCursor
+    #define XcursorGetTheme _grwl.x11.xcursor.GetTheme
+    #define XcursorGetDefaultSize _grwl.x11.xcursor.GetDefaultSize
+    #define XcursorLibraryLoadImage _grwl.x11.xcursor.LibraryLoadImage
 
 typedef Bool (*PFN_XineramaIsActive)(Display*);
 typedef Bool (*PFN_XineramaQueryExtension)(Display*, int*, int*);
 typedef XineramaScreenInfo* (*PFN_XineramaQueryScreens)(Display*, int*);
-    #define XineramaIsActive _glfw.x11.xinerama.IsActive
-    #define XineramaQueryExtension _glfw.x11.xinerama.QueryExtension
-    #define XineramaQueryScreens _glfw.x11.xinerama.QueryScreens
+    #define XineramaIsActive _grwl.x11.xinerama.IsActive
+    #define XineramaQueryExtension _grwl.x11.xinerama.QueryExtension
+    #define XineramaQueryScreens _grwl.x11.xinerama.QueryScreens
 
 typedef XID xcb_window_t;
 typedef XID xcb_visualid_t;
 typedef struct xcb_connection_t xcb_connection_t;
 typedef xcb_connection_t* (*PFN_XGetXCBConnection)(Display*);
-    #define XGetXCBConnection _glfw.x11.x11xcb.GetXCBConnection
+    #define XGetXCBConnection _grwl.x11.x11xcb.GetXCBConnection
 
 typedef Bool (*PFN_XF86VidModeQueryExtension)(Display*, int*, int*);
 typedef Bool (*PFN_XF86VidModeGetGammaRamp)(Display*, int, int, unsigned short*, unsigned short*, unsigned short*);
 typedef Bool (*PFN_XF86VidModeSetGammaRamp)(Display*, int, int, unsigned short*, unsigned short*, unsigned short*);
 typedef Bool (*PFN_XF86VidModeGetGammaRampSize)(Display*, int, int*);
-    #define XF86VidModeQueryExtension _glfw.x11.vidmode.QueryExtension
-    #define XF86VidModeGetGammaRamp _glfw.x11.vidmode.GetGammaRamp
-    #define XF86VidModeSetGammaRamp _glfw.x11.vidmode.SetGammaRamp
-    #define XF86VidModeGetGammaRampSize _glfw.x11.vidmode.GetGammaRampSize
+    #define XF86VidModeQueryExtension _grwl.x11.vidmode.QueryExtension
+    #define XF86VidModeGetGammaRamp _grwl.x11.vidmode.GetGammaRamp
+    #define XF86VidModeSetGammaRamp _grwl.x11.vidmode.SetGammaRamp
+    #define XF86VidModeGetGammaRampSize _grwl.x11.vidmode.GetGammaRampSize
 
 typedef Status (*PFN_XIQueryVersion)(Display*, int*, int*);
 typedef int (*PFN_XISelectEvents)(Display*, Window, XIEventMask*, int);
-    #define XIQueryVersion _glfw.x11.xi.QueryVersion
-    #define XISelectEvents _glfw.x11.xi.SelectEvents
+    #define XIQueryVersion _grwl.x11.xi.QueryVersion
+    #define XISelectEvents _grwl.x11.xi.SelectEvents
 
 typedef Bool (*PFN_XRenderQueryExtension)(Display*, int*, int*);
 typedef Status (*PFN_XRenderQueryVersion)(Display* dpy, int*, int*);
 typedef XRenderPictFormat* (*PFN_XRenderFindVisualFormat)(Display*, Visual const*);
-    #define XRenderQueryExtension _glfw.x11.xrender.QueryExtension
-    #define XRenderQueryVersion _glfw.x11.xrender.QueryVersion
-    #define XRenderFindVisualFormat _glfw.x11.xrender.FindVisualFormat
+    #define XRenderQueryExtension _grwl.x11.xrender.QueryExtension
+    #define XRenderQueryVersion _grwl.x11.xrender.QueryVersion
+    #define XRenderFindVisualFormat _grwl.x11.xrender.FindVisualFormat
 
 typedef Bool (*PFN_XShapeQueryExtension)(Display*, int*, int*);
 typedef Status (*PFN_XShapeQueryVersion)(Display* dpy, int*, int*);
 typedef void (*PFN_XShapeCombineRegion)(Display*, Window, int, int, int, Region, int);
 typedef void (*PFN_XShapeCombineMask)(Display*, Window, int, int, int, Pixmap, int);
 
-    #define XShapeQueryExtension _glfw.x11.xshape.QueryExtension
-    #define XShapeQueryVersion _glfw.x11.xshape.QueryVersion
-    #define XShapeCombineRegion _glfw.x11.xshape.ShapeCombineRegion
-    #define XShapeCombineMask _glfw.x11.xshape.ShapeCombineMask
+    #define XShapeQueryExtension _grwl.x11.xshape.QueryExtension
+    #define XShapeQueryVersion _grwl.x11.xshape.QueryVersion
+    #define XShapeCombineRegion _grwl.x11.xshape.ShapeCombineRegion
+    #define XShapeCombineMask _grwl.x11.xshape.ShapeCombineMask
 
 typedef int (*PFNGLXGETFBCONFIGATTRIBPROC)(Display*, GLXFBConfig, int, int*);
 typedef const char* (*PFNGLXGETCLIENTSTRINGPROC)(Display*, int);
@@ -408,19 +408,19 @@ typedef int (*PFNGLXSWAPINTERVALSGIPROC)(int);
 typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 
     // libGL.so function pointer typedefs
-    #define glXGetFBConfigs _glfw.glx.GetFBConfigs
-    #define glXGetFBConfigAttrib _glfw.glx.GetFBConfigAttrib
-    #define glXGetClientString _glfw.glx.GetClientString
-    #define glXQueryExtension _glfw.glx.QueryExtension
-    #define glXQueryVersion _glfw.glx.QueryVersion
-    #define glXDestroyContext _glfw.glx.DestroyContext
-    #define glXMakeCurrent _glfw.glx.MakeCurrent
-    #define glXSwapBuffers _glfw.glx.SwapBuffers
-    #define glXQueryExtensionsString _glfw.glx.QueryExtensionsString
-    #define glXCreateNewContext _glfw.glx.CreateNewContext
-    #define glXGetVisualFromFBConfig _glfw.glx.GetVisualFromFBConfig
-    #define glXCreateWindow _glfw.glx.CreateWindow
-    #define glXDestroyWindow _glfw.glx.DestroyWindow
+    #define glXGetFBConfigs _grwl.glx.GetFBConfigs
+    #define glXGetFBConfigAttrib _grwl.glx.GetFBConfigAttrib
+    #define glXGetClientString _grwl.glx.GetClientString
+    #define glXQueryExtension _grwl.glx.QueryExtension
+    #define glXQueryVersion _grwl.glx.QueryVersion
+    #define glXDestroyContext _grwl.glx.DestroyContext
+    #define glXMakeCurrent _grwl.glx.MakeCurrent
+    #define glXSwapBuffers _grwl.glx.SwapBuffers
+    #define glXQueryExtensionsString _grwl.glx.QueryExtensionsString
+    #define glXCreateNewContext _grwl.glx.CreateNewContext
+    #define glXGetVisualFromFBConfig _grwl.glx.GetVisualFromFBConfig
+    #define glXCreateWindow _grwl.glx.CreateWindow
+    #define glXDestroyWindow _grwl.glx.DestroyWindow
 
 typedef VkFlags VkXlibSurfaceCreateFlagsKHR;
 typedef VkFlags VkXcbSurfaceCreateFlagsKHR;
@@ -455,27 +455,27 @@ typedef VkBool32(APIENTRY* PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)(VkP
     #include "xkb_unicode.h"
     #include "posix_poll.h"
 
-    #define GLFW_X11_WINDOW_STATE _GLFWwindowX11 x11;
-    #define GLFW_X11_LIBRARY_WINDOW_STATE _GLFWlibraryX11 x11;
-    #define GLFW_X11_MONITOR_STATE _GLFWmonitorX11 x11;
-    #define GLFW_X11_CURSOR_STATE _GLFWcursorX11 x11;
+    #define GRWL_X11_WINDOW_STATE _GRWLwindowX11 x11;
+    #define GRWL_X11_LIBRARY_WINDOW_STATE _GRWLlibraryX11 x11;
+    #define GRWL_X11_MONITOR_STATE _GRWLmonitorX11 x11;
+    #define GRWL_X11_CURSOR_STATE _GRWLcursorX11 x11;
 
-    #define GLFW_GLX_CONTEXT_STATE _GLFWcontextGLX glx;
-    #define GLFW_GLX_LIBRARY_CONTEXT_STATE _GLFWlibraryGLX glx;
-    #define GLFW_GLX_USER_CONTEXT_STATE _GLFWusercontextGLX glx;
+    #define GRWL_GLX_CONTEXT_STATE _GRWLcontextGLX glx;
+    #define GRWL_GLX_LIBRARY_CONTEXT_STATE _GRWLlibraryGLX glx;
+    #define GRWL_GLX_USER_CONTEXT_STATE _GRWLusercontextGLX glx;
 
 // GLX-specific per-context data
 //
-typedef struct _GLFWcontextGLX
+typedef struct _GRWLcontextGLX
 {
     GLXContext handle;
     GLXWindow window;
     GLXFBConfig fbconfig;
-} _GLFWcontextGLX;
+} _GRWLcontextGLX;
 
 // GLX-specific global data
 //
-typedef struct _GLFWlibraryGLX
+typedef struct _GRWLlibraryGLX
 {
     int major, minor;
     int eventBase;
@@ -505,42 +505,42 @@ typedef struct _GLFWlibraryGLX
     PFNGLXSWAPINTERVALEXTPROC SwapIntervalEXT;
     PFNGLXSWAPINTERVALMESAPROC SwapIntervalMESA;
     PFNGLXCREATECONTEXTATTRIBSARBPROC CreateContextAttribsARB;
-    GLFWbool SGI_swap_control;
-    GLFWbool EXT_swap_control;
-    GLFWbool MESA_swap_control;
-    GLFWbool ARB_multisample;
-    GLFWbool ARB_framebuffer_sRGB;
-    GLFWbool EXT_framebuffer_sRGB;
-    GLFWbool ARB_create_context;
-    GLFWbool ARB_create_context_profile;
-    GLFWbool ARB_create_context_robustness;
-    GLFWbool EXT_create_context_es2_profile;
-    GLFWbool ARB_create_context_no_error;
-    GLFWbool ARB_context_flush_control;
-} _GLFWlibraryGLX;
+    GRWLbool SGI_swap_control;
+    GRWLbool EXT_swap_control;
+    GRWLbool MESA_swap_control;
+    GRWLbool ARB_multisample;
+    GRWLbool ARB_framebuffer_sRGB;
+    GRWLbool EXT_framebuffer_sRGB;
+    GRWLbool ARB_create_context;
+    GRWLbool ARB_create_context_profile;
+    GRWLbool ARB_create_context_robustness;
+    GRWLbool EXT_create_context_es2_profile;
+    GRWLbool ARB_create_context_no_error;
+    GRWLbool ARB_context_flush_control;
+} _GRWLlibraryGLX;
 
 // GLX-specific per usercontext data
 //
-typedef struct _GLFWusercontextGLX
+typedef struct _GRWLusercontextGLX
 {
     GLXContext handle;
-} _GLFWusercontextGLX;
+} _GRWLusercontextGLX;
 
 // X11-specific per-window data
 //
-typedef struct _GLFWwindowX11
+typedef struct _GRWLwindowX11
 {
     Colormap colormap;
     Window handle;
     Window parent;
     XIC ic;
 
-    GLFWbool overrideRedirect;
-    GLFWbool iconified;
-    GLFWbool maximized;
+    GRWLbool overrideRedirect;
+    GRWLbool iconified;
+    GRWLbool maximized;
 
     // Whether the visual supports framebuffer transparency
-    GLFWbool transparent;
+    GRWLbool transparent;
 
     // Cached position and size used to filter out duplicate events
     int width, height;
@@ -548,7 +548,7 @@ typedef struct _GLFWwindowX11
 
     // The last received cursor position, regardless of source
     int lastCursorPosX, lastCursorPosY;
-    // The last position the cursor was warped to by GLFW
+    // The last position the cursor was warped to by GRWL
     int warpCursorPosX, warpCursorPosY;
 
     // The time of the last KeyPress event per keycode, for discarding
@@ -565,11 +565,11 @@ typedef struct _GLFWwindowX11
     XIMCallback statusDrawCallback;
 
     int imeFocus;
-} _GLFWwindowX11;
+} _GRWLwindowX11;
 
 // X11-specific global data
 //
-typedef struct _GLFWlibraryX11
+typedef struct _GRWLlibraryX11
 {
     Display* display;
     int screen;
@@ -581,7 +581,7 @@ typedef struct _GLFWlibraryX11
     Window helperWindowHandle;
     // Invisible cursor for hidden cursor mode
     Cursor hiddenCursorHandle;
-    // Context for mapping window XIDs to _GLFWwindow pointers
+    // Context for mapping window XIDs to _GRWLwindow pointers
     XContext context;
     // XIM input method
     XIM im;
@@ -596,16 +596,16 @@ typedef struct _GLFWlibraryX11
     // Clipboard string (while the selection is owned)
     char* clipboardString;
     // Key name string
-    char keynames[GLFW_KEY_LAST + 1][5];
-    // X11 keycode to GLFW key LUT
+    char keynames[GRWL_KEY_LAST + 1][5];
+    // X11 keycode to GRWL key LUT
     short int keycodes[256];
-    // GLFW key to X11 keycode LUT
-    short int scancodes[GLFW_KEY_LAST + 1];
+    // GRWL key to X11 keycode LUT
+    short int scancodes[GRWL_KEY_LAST + 1];
     char* keyboardLayoutName;
     // Where to place the cursor when re-enabled
     double restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
-    _GLFWwindow* disabledCursorWindow;
+    _GRWLwindow* disabledCursorWindow;
     int emptyEventPipe[2];
 
     // Window manager atoms
@@ -662,12 +662,12 @@ typedef struct _GLFWlibraryX11
     Atom UTF8_STRING;
     Atom COMPOUND_STRING;
     Atom ATOM_PAIR;
-    Atom GLFW_SELECTION;
+    Atom GRWL_SELECTION;
 
     struct
     {
         void* handle;
-        GLFWbool utf8;
+        GRWLbool utf8;
         PFN_XAllocClassHint AllocClassHint;
         PFN_XAllocSizeHints AllocSizeHints;
         PFN_XAllocWMHints AllocWMHints;
@@ -770,14 +770,14 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int eventBase;
         int errorBase;
         int major;
         int minor;
-        GLFWbool gammaBroken;
-        GLFWbool monitorBroken;
+        GRWLbool gammaBroken;
+        GRWLbool monitorBroken;
         PFN_XRRAllocGamma AllocGamma;
         PFN_XRRFreeCrtcInfo FreeCrtcInfo;
         PFN_XRRFreeGamma FreeGamma;
@@ -799,8 +799,8 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
-        GLFWbool detectable;
+        GRWLbool available;
+        GRWLbool detectable;
         int majorOpcode;
         int eventBase;
         int errorBase;
@@ -848,7 +848,7 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int major;
         int minor;
@@ -865,7 +865,7 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int eventBase;
         int errorBase;
@@ -877,7 +877,7 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int majorOpcode;
         int eventBase;
@@ -890,7 +890,7 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int major;
         int minor;
@@ -903,7 +903,7 @@ typedef struct _GLFWlibraryX11
 
     struct
     {
-        GLFWbool available;
+        GRWLbool available;
         void* handle;
         int major;
         int minor;
@@ -914,11 +914,11 @@ typedef struct _GLFWlibraryX11
         PFN_XShapeQueryVersion QueryVersion;
         PFN_XShapeCombineMask ShapeCombineMask;
     } xshape;
-} _GLFWlibraryX11;
+} _GRWLlibraryX11;
 
 // X11-specific per-monitor data
 //
-typedef struct _GLFWmonitorX11
+typedef struct _GRWLmonitorX11
 {
     RROutput output;
     RRCrtc crtc;
@@ -927,127 +927,127 @@ typedef struct _GLFWmonitorX11
     // Index of corresponding Xinerama screen,
     // for EWMH full screen window placement
     int index;
-} _GLFWmonitorX11;
+} _GRWLmonitorX11;
 
 // X11-specific per-cursor data
 //
-typedef struct _GLFWcursorX11
+typedef struct _GRWLcursorX11
 {
     Cursor handle;
-} _GLFWcursorX11;
+} _GRWLcursorX11;
 
-GLFWbool _glfwConnectX11(int platformID, _GLFWplatform* platform);
-int _glfwInitX11(void);
-void _glfwTerminateX11(void);
+GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform);
+int _grwlInitX11(void);
+void _grwlTerminateX11(void);
 
-GLFWbool _glfwCreateWindowX11(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig,
-                              const _GLFWfbconfig* fbconfig);
-void _glfwDestroyWindowX11(_GLFWwindow* window);
-void _glfwSetWindowTitleX11(_GLFWwindow* window, const char* title);
-void _glfwSetWindowIconX11(_GLFWwindow* window, int count, const GLFWimage* images);
-void _glfwSetWindowProgressIndicatorX11(_GLFWwindow* window, int progressState, double value);
-void _glfwSetWindowBadgeX11(_GLFWwindow* window, int count);
-void _glfwSetWindowBadgeStringX11(_GLFWwindow* window, const char* string);
-void _glfwGetWindowPosX11(_GLFWwindow* window, int* xpos, int* ypos);
-void _glfwSetWindowPosX11(_GLFWwindow* window, int xpos, int ypos);
-void _glfwGetWindowSizeX11(_GLFWwindow* window, int* width, int* height);
-void _glfwSetWindowSizeX11(_GLFWwindow* window, int width, int height);
-void _glfwSetWindowSizeLimitsX11(_GLFWwindow* window, int minwidth, int minheight, int maxwidth, int maxheight);
-void _glfwSetWindowAspectRatioX11(_GLFWwindow* window, int numer, int denom);
-void _glfwGetFramebufferSizeX11(_GLFWwindow* window, int* width, int* height);
-void _glfwGetWindowFrameSizeX11(_GLFWwindow* window, int* left, int* top, int* right, int* bottom);
-void _glfwGetWindowContentScaleX11(_GLFWwindow* window, float* xscale, float* yscale);
-void _glfwIconifyWindowX11(_GLFWwindow* window);
-void _glfwRestoreWindowX11(_GLFWwindow* window);
-void _glfwMaximizeWindowX11(_GLFWwindow* window);
-void _glfwShowWindowX11(_GLFWwindow* window);
-void _glfwHideWindowX11(_GLFWwindow* window);
-void _glfwRequestWindowAttentionX11(_GLFWwindow* window);
-void _glfwFocusWindowX11(_GLFWwindow* window);
-void _glfwSetWindowMonitorX11(_GLFWwindow* window, _GLFWmonitor* monitor, int xpos, int ypos, int width, int height,
+GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                              const _GRWLfbconfig* fbconfig);
+void _grwlDestroyWindowX11(_GRWLwindow* window);
+void _grwlSetWindowTitleX11(_GRWLwindow* window, const char* title);
+void _grwlSetWindowIconX11(_GRWLwindow* window, int count, const GRWLimage* images);
+void _grwlSetWindowProgressIndicatorX11(_GRWLwindow* window, int progressState, double value);
+void _grwlSetWindowBadgeX11(_GRWLwindow* window, int count);
+void _grwlSetWindowBadgeStringX11(_GRWLwindow* window, const char* string);
+void _grwlGetWindowPosX11(_GRWLwindow* window, int* xpos, int* ypos);
+void _grwlSetWindowPosX11(_GRWLwindow* window, int xpos, int ypos);
+void _grwlGetWindowSizeX11(_GRWLwindow* window, int* width, int* height);
+void _grwlSetWindowSizeX11(_GRWLwindow* window, int width, int height);
+void _grwlSetWindowSizeLimitsX11(_GRWLwindow* window, int minwidth, int minheight, int maxwidth, int maxheight);
+void _grwlSetWindowAspectRatioX11(_GRWLwindow* window, int numer, int denom);
+void _grwlGetFramebufferSizeX11(_GRWLwindow* window, int* width, int* height);
+void _grwlGetWindowFrameSizeX11(_GRWLwindow* window, int* left, int* top, int* right, int* bottom);
+void _grwlGetWindowContentScaleX11(_GRWLwindow* window, float* xscale, float* yscale);
+void _grwlIconifyWindowX11(_GRWLwindow* window);
+void _grwlRestoreWindowX11(_GRWLwindow* window);
+void _grwlMaximizeWindowX11(_GRWLwindow* window);
+void _grwlShowWindowX11(_GRWLwindow* window);
+void _grwlHideWindowX11(_GRWLwindow* window);
+void _grwlRequestWindowAttentionX11(_GRWLwindow* window);
+void _grwlFocusWindowX11(_GRWLwindow* window);
+void _grwlSetWindowMonitorX11(_GRWLwindow* window, _GRWLmonitor* monitor, int xpos, int ypos, int width, int height,
                               int refreshRate);
-GLFWbool _glfwWindowFocusedX11(_GLFWwindow* window);
-GLFWbool _glfwWindowIconifiedX11(_GLFWwindow* window);
-GLFWbool _glfwWindowVisibleX11(_GLFWwindow* window);
-GLFWbool _glfwWindowMaximizedX11(_GLFWwindow* window);
-GLFWbool _glfwWindowHoveredX11(_GLFWwindow* window);
-GLFWbool _glfwFramebufferTransparentX11(_GLFWwindow* window);
-void _glfwSetWindowResizableX11(_GLFWwindow* window, GLFWbool enabled);
-void _glfwSetWindowDecoratedX11(_GLFWwindow* window, GLFWbool enabled);
-void _glfwSetWindowFloatingX11(_GLFWwindow* window, GLFWbool enabled);
-float _glfwGetWindowOpacityX11(_GLFWwindow* window);
-void _glfwSetWindowOpacityX11(_GLFWwindow* window, float opacity);
-void _glfwSetWindowMousePassthroughX11(_GLFWwindow* window, GLFWbool enabled);
+GRWLbool _grwlWindowFocusedX11(_GRWLwindow* window);
+GRWLbool _grwlWindowIconifiedX11(_GRWLwindow* window);
+GRWLbool _grwlWindowVisibleX11(_GRWLwindow* window);
+GRWLbool _grwlWindowMaximizedX11(_GRWLwindow* window);
+GRWLbool _grwlWindowHoveredX11(_GRWLwindow* window);
+GRWLbool _grwlFramebufferTransparentX11(_GRWLwindow* window);
+void _grwlSetWindowResizableX11(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowDecoratedX11(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowFloatingX11(_GRWLwindow* window, GRWLbool enabled);
+float _grwlGetWindowOpacityX11(_GRWLwindow* window);
+void _grwlSetWindowOpacityX11(_GRWLwindow* window, float opacity);
+void _grwlSetWindowMousePassthroughX11(_GRWLwindow* window, GRWLbool enabled);
 
-void _glfwSetRawMouseMotionX11(_GLFWwindow* window, GLFWbool enabled);
-GLFWbool _glfwRawMouseMotionSupportedX11(void);
+void _grwlSetRawMouseMotionX11(_GRWLwindow* window, GRWLbool enabled);
+GRWLbool _grwlRawMouseMotionSupportedX11(void);
 
-void _glfwPollEventsX11(void);
-void _glfwWaitEventsX11(void);
-void _glfwWaitEventsTimeoutX11(double timeout);
-void _glfwPostEmptyEventX11(void);
+void _grwlPollEventsX11(void);
+void _grwlWaitEventsX11(void);
+void _grwlWaitEventsTimeoutX11(double timeout);
+void _grwlPostEmptyEventX11(void);
 
-void _glfwGetCursorPosX11(_GLFWwindow* window, double* xpos, double* ypos);
-void _glfwSetCursorPosX11(_GLFWwindow* window, double xpos, double ypos);
-void _glfwSetCursorModeX11(_GLFWwindow* window, int mode);
-const char* _glfwGetScancodeNameX11(int scancode);
-int _glfwGetKeyScancodeX11(int key);
-const char* _glfwGetKeyboardLayoutNameX11(void);
-GLFWbool _glfwCreateCursorX11(_GLFWcursor* cursor, const GLFWimage* image, int xhot, int yhot);
-GLFWbool _glfwCreateStandardCursorX11(_GLFWcursor* cursor, int shape);
-void _glfwDestroyCursorX11(_GLFWcursor* cursor);
-void _glfwSetCursorX11(_GLFWwindow* window, _GLFWcursor* cursor);
-void _glfwSetClipboardStringX11(const char* string);
-const char* _glfwGetClipboardStringX11(void);
+void _grwlGetCursorPosX11(_GRWLwindow* window, double* xpos, double* ypos);
+void _grwlSetCursorPosX11(_GRWLwindow* window, double xpos, double ypos);
+void _grwlSetCursorModeX11(_GRWLwindow* window, int mode);
+const char* _grwlGetScancodeNameX11(int scancode);
+int _grwlGetKeyScancodeX11(int key);
+const char* _grwlGetKeyboardLayoutNameX11(void);
+GRWLbool _grwlCreateCursorX11(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
+GRWLbool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape);
+void _grwlDestroyCursorX11(_GRWLcursor* cursor);
+void _grwlSetCursorX11(_GRWLwindow* window, _GRWLcursor* cursor);
+void _grwlSetClipboardStringX11(const char* string);
+const char* _grwlGetClipboardStringX11(void);
 
-void _glfwUpdatePreeditCursorRectangleX11(_GLFWwindow* window);
-void _glfwResetPreeditTextX11(_GLFWwindow* window);
-void _glfwSetIMEStatusX11(_GLFWwindow* window, int active);
-int _glfwGetIMEStatusX11(_GLFWwindow* window);
+void _grwlUpdatePreeditCursorRectangleX11(_GRWLwindow* window);
+void _grwlResetPreeditTextX11(_GRWLwindow* window);
+void _grwlSetIMEStatusX11(_GRWLwindow* window, int active);
+int _grwlGetIMEStatusX11(_GRWLwindow* window);
 
-EGLenum _glfwGetEGLPlatformX11(EGLint** attribs);
-EGLNativeDisplayType _glfwGetEGLNativeDisplayX11(void);
-EGLNativeWindowType _glfwGetEGLNativeWindowX11(_GLFWwindow* window);
+EGLenum _grwlGetEGLPlatformX11(EGLint** attribs);
+EGLNativeDisplayType _grwlGetEGLNativeDisplayX11(void);
+EGLNativeWindowType _grwlGetEGLNativeWindowX11(_GRWLwindow* window);
 
-void _glfwGetRequiredInstanceExtensionsX11(char** extensions);
-GLFWbool _glfwGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device,
+void _grwlGetRequiredInstanceExtensionsX11(char** extensions);
+GRWLbool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device,
                                                       uint32_t queuefamily);
-VkResult _glfwCreateWindowSurfaceX11(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator,
+VkResult _grwlCreateWindowSurfaceX11(VkInstance instance, _GRWLwindow* window, const VkAllocationCallbacks* allocator,
                                      VkSurfaceKHR* surface);
 
-void _glfwFreeMonitorX11(_GLFWmonitor* monitor);
-void _glfwGetMonitorPosX11(_GLFWmonitor* monitor, int* xpos, int* ypos);
-void _glfwGetMonitorContentScaleX11(_GLFWmonitor* monitor, float* xscale, float* yscale);
-void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
-GLFWvidmode* _glfwGetVideoModesX11(_GLFWmonitor* monitor, int* count);
-void _glfwGetVideoModeX11(_GLFWmonitor* monitor, GLFWvidmode* mode);
-GLFWbool _glfwGetGammaRampX11(_GLFWmonitor* monitor, GLFWgammaramp* ramp);
-void _glfwSetGammaRampX11(_GLFWmonitor* monitor, const GLFWgammaramp* ramp);
+void _grwlFreeMonitorX11(_GRWLmonitor* monitor);
+void _grwlGetMonitorPosX11(_GRWLmonitor* monitor, int* xpos, int* ypos);
+void _grwlGetMonitorContentScaleX11(_GRWLmonitor* monitor, float* xscale, float* yscale);
+void _grwlGetMonitorWorkareaX11(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
+GRWLvidmode* _grwlGetVideoModesX11(_GRWLmonitor* monitor, int* count);
+void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode);
+GRWLbool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
+void _grwlSetGammaRampX11(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
-void _glfwPollMonitorsX11(void);
-void _glfwSetVideoModeX11(_GLFWmonitor* monitor, const GLFWvidmode* desired);
-void _glfwRestoreVideoModeX11(_GLFWmonitor* monitor);
+void _grwlPollMonitorsX11(void);
+void _grwlSetVideoModeX11(_GRWLmonitor* monitor, const GRWLvidmode* desired);
+void _grwlRestoreVideoModeX11(_GRWLmonitor* monitor);
 
-Cursor _glfwCreateNativeCursorX11(const GLFWimage* image, int xhot, int yhot);
+Cursor _grwlCreateNativeCursorX11(const GRWLimage* image, int xhot, int yhot);
 
-unsigned long _glfwGetWindowPropertyX11(Window window, Atom property, Atom type, unsigned char** value);
-GLFWbool _glfwIsVisualTransparentX11(Visual* visual);
+unsigned long _grwlGetWindowPropertyX11(Window window, Atom property, Atom type, unsigned char** value);
+GRWLbool _grwlIsVisualTransparentX11(Visual* visual);
 
-void _glfwGrabErrorHandlerX11(void);
-void _glfwReleaseErrorHandlerX11(void);
-void _glfwInputErrorX11(int error, const char* message);
+void _grwlGrabErrorHandlerX11(void);
+void _grwlReleaseErrorHandlerX11(void);
+void _grwlInputErrorX11(int error, const char* message);
 
-void _glfwPushSelectionToManagerX11(void);
-void _glfwCreateInputContextX11(_GLFWwindow* window);
+void _grwlPushSelectionToManagerX11(void);
+void _grwlCreateInputContextX11(_GRWLwindow* window);
 
-GLFWbool _glfwInitGLX(void);
-void _glfwTerminateGLX(void);
-GLFWbool _glfwCreateContextGLX(_GLFWwindow* window, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
-void _glfwDestroyContextGLX(_GLFWwindow* window);
-GLFWbool _glfwChooseVisualGLX(const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig,
-                              const _GLFWfbconfig* fbconfig, Visual** visual, int* depth);
+GRWLbool _grwlInitGLX(void);
+void _grwlTerminateGLX(void);
+GRWLbool _grwlCreateContextGLX(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
+void _grwlDestroyContextGLX(_GRWLwindow* window);
+GRWLbool _grwlChooseVisualGLX(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                              const _GRWLfbconfig* fbconfig, Visual** visual, int* depth);
 
-_GLFWusercontext* _glfwCreateUserContextX11(_GLFWwindow* window);
-_GLFWusercontext* _glfwCreateUserContextGLX(_GLFWwindow* window);
+_GRWLusercontext* _grwlCreateUserContextX11(_GRWLwindow* window);
+_GRWLusercontext* _grwlCreateUserContextGLX(_GRWLwindow* window);
 
 #endif

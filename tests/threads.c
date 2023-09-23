@@ -5,14 +5,14 @@
 // Multi-threading test
 //
 // This test is intended to verify whether the OpenGL context part of
-// the GLFW API is able to be used from multiple threads
+// the GRWL API is able to be used from multiple threads
 
 #include "tinycthread.h"
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,24 +20,24 @@
 
 typedef struct
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
     const char* title;
     float r, g, b;
     thrd_t id;
 } Thread;
 
-static volatile int running = GLFW_TRUE;
+static volatile int running = GRWL_TRUE;
 
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GRWL_KEY_ESCAPE && action == GRWL_PRESS)
     {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
     }
 }
 
@@ -45,19 +45,19 @@ static int thread_main(void* data)
 {
     const Thread* thread = data;
 
-    glfwMakeContextCurrent(thread->window);
-    glfwSwapInterval(1);
+    grwlMakeContextCurrent(thread->window);
+    grwlSwapInterval(1);
 
     while (running)
     {
-        const float v = (float)fabs(sin(glfwGetTime() * 2.f));
+        const float v = (float)fabs(sin(grwlGetTime() * 2.f));
         glClearColor(thread->r * v, thread->g * v, thread->b * v, 0.f);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        glfwSwapBuffers(thread->window);
+        grwlSwapBuffers(thread->window);
     }
 
-    glfwMakeContextCurrent(NULL);
+    grwlMakeContextCurrent(NULL);
     return 0;
 }
 
@@ -69,31 +69,31 @@ int main(void)
                          { NULL, "Blue", 0.f, 0.f, 1.f, 0 } };
     const int count = sizeof(threads) / sizeof(Thread);
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
     for (i = 0; i < count; i++)
     {
-        glfwWindowHint(GLFW_POSITION_X, 200 + 250 * i);
-        glfwWindowHint(GLFW_POSITION_Y, 200);
+        grwlWindowHint(GRWL_POSITION_X, 200 + 250 * i);
+        grwlWindowHint(GRWL_POSITION_Y, 200);
 
-        threads[i].window = glfwCreateWindow(200, 200, threads[i].title, NULL, NULL);
+        threads[i].window = grwlCreateWindow(200, 200, threads[i].title, NULL, NULL);
         if (!threads[i].window)
         {
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
 
-        glfwSetKeyCallback(threads[i].window, key_callback);
+        grwlSetKeyCallback(threads[i].window, key_callback);
     }
 
-    glfwMakeContextCurrent(threads[0].window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwMakeContextCurrent(NULL);
+    grwlMakeContextCurrent(threads[0].window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlMakeContextCurrent(NULL);
 
     for (i = 0; i < count; i++)
     {
@@ -101,27 +101,27 @@ int main(void)
         {
             fprintf(stderr, "Failed to create secondary thread\n");
 
-            glfwTerminate();
+            grwlTerminate();
             exit(EXIT_FAILURE);
         }
     }
 
     while (running)
     {
-        glfwWaitEvents();
+        grwlWaitEvents();
 
         for (i = 0; i < count; i++)
         {
-            if (glfwWindowShouldClose(threads[i].window))
+            if (grwlWindowShouldClose(threads[i].window))
             {
-                running = GLFW_FALSE;
+                running = GRWL_FALSE;
             }
         }
     }
 
     for (i = 0; i < count; i++)
     {
-        glfwHideWindow(threads[i].window);
+        grwlHideWindow(threads[i].window);
     }
 
     for (i = 0; i < count; i++)

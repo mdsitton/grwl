@@ -31,8 +31,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 /* Map height updates */
 #define MAX_CIRCLE_SIZE (5.0f)
@@ -44,35 +44,31 @@
 /* Map general information */
 #define MAP_SIZE (10.0f)
 #define MAP_NUM_VERTICES (80)
-#define MAP_NUM_TOTAL_VERTICES (MAP_NUM_VERTICES*MAP_NUM_VERTICES)
-#define MAP_NUM_LINES (3* (MAP_NUM_VERTICES - 1) * (MAP_NUM_VERTICES - 1) + \
-               2 * (MAP_NUM_VERTICES - 1))
-
+#define MAP_NUM_TOTAL_VERTICES (MAP_NUM_VERTICES * MAP_NUM_VERTICES)
+#define MAP_NUM_LINES (3 * (MAP_NUM_VERTICES - 1) * (MAP_NUM_VERTICES - 1) + 2 * (MAP_NUM_VERTICES - 1))
 
 /**********************************************************************
  * Default shader programs
  *********************************************************************/
 
-static const char* vertex_shader_text =
-"#version 150\n"
-"uniform mat4 project;\n"
-"uniform mat4 modelview;\n"
-"in float x;\n"
-"in float y;\n"
-"in float z;\n"
-"\n"
-"void main()\n"
-"{\n"
-"   gl_Position = project * modelview * vec4(x, y, z, 1.0);\n"
-"}\n";
+static const char* vertex_shader_text = "#version 150\n"
+                                        "uniform mat4 project;\n"
+                                        "uniform mat4 modelview;\n"
+                                        "in float x;\n"
+                                        "in float y;\n"
+                                        "in float z;\n"
+                                        "\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "   gl_Position = project * modelview * vec4(x, y, z, 1.0);\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 150\n"
-"out vec4 color;\n"
-"void main()\n"
-"{\n"
-"    color = vec4(0.2, 1.0, 0.2, 1.0); \n"
-"}\n";
+static const char* fragment_shader_text = "#version 150\n"
+                                          "out vec4 color;\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    color = vec4(0.2, 1.0, 0.2, 1.0); \n"
+                                          "}\n";
 
 /**********************************************************************
  * Values for shader uniforms
@@ -80,32 +76,24 @@ static const char* fragment_shader_text =
 
 /* Frustum configuration */
 static GLfloat view_angle = 45.0f;
-static GLfloat aspect_ratio = 4.0f/3.0f;
+static GLfloat aspect_ratio = 4.0f / 3.0f;
 static GLfloat z_near = 1.0f;
 static GLfloat z_far = 100.f;
 
 /* Projection matrix */
-static GLfloat projection_matrix[16] = {
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-};
+static GLfloat projection_matrix[16] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                                         0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
 /* Model view matrix */
-static GLfloat modelview_matrix[16] = {
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-};
+static GLfloat modelview_matrix[16] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                                        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
 /**********************************************************************
  * Heightmap vertex and index data
  *********************************************************************/
 
 static GLfloat map_vertices[3][MAP_NUM_TOTAL_VERTICES];
-static GLuint  map_line_indices[2*MAP_NUM_LINES];
+static GLuint map_line_indices[2 * MAP_NUM_LINES];
 
 /* Store uniform location for the shaders
  * Those values are setup as part of the process of creating
@@ -136,8 +124,9 @@ static GLuint make_shader(GLenum type, const char* text)
         glGetShaderiv(shader, GL_COMPILE_STATUS, &shader_ok);
         if (shader_ok != GL_TRUE)
         {
-            fprintf(stderr, "ERROR: Failed to compile %s shader\n", (type == GL_FRAGMENT_SHADER) ? "fragment" : "vertex" );
-            glGetShaderInfoLog(shader, 8192, &log_length,info_log);
+            fprintf(stderr, "ERROR: Failed to compile %s shader\n",
+                    (type == GL_FRAGMENT_SHADER) ? "fragment" : "vertex");
+            glGetShaderInfoLog(shader, 8192, &log_length, info_log);
             fprintf(stderr, "ERROR: \n%s\n\n", info_log);
             glDeleteShader(shader);
             shader = 0;
@@ -214,9 +203,9 @@ static void init_map(void)
     GLfloat z = 0.0f;
     /* Create a flat grid */
     k = 0;
-    for (i = 0 ; i < MAP_NUM_VERTICES ; ++i)
+    for (i = 0; i < MAP_NUM_VERTICES; ++i)
     {
-        for (j = 0 ; j < MAP_NUM_VERTICES ; ++j)
+        for (j = 0; j < MAP_NUM_VERTICES; ++j)
         {
             map_vertices[0][k] = x;
             map_vertices[1][k] = 0.0f;
@@ -228,11 +217,9 @@ static void init_map(void)
         z = 0.0f;
     }
 #if DEBUG_ENABLED
-    for (i = 0 ; i < MAP_NUM_TOTAL_VERTICES ; ++i)
+    for (i = 0; i < MAP_NUM_TOTAL_VERTICES; ++i)
     {
-        printf ("Vertice %d (%f, %f, %f)\n",
-                i, map_vertices[0][i], map_vertices[1][i], map_vertices[2][i]);
-
+        printf("Vertice %d (%f, %f, %f)\n", i, map_vertices[0][i], map_vertices[1][i], map_vertices[2][i]);
     }
 #endif
     /* create indices */
@@ -246,21 +233,21 @@ static void init_map(void)
 
     /* close the top of the square */
     k = 0;
-    for (i = 0 ; i < MAP_NUM_VERTICES  -1 ; ++i)
+    for (i = 0; i < MAP_NUM_VERTICES - 1; ++i)
     {
-        map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES -1;
-        map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES -1;
+        map_line_indices[k++] = (i + 1) * MAP_NUM_VERTICES - 1;
+        map_line_indices[k++] = (i + 2) * MAP_NUM_VERTICES - 1;
     }
     /* close the right of the square */
-    for (i = 0 ; i < MAP_NUM_VERTICES -1 ; ++i)
+    for (i = 0; i < MAP_NUM_VERTICES - 1; ++i)
     {
         map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i;
         map_line_indices[k++] = (MAP_NUM_VERTICES - 1) * MAP_NUM_VERTICES + i + 1;
     }
 
-    for (i = 0 ; i < (MAP_NUM_VERTICES - 1) ; ++i)
+    for (i = 0; i < (MAP_NUM_VERTICES - 1); ++i)
     {
-        for (j = 0 ; j < (MAP_NUM_VERTICES - 1) ; ++j)
+        for (j = 0; j < (MAP_NUM_VERTICES - 1); ++j)
         {
             int ref = i * (MAP_NUM_VERTICES) + j;
             map_line_indices[k++] = ref;
@@ -275,30 +262,28 @@ static void init_map(void)
     }
 
 #ifdef DEBUG_ENABLED
-    for (k = 0 ; k < 2 * MAP_NUM_LINES ; k += 2)
+    for (k = 0; k < 2 * MAP_NUM_LINES; k += 2)
     {
         int beg, end;
         beg = map_line_indices[k];
-        end = map_line_indices[k+1];
-        printf ("Line %d: %d -> %d (%f, %f, %f) -> (%f, %f, %f)\n",
-                k / 2, beg, end,
-                map_vertices[0][beg], map_vertices[1][beg], map_vertices[2][beg],
-                map_vertices[0][end], map_vertices[1][end], map_vertices[2][end]);
+        end = map_line_indices[k + 1];
+        printf("Line %d: %d -> %d (%f, %f, %f) -> (%f, %f, %f)\n", k / 2, beg, end, map_vertices[0][beg],
+               map_vertices[1][beg], map_vertices[2][beg], map_vertices[0][end], map_vertices[1][end],
+               map_vertices[2][end]);
     }
 #endif
 }
 
-static void generate_heightmap__circle(float* center_x, float* center_y,
-        float* size, float* displacement)
+static void generate_heightmap__circle(float* center_x, float* center_y, float* size, float* displacement)
 {
     float sign;
     /* random value for element in between [0-1.0] */
-    *center_x = (MAP_SIZE * rand()) / (float) RAND_MAX;
-    *center_y = (MAP_SIZE * rand()) / (float) RAND_MAX;
-    *size = (MAX_CIRCLE_SIZE * rand()) / (float) RAND_MAX;
-    sign = (1.0f * rand()) / (float) RAND_MAX;
+    *center_x = (MAP_SIZE * rand()) / (float)RAND_MAX;
+    *center_y = (MAP_SIZE * rand()) / (float)RAND_MAX;
+    *size = (MAX_CIRCLE_SIZE * rand()) / (float)RAND_MAX;
+    sign = (1.0f * rand()) / (float)RAND_MAX;
     sign = (sign < DISPLACEMENT_SIGN_LIMIT) ? -1.0f : 1.0f;
-    *displacement = (sign * (MAX_DISPLACEMENT * rand())) / (float) RAND_MAX;
+    *displacement = (sign * (MAX_DISPLACEMENT * rand())) / (float)RAND_MAX;
 }
 
 /* Run the specified number of iterations of the generation process for the
@@ -307,7 +292,7 @@ static void generate_heightmap__circle(float* center_x, float* center_y,
 static void update_map(int num_iter)
 {
     assert(num_iter > 0);
-    while(num_iter)
+    while (num_iter)
     {
         /* center of the circle */
         float center_x;
@@ -317,15 +302,15 @@ static void update_map(int num_iter)
         size_t ii;
         generate_heightmap__circle(&center_x, &center_z, &circle_size, &disp);
         disp = disp / 2.0f;
-        for (ii = 0u ; ii < MAP_NUM_TOTAL_VERTICES ; ++ii)
+        for (ii = 0u; ii < MAP_NUM_TOTAL_VERTICES; ++ii)
         {
             GLfloat dx = center_x - map_vertices[0][ii];
             GLfloat dz = center_z - map_vertices[2][ii];
-            GLfloat pd = (2.0f * (float) sqrt((dx * dx) + (dz * dz))) / circle_size;
+            GLfloat pd = (2.0f * (float)sqrt((dx * dx) + (dz * dz))) / circle_size;
             if (fabs(pd) <= 1.0f)
             {
                 /* tx,tz is within the circle */
-                GLfloat new_height = disp + (float) (cos(pd*3.14f)*disp);
+                GLfloat new_height = disp + (float)(cos(pd * 3.14f) * disp);
                 map_vertices[1][ii] += new_height;
             }
         }
@@ -349,7 +334,7 @@ static void make_mesh(GLuint program)
     glBindVertexArray(mesh);
     /* Prepare the data for drawing through a buffer inidices */
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_vbo[3]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)* MAP_NUM_LINES * 2, map_line_indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * MAP_NUM_LINES * 2, map_line_indices, GL_STATIC_DRAW);
 
     /* Prepare the attributes for rendering */
     attrloc = glGetAttribLocation(program, "x");
@@ -379,16 +364,16 @@ static void update_mesh(void)
 }
 
 /**********************************************************************
- * GLFW callback functions
+ * GRWL callback functions
  *********************************************************************/
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    switch(key)
+    switch (key)
     {
-        case GLFW_KEY_ESCAPE:
+        case GRWL_KEY_ESCAPE:
             /* Exit program on Escape */
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+            grwlSetWindowShouldClose(window, GRWL_TRUE);
             break;
     }
 }
@@ -400,7 +385,7 @@ static void error_callback(int error, const char* description)
 
 int main(int argc, char** argv)
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
     int iter;
     double dt;
     double last_update_time;
@@ -412,56 +397,58 @@ int main(int argc, char** argv)
 
     GLuint shader_program;
 
-    glfwSetErrorCallback(error_callback);
+    grwlSetErrorCallback(error_callback);
 
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-
-    window = glfwCreateWindow(800, 600, "GLFW OpenGL3 Heightmap demo", NULL, NULL);
-    if (! window )
+    if (!grwlInit())
     {
-        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+
+    grwlWindowHint(GRWL_RESIZABLE, GRWL_FALSE);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 3);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 2);
+    grwlWindowHint(GRWL_OPENGL_PROFILE, GRWL_OPENGL_CORE_PROFILE);
+    grwlWindowHint(GRWL_OPENGL_FORWARD_COMPAT, GRWL_TRUE);
+
+    window = grwlCreateWindow(800, 600, "GRWL OpenGL3 Heightmap demo", NULL, NULL);
+    if (!window)
+    {
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
     /* Register events callback */
-    glfwSetKeyCallback(window, key_callback);
+    grwlSetKeyCallback(window, key_callback);
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
 
     /* Prepare opengl resources for rendering */
     shader_program = make_shader_program(vertex_shader_text, fragment_shader_text);
 
     if (shader_program == 0u)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
     glUseProgram(shader_program);
-    uloc_project   = glGetUniformLocation(shader_program, "project");
+    uloc_project = glGetUniformLocation(shader_program, "project");
     uloc_modelview = glGetUniformLocation(shader_program, "modelview");
 
     /* Compute the projection matrix */
     f = 1.0f / tanf(view_angle / 2.0f);
-    projection_matrix[0]  = f / aspect_ratio;
-    projection_matrix[5]  = f;
-    projection_matrix[10] = (z_far + z_near)/ (z_near - z_far);
+    projection_matrix[0] = f / aspect_ratio;
+    projection_matrix[5] = f;
+    projection_matrix[10] = (z_far + z_near) / (z_near - z_far);
     projection_matrix[11] = -1.0f;
     projection_matrix[14] = 2.0f * (z_far * z_near) / (z_near - z_far);
     glUniformMatrix4fv(uloc_project, 1, GL_FALSE, projection_matrix);
 
     /* Set the camera position */
-    modelview_matrix[12]  = -5.0f;
-    modelview_matrix[13]  = -5.0f;
-    modelview_matrix[14]  = -20.0f;
+    modelview_matrix[12] = -5.0f;
+    modelview_matrix[13] = -5.0f;
+    modelview_matrix[14] = -20.0f;
     glUniformMatrix4fv(uloc_modelview, 1, GL_FALSE, modelview_matrix);
 
     /* Create mesh data */
@@ -472,27 +459,27 @@ int main(int argc, char** argv)
     /* Create the vbo to store all the information for the grid and the height */
 
     /* setup the scene ready for rendering */
-    glfwGetFramebufferSize(window, &width, &height);
+    grwlGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     /* main loop */
     frame = 0;
     iter = 0;
-    last_update_time = glfwGetTime();
+    last_update_time = grwlGetTime();
 
-    while (!glfwWindowShouldClose(window))
+    while (!grwlWindowShouldClose(window))
     {
         ++frame;
         /* render the next frame */
         glClear(GL_COLOR_BUFFER_BIT);
-        glDrawElements(GL_LINES, 2* MAP_NUM_LINES , GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_LINES, 2 * MAP_NUM_LINES, GL_UNSIGNED_INT, 0);
 
         /* display and process events through callbacks */
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        grwlSwapBuffers(window);
+        grwlPollEvents();
         /* Check the frame rate and update the heightmap if needed */
-        dt = glfwGetTime();
+        dt = grwlGetTime();
         if ((dt - last_update_time) > 0.2)
         {
             /* generate the next iteration of the heightmap */
@@ -507,7 +494,6 @@ int main(int argc, char** argv)
         }
     }
 
-    glfwTerminate();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }
-

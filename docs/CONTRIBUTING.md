@@ -19,14 +19,14 @@
 
 ## Asking a question
 
-Questions about how to use GLFW should be asked either in the [support
+Questions about how to use GRWL should be asked either in the [support
 section](https://discourse.glfw.org/c/support) of the forum, under the [Stack
 Overflow tag](https://stackoverflow.com/questions/tagged/glfw) or [Game
 Development tag](https://gamedev.stackexchange.com/questions/tagged/glfw) on
 Stack Exchange or in the IRC channel `#glfw` on
 [Libera.Chat](https://libera.chat/).
 
-Questions about the design or implementation of GLFW or about future plans
+Questions about the design or implementation of GRWL or about future plans
 should be asked in the [dev section](https://discourse.glfw.org/c/dev) of the
 forum or in the IRC channel.  Please don't open a GitHub issue to discuss design
 questions without first checking with a maintainer.
@@ -34,17 +34,17 @@ questions without first checking with a maintainer.
 
 ## Reporting a bug
 
-If GLFW is behaving unexpectedly at run-time, start by setting an [error
-callback](https://www.glfw.org/docs/latest/intro_guide.html#error_handling).
-GLFW will often tell you the cause of an error via this callback.  If it
+If GRWL is behaving unexpectedly at run-time, start by setting an [error
+callback](https://www.grwl.dev/docs/latest/intro_guide.html#error_handling).
+GRWL will often tell you the cause of an error via this callback.  If it
 doesn't, that might be a separate bug.
 
-If GLFW is crashing or triggering asserts, make sure that all your object
+If GRWL is crashing or triggering asserts, make sure that all your object
 handles and other pointers are valid.
 
 For bugs where it makes sense, a short, self contained example is absolutely
 invaluable.  Just put it inline in the body text.  Note that if the bug is
-reproducible with one of the test programs that come with GLFW, just mention
+reproducible with one of the test programs that come with GRWL, just mention
 that instead.
 
 __Don't worry about adding too much information__.  Unimportant information can
@@ -82,21 +82,21 @@ it already has everything, give it a :+1:.
 
 ### Reporting a compile or link bug
 
-__Note:__ GLFW needs many system APIs to do its job, which on some platforms
-means linking to many system libraries.  If you are using GLFW as a static
-library, that means your application needs to link to these in addition to GLFW.
+__Note:__ GRWL needs many system APIs to do its job, which on some platforms
+means linking to many system libraries.  If you are using GRWL as a static
+library, that means your application needs to link to these in addition to GRWL.
 
 __Note:__ Check the [Compiling
-GLFW](https://www.glfw.org/docs/latest/compile.html) guide and or [Building
-applications](https://www.glfw.org/docs/latest/build.html) guide for before
+GRWL](https://www.grwl.dev/docs/latest/compile.html) guide and or [Building
+applications](https://www.grwl.dev/docs/latest/build.html) guide for before
 opening an issue of this kind.  Most issues are caused by a missing package or
 linker flag.
 
 Always include the __operating system name and version__ (e.g. `Windows
 7 64-bit` or `Ubuntu 15.10`) and the __compiler name and version__ (e.g. `Visual
-C++ 2015 Update 2`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+C++ 2015 Update 2`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 Please also include the __complete build log__ from your compiler and linker,
 even if it's long.  It can always be shortened later, if necessary.
@@ -115,13 +115,13 @@ Build log:
 ### Reporting a segfault or other crash bug
 
 Always include the __operating system name and version__ (e.g. `Windows
-7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 Please also include any __error messages__ provided to your application via the
 [error
-callback](https://www.glfw.org/docs/latest/intro_guide.html#error_handling) and
+callback](https://www.grwl.dev/docs/latest/intro_guide.html#error_handling) and
 the __full call stack__ of the crash, or if the crash does not occur in debug
 mode, mention that instead.
 
@@ -139,7 +139,7 @@ Call stack:
 ### Reporting a context creation bug
 
 __Note:__ Windows ships with graphics drivers that do not support OpenGL.  If
-GLFW says that your machine lacks support for OpenGL, it very likely does.
+GRWL says that your machine lacks support for OpenGL, it very likely does.
 Install drivers from the computer manufacturer or graphics card manufacturer
 ([Nvidia](https://www.geforce.com/drivers),
 [AMD](https://www.amd.com/en/support),
@@ -147,25 +147,25 @@ Install drivers from the computer manufacturer or graphics card manufacturer
 fix this.
 
 __Note:__ AMD only supports OpenGL ES on Windows via EGL.  See the
-[GLFW\_CONTEXT\_CREATION\_API](https://www.glfw.org/docs/latest/window_guide.html#window_hints_ctx)
+[GRWL\_CONTEXT\_CREATION\_API](https://www.grwl.dev/docs/latest/window_guide.html#window_hints_ctx)
 hint for how to select EGL.
 
 Please verify that context creation also fails with the `glfwinfo` tool before
-reporting it as a bug.  This tool is included in the GLFW source tree as
+reporting it as a bug.  This tool is included in the GRWL source tree as
 `tests/glfwinfo.c` and is built along with the library.  It has switches for all
-GLFW context and framebuffer hints.  Run `glfwinfo -h` for a complete list.
+GRWL context and framebuffer hints.  Run `glfwinfo -h` for a complete list.
 
 Always include the __operating system name and version__ (e.g. `Windows
-7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 If you are running your program in a virtual machine, please mention this and
 include the __VM name and version__ (e.g. `VirtualBox 5.1`).
 
-Please also include the __GLFW version string__ (`3.2.0 X11 EGL clock_gettime
+Please also include the __GRWL version string__ (`3.2.0 X11 EGL clock_gettime
 /dev/js`), as described
-[here](https://www.glfw.org/docs/latest/intro.html#intro_version_string), the
+[here](https://www.grwl.dev/docs/latest/intro.html#intro_version_string), the
 __GPU model and driver version__ (e.g. `GeForce GTX660 with 352.79`), and the
 __output of `glfwinfo`__ (with switches matching any hints you set in your
 code) when reporting this kind of bug.  If this tool doesn't run on the machine,
@@ -190,24 +190,24 @@ causes glfwGetPrimaryMonitor to return `NULL`, which not all applications are
 prepared for.
 
 __Note:__ Some third-party tools report more video modes than are approved of
-by the OS.  For safety and compatibility, GLFW only reports video modes the OS
+by the OS.  For safety and compatibility, GRWL only reports video modes the OS
 wants programs to use.  This is not a bug.
 
-The `monitors` tool is included in the GLFW source tree as `tests/monitors.c`
-and is built along with the library.  It lists all information GLFW provides
+The `monitors` tool is included in the GRWL source tree as `tests/monitors.c`
+and is built along with the library.  It lists all information GRWL provides
 about monitors it detects.
 
 Always include the __operating system name and version__ (e.g. `Windows
-7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 If you are running your program in a virtual machine, please mention this and
 include the __VM name and version__ (e.g. `VirtualBox 5.1`).
 
 Please also include any __error messages__ provided to your application via the
 [error
-callback](https://www.glfw.org/docs/latest/intro_guide.html#error_handling) and
+callback](https://www.grwl.dev/docs/latest/intro_guide.html#error_handling) and
 the __output of `monitors`__ when reporting this kind of bug.  If this tool
 doesn't run on the machine, mention this instead.
 
@@ -228,26 +228,26 @@ __Note:__ The exact ordering of related window events will sometimes differ.
 
 __Note:__ Window moving and resizing (by the user) will block the main thread on
 some platforms.  This is not a bug.  Set a [refresh
-callback](https://www.glfw.org/docs/latest/window.html#window_refresh) if you
+callback](https://www.grwl.dev/docs/latest/window.html#window_refresh) if you
 want to keep the window contents updated during a move or size operation.
 
-The `events` tool is included in the GLFW source tree as `tests/events.c` and is
+The `events` tool is included in the GRWL source tree as `tests/events.c` and is
 built along with the library.  It prints all information provided to every
-callback supported by GLFW as events occur.  Each event is listed with the time
+callback supported by GRWL as events occur.  Each event is listed with the time
 and a unique number to make discussions about event logs easier.  The tool has
 command-line options for creating multiple windows and full screen windows.
 
 Always include the __operating system name and version__ (e.g. `Windows
-7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 If you are running your program in a virtual machine, please mention this and
 include the __VM name and version__ (e.g. `VirtualBox 5.1`).
 
 Please also include any __error messages__ provided to your application via the
 [error
-callback](https://www.glfw.org/docs/latest/intro_guide.html#error_handling) and
+callback](https://www.grwl.dev/docs/latest/intro_guide.html#error_handling) and
 if relevant, the __output of `events`__ when reporting this kind of bug.  If
 this tool doesn't run on the machine, mention this instead.
 
@@ -270,13 +270,13 @@ events output:
 ### Reporting some other library bug
 
 Always include the __operating system name and version__ (e.g. `Windows
-7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GLFW,
-include the __GLFW release version__ (e.g. `3.1.2`), otherwise include the
-__GLFW commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
+7 64-bit` or `Ubuntu 15.10`).  If you are using an official release of GRWL,
+include the __GRWL release version__ (e.g. `3.1.2`), otherwise include the
+__GRWL commit ID__ (e.g.  `3795d78b14ef06008889cc422a1fb8d642597751`) from Git.
 
 Please also include any __error messages__ provided to your application via the
 [error
-callback](https://www.glfw.org/docs/latest/intro_guide.html#error_handling), if
+callback](https://www.grwl.dev/docs/latest/intro_guide.html#error_handling), if
 relevant.
 
 
@@ -319,7 +319,7 @@ __Note:__ You must have all necessary [intellectual
 property rights](https://en.wikipedia.org/wiki/Intellectual_property) to any
 code you contribute.  If you did not write the code yourself, you must explain
 where it came from and under what license you received it.  Even code using the
-same license as GLFW may not be copied without attribution.
+same license as GRWL may not be copied without attribution.
 
 __There is no preferred patch size__.  A one character fix is just as welcome as
 a thousand line one, if that is the appropriate size for the fix.
@@ -344,7 +344,7 @@ Message](https://chris.beams.io/posts/git-commit/).
 
 __Note:__ You must have all necessary rights to any code you contribute.  If you
 did not write the code yourself, you must explain where it came from and under
-what license.  Even code using the same license as GLFW may not be copied
+what license.  Even code using the same license as GRWL may not be copied
 without attribution.
 
 __Note:__ If you haven't already implemented the feature, check first if there

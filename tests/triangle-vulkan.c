@@ -43,8 +43,8 @@
 
 #define GLAD_VULKAN_IMPLEMENTATION
 #include <glad/vulkan.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #define DEMO_TEXTURE_COUNT 1
 #define VERTEX_BUFFER_BIND_ID 0
@@ -148,7 +148,7 @@ typedef struct
 
 struct demo
 {
-    GLFWwindow* window;
+    GRWLwindow* window;
     VkSurfaceKHR surface;
     bool use_staging_buffer;
 
@@ -1458,27 +1458,27 @@ static void demo_prepare(struct demo* demo)
 
 static void demo_error_callback(int error, const char* description)
 {
-    printf("GLFW error: %s\n", description);
+    printf("GRWL error: %s\n", description);
     fflush(stdout);
 }
 
-static void demo_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void demo_key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+    if (key == GRWL_KEY_ESCAPE && action == GRWL_RELEASE)
     {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
+        grwlSetWindowShouldClose(window, GRWL_TRUE);
     }
 }
 
-static void demo_refresh_callback(GLFWwindow* window)
+static void demo_refresh_callback(GRWLwindow* window)
 {
-    struct demo* demo = glfwGetWindowUserPointer(window);
+    struct demo* demo = grwlGetWindowUserPointer(window);
     demo_draw(demo);
 }
 
-static void demo_resize_callback(GLFWwindow* window, int width, int height)
+static void demo_resize_callback(GRWLwindow* window, int width, int height)
 {
-    struct demo* demo = glfwGetWindowUserPointer(window);
+    struct demo* demo = grwlGetWindowUserPointer(window);
     demo->width = width;
     demo->height = height;
     demo_resize(demo);
@@ -1486,9 +1486,9 @@ static void demo_resize_callback(GLFWwindow* window, int width, int height)
 
 static void demo_run(struct demo* demo)
 {
-    while (!glfwWindowShouldClose(demo->window))
+    while (!grwlWindowShouldClose(demo->window))
     {
-        glfwPollEvents();
+        grwlPollEvents();
 
         demo_draw(demo);
 
@@ -1508,16 +1508,16 @@ static void demo_run(struct demo* demo)
         demo->curFrame++;
         if (demo->frameCount != INT32_MAX && demo->curFrame == demo->frameCount)
         {
-            glfwSetWindowShouldClose(demo->window, GLFW_TRUE);
+            grwlSetWindowShouldClose(demo->window, GRWL_TRUE);
         }
     }
 }
 
 static void demo_create_window(struct demo* demo)
 {
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    grwlWindowHint(GRWL_CLIENT_API, GRWL_NO_API);
 
-    demo->window = glfwCreateWindow(demo->width, demo->height, APP_LONG_NAME, NULL, NULL);
+    demo->window = grwlCreateWindow(demo->width, demo->height, APP_LONG_NAME, NULL, NULL);
     if (!demo->window)
     {
         // It didn't work, so try to give a useful error:
@@ -1526,10 +1526,10 @@ static void demo_create_window(struct demo* demo)
         exit(1);
     }
 
-    glfwSetWindowUserPointer(demo->window, demo);
-    glfwSetWindowRefreshCallback(demo->window, demo_refresh_callback);
-    glfwSetFramebufferSizeCallback(demo->window, demo_resize_callback);
-    glfwSetKeyCallback(demo->window, demo_key_callback);
+    grwlSetWindowUserPointer(demo->window, demo);
+    grwlSetWindowRefreshCallback(demo->window, demo_refresh_callback);
+    grwlSetFramebufferSizeCallback(demo->window, demo_resize_callback);
+    grwlSetKeyCallback(demo->window, demo_key_callback);
 }
 
 /*
@@ -1632,10 +1632,10 @@ static void demo_init_vk(struct demo* demo)
     }
 
     /* Look for instance extensions */
-    required_extensions = glfwGetRequiredInstanceExtensions(&required_extension_count);
+    required_extensions = grwlGetRequiredInstanceExtensions(&required_extension_count);
     if (!required_extensions)
     {
-        ERR_EXIT("glfwGetRequiredInstanceExtensions failed to find the "
+        ERR_EXIT("grwlGetRequiredInstanceExtensions failed to find the "
                  "platform surface extensions.\n\nDo you have a compatible "
                  "Vulkan installable client driver (ICD) installed?\nPlease "
                  "look at the Getting Started guide for additional "
@@ -1726,7 +1726,7 @@ static void demo_init_vk(struct demo* demo)
                  "vkCreateInstance Failure");
     }
 
-    gladLoadVulkanUserPtr(NULL, (GLADuserptrloadfunc)glfwGetInstanceProcAddress, demo->inst);
+    gladLoadVulkanUserPtr(NULL, (GLADuserptrloadfunc)grwlGetInstanceProcAddress, demo->inst);
 
     /* Make initial call to query gpu_count, then second call for gpu info*/
     err = vkEnumeratePhysicalDevices(demo->inst, &gpu_count, NULL);
@@ -1750,7 +1750,7 @@ static void demo_init_vk(struct demo* demo)
                  "vkEnumeratePhysicalDevices Failure");
     }
 
-    gladLoadVulkanUserPtr(demo->gpu, (GLADuserptrloadfunc)glfwGetInstanceProcAddress, demo->inst);
+    gladLoadVulkanUserPtr(demo->gpu, (GLADuserptrloadfunc)grwlGetInstanceProcAddress, demo->inst);
 
     /* Look for device extensions */
     uint32_t device_extension_count = 0;
@@ -1867,7 +1867,7 @@ static void demo_init_vk_swapchain(struct demo* demo)
     uint32_t i;
 
     // Create a WSI surface for the window:
-    glfwCreateWindowSurface(demo->inst, demo->window, NULL, &demo->surface);
+    grwlCreateWindowSurface(demo->inst, demo->window, NULL, &demo->surface);
 
     // Iterate over each queue to learn whether it supports presenting:
     VkBool32* supportsPresent = (VkBool32*)malloc(demo->queue_count * sizeof(VkBool32));
@@ -1963,23 +1963,23 @@ static void demo_init_vk_swapchain(struct demo* demo)
 
 static void demo_init_connection(struct demo* demo)
 {
-    glfwSetErrorCallback(demo_error_callback);
+    grwlSetErrorCallback(demo_error_callback);
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
-        printf("Cannot initialize GLFW.\nExiting ...\n");
+        printf("Cannot initialize GRWL.\nExiting ...\n");
         fflush(stdout);
         exit(1);
     }
 
-    if (!glfwVulkanSupported())
+    if (!grwlVulkanSupported())
     {
-        printf("GLFW failed to find the Vulkan loader.\nExiting ...\n");
+        printf("GRWL failed to find the Vulkan loader.\nExiting ...\n");
         fflush(stdout);
         exit(1);
     }
 
-    gladLoadVulkanUserPtr(NULL, (GLADuserptrloadfunc)glfwGetInstanceProcAddress, NULL);
+    gladLoadVulkanUserPtr(NULL, (GLADuserptrloadfunc)grwlGetInstanceProcAddress, NULL);
 }
 
 static void demo_init(struct demo* demo, const int argc, const char* argv[])
@@ -2085,8 +2085,8 @@ static void demo_cleanup(struct demo* demo)
 
     free(demo->queue_props);
 
-    glfwDestroyWindow(demo->window);
-    glfwTerminate();
+    grwlDestroyWindow(demo->window);
+    grwlTerminate();
 }
 
 static void demo_resize(struct demo* demo)

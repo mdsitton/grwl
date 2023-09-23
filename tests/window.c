@@ -6,8 +6,8 @@
 
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#define GRWL_INCLUDE_NONE
+#include <GRWL/grwl.h>
 
 #include <stdarg.h>
 
@@ -21,8 +21,8 @@
 #define NK_BUTTON_TRIGGER_ON_RELEASE
 #include <nuklear.h>
 
-#define NK_GLFW_GL2_IMPLEMENTATION
-#include <nuklear_glfw_gl2.h>
+#define NK_GRWL_GL2_IMPLEMENTATION
+#include <nuklear_grwl_gl2.h>
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -44,39 +44,39 @@ int main(int argc, char** argv)
     char max_width_buffer[12] = "", max_height_buffer[12] = "";
     int may_close = true;
 
-    if (!glfwInit())
+    if (!grwlInit())
     {
         exit(EXIT_FAILURE);
     }
 
-    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
-    glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_TRUE);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    grwlWindowHint(GRWL_SCALE_TO_MONITOR, GRWL_TRUE);
+    grwlWindowHint(GRWL_WIN32_KEYBOARD_MENU, GRWL_TRUE);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MAJOR, 2);
+    grwlWindowHint(GRWL_CONTEXT_VERSION_MINOR, 1);
 
-    GLFWwindow* window = glfwCreateWindow(600, 800, "Window Features", NULL, NULL);
+    GRWLwindow* window = grwlCreateWindow(600, 800, "Window Features", NULL, NULL);
     if (!window)
     {
-        glfwTerminate();
+        grwlTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwMakeContextCurrent(window);
-    gladLoadGL(glfwGetProcAddress);
-    glfwSwapInterval(0);
+    grwlMakeContextCurrent(window);
+    gladLoadGL(grwlGetProcAddress);
+    grwlSwapInterval(0);
 
     bool position_supported = true;
 
-    glfwGetError(NULL);
-    glfwGetWindowPos(window, &last_xpos, &last_ypos);
+    grwlGetError(NULL);
+    grwlGetWindowPos(window, &last_xpos, &last_ypos);
     sprintf(xpos_buffer, "%i", last_xpos);
     sprintf(ypos_buffer, "%i", last_ypos);
-    if (glfwGetError(NULL) == GLFW_FEATURE_UNAVAILABLE)
+    if (grwlGetError(NULL) == GRWL_FEATURE_UNAVAILABLE)
     {
         position_supported = false;
     }
 
-    glfwGetWindowSize(window, &last_width, &last_height);
+    grwlGetWindowSize(window, &last_width, &last_height);
     sprintf(width_buffer, "%i", last_width);
     sprintf(height_buffer, "%i", last_height);
 
@@ -88,76 +88,76 @@ int main(int argc, char** argv)
     sprintf(max_width_buffer, "%i", max_width);
     sprintf(max_height_buffer, "%i", max_height);
 
-    struct nk_context* nk = nk_glfw3_init(window, NK_GLFW3_INSTALL_CALLBACKS);
+    struct nk_context* nk = nk_grwl_init(window, NK_GRWL_INSTALL_CALLBACKS);
 
     struct nk_font_atlas* atlas;
-    nk_glfw3_font_stash_begin(&atlas);
-    nk_glfw3_font_stash_end();
+    nk_grwl_font_stash_begin(&atlas);
+    nk_grwl_font_stash_end();
 
-    while (!(may_close && glfwWindowShouldClose(window)))
+    while (!(may_close && grwlWindowShouldClose(window)))
     {
         int width, height;
 
-        glfwGetWindowSize(window, &width, &height);
+        grwlGetWindowSize(window, &width, &height);
 
         struct nk_rect area = nk_rect(0.f, 0.f, (float)width, (float)height);
         nk_window_set_bounds(nk, "main", area);
 
-        nk_glfw3_new_frame();
+        nk_grwl_new_frame();
         if (nk_begin(nk, "main", area, 0))
         {
             nk_layout_row_dynamic(nk, 30, 5);
 
             if (nk_button_label(nk, "Toggle Fullscreen"))
             {
-                if (glfwGetWindowMonitor(window))
+                if (grwlGetWindowMonitor(window))
                 {
-                    glfwSetWindowMonitor(window, NULL, windowed_x, windowed_y, windowed_width, windowed_height, 0);
+                    grwlSetWindowMonitor(window, NULL, windowed_x, windowed_y, windowed_width, windowed_height, 0);
                 }
                 else
                 {
-                    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-                    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-                    glfwGetWindowPos(window, &windowed_x, &windowed_y);
-                    glfwGetWindowSize(window, &windowed_width, &windowed_height);
-                    glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+                    GRWLmonitor* monitor = grwlGetPrimaryMonitor();
+                    const GRWLvidmode* mode = grwlGetVideoMode(monitor);
+                    grwlGetWindowPos(window, &windowed_x, &windowed_y);
+                    grwlGetWindowSize(window, &windowed_width, &windowed_height);
+                    grwlSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
                 }
             }
 
             if (nk_button_label(nk, "Maximize"))
             {
-                glfwMaximizeWindow(window);
+                grwlMaximizeWindow(window);
             }
             if (nk_button_label(nk, "Iconify"))
             {
-                glfwIconifyWindow(window);
+                grwlIconifyWindow(window);
             }
             if (nk_button_label(nk, "Restore"))
             {
-                glfwRestoreWindow(window);
+                grwlRestoreWindow(window);
             }
             if (nk_button_label(nk, "Hide (briefly)"))
             {
-                glfwHideWindow(window);
+                grwlHideWindow(window);
 
-                const double time = glfwGetTime() + 3.0;
-                while (glfwGetTime() < time)
+                const double time = grwlGetTime() + 3.0;
+                while (grwlGetTime() < time)
                 {
-                    glfwWaitEventsTimeout(1.0);
+                    grwlWaitEventsTimeout(1.0);
                 }
 
-                glfwShowWindow(window);
+                grwlShowWindow(window);
             }
 
             nk_layout_row_dynamic(nk, 30, 1);
 
-            if (glfwGetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH))
+            if (grwlGetWindowAttrib(window, GRWL_MOUSE_PASSTHROUGH))
             {
                 nk_label(nk, "Press H to disable mouse passthrough", NK_TEXT_CENTERED);
 
-                if (glfwGetKey(window, GLFW_KEY_H))
+                if (grwlGetKey(window, GRWL_KEY_H))
                 {
-                    glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, false);
+                    grwlSetWindowAttrib(window, GRWL_MOUSE_PASSTHROUGH, false);
                 }
             }
 
@@ -169,7 +169,7 @@ int main(int argc, char** argv)
             if (position_supported)
             {
                 int xpos, ypos;
-                glfwGetWindowPos(window, &xpos, &ypos);
+                grwlGetWindowPos(window, &xpos, &ypos);
 
                 nk_layout_row_dynamic(nk, 30, 3);
                 nk_label(nk, "Position", NK_TEXT_LEFT);
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
                 if (events & NK_EDIT_COMMITED)
                 {
                     xpos = atoi(xpos_buffer);
-                    glfwSetWindowPos(window, xpos, ypos);
+                    grwlSetWindowPos(window, xpos, ypos);
                 }
                 else if (xpos != last_xpos || (events & NK_EDIT_DEACTIVATED))
                 {
@@ -189,7 +189,7 @@ int main(int argc, char** argv)
                 if (events & NK_EDIT_COMMITED)
                 {
                     ypos = atoi(ypos_buffer);
-                    glfwSetWindowPos(window, xpos, ypos);
+                    grwlSetWindowPos(window, xpos, ypos);
                 }
                 else if (ypos != last_ypos || (events & NK_EDIT_DEACTIVATED))
                 {
@@ -211,7 +211,7 @@ int main(int argc, char** argv)
             if (events & NK_EDIT_COMMITED)
             {
                 width = atoi(width_buffer);
-                glfwSetWindowSize(window, width, height);
+                grwlSetWindowSize(window, width, height);
             }
             else if (width != last_width || (events & NK_EDIT_DEACTIVATED))
             {
@@ -222,7 +222,7 @@ int main(int argc, char** argv)
             if (events & NK_EDIT_COMMITED)
             {
                 height = atoi(height_buffer);
-                glfwSetWindowSize(window, width, height);
+                grwlSetWindowSize(window, width, height);
             }
             else if (height != last_height || (events & NK_EDIT_DEACTIVATED))
             {
@@ -264,11 +264,11 @@ int main(int argc, char** argv)
             {
                 if (limit_aspect_ratio)
                 {
-                    glfwSetWindowAspectRatio(window, aspect_numer, aspect_denom);
+                    grwlSetWindowAspectRatio(window, aspect_numer, aspect_denom);
                 }
                 else
                 {
-                    glfwSetWindowAspectRatio(window, GLFW_DONT_CARE, GLFW_DONT_CARE);
+                    grwlSetWindowAspectRatio(window, GRWL_DONT_CARE, GRWL_DONT_CARE);
                 }
             }
 
@@ -334,26 +334,26 @@ int main(int argc, char** argv)
 
             if (update_size_limit)
             {
-                glfwSetWindowSizeLimits(
-                    window, limit_min_size ? min_width : GLFW_DONT_CARE, limit_min_size ? min_height : GLFW_DONT_CARE,
-                    limit_max_size ? max_width : GLFW_DONT_CARE, limit_max_size ? max_height : GLFW_DONT_CARE);
+                grwlSetWindowSizeLimits(
+                    window, limit_min_size ? min_width : GRWL_DONT_CARE, limit_min_size ? min_height : GRWL_DONT_CARE,
+                    limit_max_size ? max_width : GRWL_DONT_CARE, limit_max_size ? max_height : GRWL_DONT_CARE);
             }
 
             int fb_width, fb_height;
-            glfwGetFramebufferSize(window, &fb_width, &fb_height);
+            grwlGetFramebufferSize(window, &fb_width, &fb_height);
             nk_label(nk, "Framebuffer Size", NK_TEXT_LEFT);
             nk_labelf(nk, NK_TEXT_LEFT, "%i", fb_width);
             nk_labelf(nk, NK_TEXT_LEFT, "%i", fb_height);
 
             float xscale, yscale;
-            glfwGetWindowContentScale(window, &xscale, &yscale);
+            grwlGetWindowContentScale(window, &xscale, &yscale);
             nk_label(nk, "Content Scale", NK_TEXT_LEFT);
             nk_labelf(nk, NK_TEXT_LEFT, "%f", xscale);
             nk_labelf(nk, NK_TEXT_LEFT, "%f", yscale);
 
             nk_layout_row_begin(nk, NK_DYNAMIC, 30, 5);
             int frame_left, frame_top, frame_right, frame_bottom;
-            glfwGetWindowFrameSize(window, &frame_left, &frame_top, &frame_right, &frame_bottom);
+            grwlGetWindowFrameSize(window, &frame_left, &frame_top, &frame_right, &frame_bottom);
             nk_layout_row_push(nk, 1.f / 3.f);
             nk_label(nk, "Frame Size:", NK_TEXT_LEFT);
             nk_layout_row_push(nk, 1.f / 6.f);
@@ -367,22 +367,22 @@ int main(int argc, char** argv)
             nk_layout_row_end(nk);
 
             nk_layout_row_begin(nk, NK_DYNAMIC, 30, 2);
-            float opacity = glfwGetWindowOpacity(window);
+            float opacity = grwlGetWindowOpacity(window);
             nk_layout_row_push(nk, 1.f / 3.f);
             nk_labelf(nk, NK_TEXT_LEFT, "Opacity: %0.3f", opacity);
             nk_layout_row_push(nk, 2.f / 3.f);
             if (nk_slider_float(nk, 0.f, &opacity, 1.f, 0.001f))
             {
-                glfwSetWindowOpacity(window, opacity);
+                grwlSetWindowOpacity(window, opacity);
             }
             nk_layout_row_end(nk);
 
             nk_layout_row_begin(nk, NK_DYNAMIC, 30, 2);
-            int should_close = glfwWindowShouldClose(window);
+            int should_close = grwlWindowShouldClose(window);
             nk_layout_row_push(nk, 1.f / 3.f);
             if (nk_checkbox_label(nk, "Should Close", &should_close))
             {
-                glfwSetWindowShouldClose(window, should_close);
+                grwlSetWindowShouldClose(window, should_close);
             }
             nk_layout_row_push(nk, 2.f / 3.f);
             nk_checkbox_label(nk, "May Close", &may_close);
@@ -393,41 +393,41 @@ int main(int argc, char** argv)
 
             nk_layout_row_dynamic(nk, 30, width > 200 ? width / 200 : 1);
 
-            int decorated = glfwGetWindowAttrib(window, GLFW_DECORATED);
+            int decorated = grwlGetWindowAttrib(window, GRWL_DECORATED);
             if (nk_checkbox_label(nk, "Decorated", &decorated))
             {
-                glfwSetWindowAttrib(window, GLFW_DECORATED, decorated);
+                grwlSetWindowAttrib(window, GRWL_DECORATED, decorated);
             }
 
-            int resizable = glfwGetWindowAttrib(window, GLFW_RESIZABLE);
+            int resizable = grwlGetWindowAttrib(window, GRWL_RESIZABLE);
             if (nk_checkbox_label(nk, "Resizable", &resizable))
             {
-                glfwSetWindowAttrib(window, GLFW_RESIZABLE, resizable);
+                grwlSetWindowAttrib(window, GRWL_RESIZABLE, resizable);
             }
 
-            int floating = glfwGetWindowAttrib(window, GLFW_FLOATING);
+            int floating = grwlGetWindowAttrib(window, GRWL_FLOATING);
             if (nk_checkbox_label(nk, "Floating", &floating))
             {
-                glfwSetWindowAttrib(window, GLFW_FLOATING, floating);
+                grwlSetWindowAttrib(window, GRWL_FLOATING, floating);
             }
 
-            int passthrough = glfwGetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH);
+            int passthrough = grwlGetWindowAttrib(window, GRWL_MOUSE_PASSTHROUGH);
             if (nk_checkbox_label(nk, "Mouse Passthrough", &passthrough))
             {
-                glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, passthrough);
+                grwlSetWindowAttrib(window, GRWL_MOUSE_PASSTHROUGH, passthrough);
             }
 
-            int auto_iconify = glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY);
+            int auto_iconify = grwlGetWindowAttrib(window, GRWL_AUTO_ICONIFY);
             if (nk_checkbox_label(nk, "Auto Iconify", &auto_iconify))
             {
-                glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, auto_iconify);
+                grwlSetWindowAttrib(window, GRWL_AUTO_ICONIFY, auto_iconify);
             }
 
-            nk_value_bool(nk, "Focused", glfwGetWindowAttrib(window, GLFW_FOCUSED));
-            nk_value_bool(nk, "Hovered", glfwGetWindowAttrib(window, GLFW_HOVERED));
-            nk_value_bool(nk, "Visible", glfwGetWindowAttrib(window, GLFW_VISIBLE));
-            nk_value_bool(nk, "Iconified", glfwGetWindowAttrib(window, GLFW_ICONIFIED));
-            nk_value_bool(nk, "Maximized", glfwGetWindowAttrib(window, GLFW_MAXIMIZED));
+            nk_value_bool(nk, "Focused", grwlGetWindowAttrib(window, GRWL_FOCUSED));
+            nk_value_bool(nk, "Hovered", grwlGetWindowAttrib(window, GRWL_HOVERED));
+            nk_value_bool(nk, "Visible", grwlGetWindowAttrib(window, GRWL_VISIBLE));
+            nk_value_bool(nk, "Iconified", grwlGetWindowAttrib(window, GRWL_ICONIFIED));
+            nk_value_bool(nk, "Maximized", grwlGetWindowAttrib(window, GRWL_MAXIMIZED));
 
             nk_layout_row_dynamic(nk, 30, 1);
 
@@ -435,33 +435,33 @@ int main(int argc, char** argv)
 
             nk_layout_row_dynamic(nk, 30, 5);
 
-            static int state = GLFW_PROGRESS_INDICATOR_DISABLED;
+            static int state = GRWL_PROGRESS_INDICATOR_DISABLED;
             static float progress = 0;
             if (nk_button_label(nk, "No progress"))
             {
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_DISABLED, (double)progress);
+                grwlSetWindowProgressIndicator(window, state = GRWL_PROGRESS_INDICATOR_DISABLED, (double)progress);
             }
             if (nk_button_label(nk, "Indeterminate"))
             {
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_INDETERMINATE, (double)progress);
+                grwlSetWindowProgressIndicator(window, state = GRWL_PROGRESS_INDICATOR_INDETERMINATE, (double)progress);
             }
             if (nk_button_label(nk, "Normal"))
             {
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_NORMAL, (double)progress);
+                grwlSetWindowProgressIndicator(window, state = GRWL_PROGRESS_INDICATOR_NORMAL, (double)progress);
             }
             if (nk_button_label(nk, "Error"))
             {
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_ERROR, (double)progress);
+                grwlSetWindowProgressIndicator(window, state = GRWL_PROGRESS_INDICATOR_ERROR, (double)progress);
             }
             if (nk_button_label(nk, "Paused"))
             {
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_PAUSED, (double)progress);
+                grwlSetWindowProgressIndicator(window, state = GRWL_PROGRESS_INDICATOR_PAUSED, (double)progress);
             }
 
             nk_label(nk, "Progress: ", NK_TEXT_ALIGN_LEFT);
             if (nk_slider_float(nk, 0.0f, &progress, 1.0f, 0.05f))
             {
-                glfwSetWindowProgressIndicator(window, state, (double)progress);
+                grwlSetWindowProgressIndicator(window, state, (double)progress);
             }
 
             nk_layout_row_dynamic(nk, 30, 1);
@@ -475,21 +475,21 @@ int main(int argc, char** argv)
             nk_layout_row_push(nk, 2.f / 3.f);
             if (nk_slider_int(nk, 0, &badgeCount, 10000, 1))
             {
-                glfwSetWindowBadge(window, badgeCount);
-                glfwSetWindowBadge(NULL, badgeCount);
+                grwlSetWindowBadge(window, badgeCount);
+                grwlSetWindowBadge(NULL, badgeCount);
             }
             nk_layout_row_end(nk);
         }
         nk_end(nk);
 
         glClear(GL_COLOR_BUFFER_BIT);
-        nk_glfw3_render(NK_ANTI_ALIASING_ON);
-        glfwSwapBuffers(window);
+        nk_grwl_render(NK_ANTI_ALIASING_ON);
+        grwlSwapBuffers(window);
 
-        glfwWaitEvents();
+        grwlWaitEvents();
     }
 
-    nk_glfw3_shutdown();
-    glfwTerminate();
+    nk_grwl_shutdown();
+    grwlTerminate();
     exit(EXIT_SUCCESS);
 }

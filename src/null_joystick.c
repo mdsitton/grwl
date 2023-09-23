@@ -6,28 +6,28 @@
 #include "internal.h"
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
+//////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWbool _glfwInitJoysticksNull(void)
+GRWLbool _grwlInitJoysticksNull(void)
 {
-    return GLFW_TRUE;
+    return GRWL_TRUE;
 }
 
-void _glfwTerminateJoysticksNull(void)
+void _grwlTerminateJoysticksNull(void)
 {
 }
 
-GLFWbool _glfwPollJoystickNull(_GLFWjoystick* js, int mode)
+GRWLbool _grwlPollJoystickNull(_GRWLjoystick* js, int mode)
 {
-    return GLFW_FALSE;
+    return GRWL_FALSE;
 }
 
-const char* _glfwGetMappingNameNull(void)
+const char* _grwlGetMappingNameNull(void)
 {
     return "";
 }
 
-void _glfwUpdateGamepadGUIDNull(char* guid)
+void _grwlUpdateGamepadGUIDNull(char* guid)
 {
 }

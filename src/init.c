@@ -11,35 +11,35 @@
 #include <stdarg.h>
 #include <assert.h>
 
-// NOTE: The global variables below comprise all mutable global data in GLFW
+// NOTE: The global variables below comprise all mutable global data in GRWL
 //       Any other mutable global variable is a bug
 
-// This contains all mutable state shared between compilation units of GLFW
+// This contains all mutable state shared between compilation units of GRWL
 //
-_GLFWlibrary _glfw = { GLFW_FALSE };
+_GRWLlibrary _grwl = { GRWL_FALSE };
 
-// These are outside of _glfw so they can be used before initialization and
-// after termination without special handling when _glfw is cleared to zero
+// These are outside of _grwl so they can be used before initialization and
+// after termination without special handling when _grwl is cleared to zero
 //
-static _GLFWerror _glfwMainThreadError;
-static GLFWerrorfun _glfwErrorCallback;
-static GLFWallocator _glfwInitAllocator;
-static _GLFWinitconfig _glfwInitHints = {
-    GLFW_TRUE,                     // hat buttons
-    GLFW_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
-    GLFW_ANY_PLATFORM,             // preferred platform
-    GLFW_FALSE,                    // whether to manage preedit candidate
+static _GRWLerror _grwlMainThreadError;
+static GRWLerrorfun _grwlErrorCallback;
+static GRWLallocator _grwlInitAllocator;
+static _GRWLinitconfig _grwlInitHints = {
+    GRWL_TRUE,                     // hat buttons
+    GRWL_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
+    GRWL_ANY_PLATFORM,             // preferred platform
+    GRWL_FALSE,                    // whether to manage preedit candidate
     NULL,                          // vkGetInstanceProcAddr function
     {
-        GLFW_TRUE, // macOS menu bar
-        GLFW_TRUE  // macOS bundle chdir
+        GRWL_TRUE, // macOS menu bar
+        GRWL_TRUE  // macOS bundle chdir
     },
     {
-        GLFW_TRUE, // X11 XCB Vulkan surface
-        GLFW_FALSE // X11 on-the-spot IM-style
+        GRWL_TRUE, // X11 XCB Vulkan surface
+        GRWL_FALSE // X11 on-the-spot IM-style
     },
     {
-        GLFW_WAYLAND_PREFER_LIBDECOR // Wayland libdecor mode
+        GRWL_WAYLAND_PREFER_LIBDECOR // Wayland libdecor mode
     },
 };
 
@@ -70,65 +70,65 @@ static void terminate(void)
 {
     int i;
 
-    memset(&_glfw.callbacks, 0, sizeof(_glfw.callbacks));
+    memset(&_grwl.callbacks, 0, sizeof(_grwl.callbacks));
 
-    while (_glfw.windowListHead)
+    while (_grwl.windowListHead)
     {
-        glfwDestroyWindow((GLFWwindow*)_glfw.windowListHead);
+        grwlDestroyWindow((GRWLwindow*)_grwl.windowListHead);
     }
 
-    while (_glfw.cursorListHead)
+    while (_grwl.cursorListHead)
     {
-        glfwDestroyCursor((GLFWcursor*)_glfw.cursorListHead);
+        grwlDestroyCursor((GRWLcursor*)_grwl.cursorListHead);
     }
 
-    for (i = 0; i < _glfw.monitorCount; i++)
+    for (i = 0; i < _grwl.monitorCount; i++)
     {
-        _GLFWmonitor* monitor = _glfw.monitors[i];
+        _GRWLmonitor* monitor = _grwl.monitors[i];
         if (monitor->originalRamp.size)
         {
-            _glfw.platform.setGammaRamp(monitor, &monitor->originalRamp);
+            _grwl.platform.setGammaRamp(monitor, &monitor->originalRamp);
         }
-        _glfwFreeMonitor(monitor);
+        _grwlFreeMonitor(monitor);
     }
 
-    _glfw_free(_glfw.monitors);
-    _glfw.monitors = NULL;
-    _glfw.monitorCount = 0;
+    _grwl_free(_grwl.monitors);
+    _grwl.monitors = NULL;
+    _grwl.monitorCount = 0;
 
-    _glfw_free(_glfw.mappings);
-    _glfw.mappings = NULL;
-    _glfw.mappingCount = 0;
+    _grwl_free(_grwl.mappings);
+    _grwl.mappings = NULL;
+    _grwl.mappingCount = 0;
 
-    _glfwTerminateVulkan();
-    _glfw.platform.terminateJoysticks();
-    _glfw.platform.terminate();
+    _grwlTerminateVulkan();
+    _grwl.platform.terminateJoysticks();
+    _grwl.platform.terminate();
 
-    _glfw.initialized = GLFW_FALSE;
+    _grwl.initialized = GRWL_FALSE;
 
-    while (_glfw.errorListHead)
+    while (_grwl.errorListHead)
     {
-        _GLFWerror* error = _glfw.errorListHead;
-        _glfw.errorListHead = error->next;
-        _glfw_free(error);
+        _GRWLerror* error = _grwl.errorListHead;
+        _grwl.errorListHead = error->next;
+        _grwl_free(error);
     }
 
-    _glfwPlatformDestroyTls(&_glfw.usercontextSlot);
-    _glfwPlatformDestroyTls(&_glfw.contextSlot);
-    _glfwPlatformDestroyTls(&_glfw.errorSlot);
-    _glfwPlatformDestroyMutex(&_glfw.errorLock);
+    _grwlPlatformDestroyTls(&_grwl.usercontextSlot);
+    _grwlPlatformDestroyTls(&_grwl.contextSlot);
+    _grwlPlatformDestroyTls(&_grwl.errorSlot);
+    _grwlPlatformDestroyMutex(&_grwl.errorLock);
 
-    memset(&_glfw, 0, sizeof(_glfw));
+    memset(&_grwl, 0, sizeof(_grwl));
 }
 
 //////////////////////////////////////////////////////////////////////////
-//////                       GLFW internal API                      //////
+//////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
 // Encode a Unicode code point to a UTF-8 stream
 // Based on cutef8 by Jeff Bezanson (Public Domain)
 //
-size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
+size_t _grwlEncodeUTF8(char* s, uint32_t codepoint)
 {
     size_t count = 0;
 
@@ -161,7 +161,7 @@ size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
 // Decode a Unicode code point from a UTF-8 stream
 // Based on cutef8 by Jeff Bezanson (Public Domain)
 //
-uint32_t _glfwDecodeUTF8(const char** s)
+uint32_t _grwlDecodeUTF8(const char** s)
 {
     uint32_t codepoint = 0, count = 0;
     static const uint32_t offsets[] = { 0x00000000u, 0x00003080u, 0x000e2080u, 0x03c82080u, 0xfa082080u, 0x82082080u };
@@ -180,7 +180,7 @@ uint32_t _glfwDecodeUTF8(const char** s)
 // Splits and translates a text/uri-list into separate file paths
 // NOTE: This function destroys the provided string
 //
-char** _glfwParseUriList(char* text, int* count)
+char** _grwlParseUriList(char* text, int* count)
 {
     const char* prefix = "file://";
     char** paths = NULL;
@@ -211,8 +211,8 @@ char** _glfwParseUriList(char* text, int* count)
 
         (*count)++;
 
-        path = _glfw_calloc(strlen(line) + 1, 1);
-        paths = _glfw_realloc(paths, *count * sizeof(char*));
+        path = _grwl_calloc(strlen(line) + 1, 1);
+        paths = _grwl_realloc(paths, *count * sizeof(char*));
         paths[*count - 1] = path;
 
         while (*line)
@@ -236,25 +236,25 @@ char** _glfwParseUriList(char* text, int* count)
     return paths;
 }
 
-char* _glfw_strdup(const char* source)
+char* _grwl_strdup(const char* source)
 {
     const size_t length = strlen(source);
-    char* result = _glfw_calloc(length + 1, 1);
+    char* result = _grwl_calloc(length + 1, 1);
     strcpy(result, source);
     return result;
 }
 
-int _glfw_min(int a, int b)
+int _grwl_min(int a, int b)
 {
     return a < b ? a : b;
 }
 
-int _glfw_max(int a, int b)
+int _grwl_max(int a, int b)
 {
     return a > b ? a : b;
 }
 
-float _glfw_fminf(float a, float b)
+float _grwl_fminf(float a, float b)
 {
     if (a != a)
     {
@@ -274,7 +274,7 @@ float _glfw_fminf(float a, float b)
     }
 }
 
-float _glfw_fmaxf(float a, float b)
+float _grwl_fmaxf(float a, float b)
 {
     if (a != a)
     {
@@ -294,7 +294,7 @@ float _glfw_fmaxf(float a, float b)
     }
 }
 
-void* _glfw_calloc(size_t count, size_t size)
+void* _grwl_calloc(size_t count, size_t size)
 {
     if (count && size)
     {
@@ -302,18 +302,18 @@ void* _glfw_calloc(size_t count, size_t size)
 
         if (count > SIZE_MAX / size)
         {
-            _glfwInputError(GLFW_INVALID_VALUE, "Allocation size overflow");
+            _grwlInputError(GRWL_INVALID_VALUE, "Allocation size overflow");
             return NULL;
         }
 
-        block = _glfw.allocator.allocate(count * size, _glfw.allocator.user);
+        block = _grwl.allocator.allocate(count * size, _grwl.allocator.user);
         if (block)
         {
             return memset(block, 0, count * size);
         }
         else
         {
-            _glfwInputError(GLFW_OUT_OF_MEMORY, NULL);
+            _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
             return NULL;
         }
     }
@@ -323,50 +323,50 @@ void* _glfw_calloc(size_t count, size_t size)
     }
 }
 
-void* _glfw_realloc(void* block, size_t size)
+void* _grwl_realloc(void* block, size_t size)
 {
     if (block && size)
     {
-        void* resized = _glfw.allocator.reallocate(block, size, _glfw.allocator.user);
+        void* resized = _grwl.allocator.reallocate(block, size, _grwl.allocator.user);
         if (resized)
         {
             return resized;
         }
         else
         {
-            _glfwInputError(GLFW_OUT_OF_MEMORY, NULL);
+            _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
             return NULL;
         }
     }
     else if (block)
     {
-        _glfw_free(block);
+        _grwl_free(block);
         return NULL;
     }
     else
     {
-        return _glfw_calloc(1, size);
+        return _grwl_calloc(1, size);
     }
 }
 
-void _glfw_free(void* block)
+void _grwl_free(void* block)
 {
     if (block)
     {
-        _glfw.allocator.deallocate(block, _glfw.allocator.user);
+        _grwl.allocator.deallocate(block, _grwl.allocator.user);
     }
 }
 
 //////////////////////////////////////////////////////////////////////////
-//////                         GLFW event API                       //////
+//////                         GRWL event API                       //////
 //////////////////////////////////////////////////////////////////////////
 
 // Notifies shared code of an error
 //
-void _glfwInputError(int code, const char* format, ...)
+void _grwlInputError(int code, const char* format, ...)
 {
-    _GLFWerror* error;
-    char description[_GLFW_MESSAGE_SIZE];
+    _GRWLerror* error;
+    char description[_GRWL_MESSAGE_SIZE];
 
     if (format)
     {
@@ -380,151 +380,151 @@ void _glfwInputError(int code, const char* format, ...)
     }
     else
     {
-        if (code == GLFW_NOT_INITIALIZED)
+        if (code == GRWL_NOT_INITIALIZED)
         {
-            strcpy(description, "The GLFW library is not initialized");
+            strcpy(description, "The GRWL library is not initialized");
         }
-        else if (code == GLFW_NO_CURRENT_CONTEXT)
+        else if (code == GRWL_NO_CURRENT_CONTEXT)
         {
             strcpy(description, "There is no current context");
         }
-        else if (code == GLFW_INVALID_ENUM)
+        else if (code == GRWL_INVALID_ENUM)
         {
             strcpy(description, "Invalid argument for enum parameter");
         }
-        else if (code == GLFW_INVALID_VALUE)
+        else if (code == GRWL_INVALID_VALUE)
         {
             strcpy(description, "Invalid value for parameter");
         }
-        else if (code == GLFW_OUT_OF_MEMORY)
+        else if (code == GRWL_OUT_OF_MEMORY)
         {
             strcpy(description, "Out of memory");
         }
-        else if (code == GLFW_API_UNAVAILABLE)
+        else if (code == GRWL_API_UNAVAILABLE)
         {
             strcpy(description, "The requested API is unavailable");
         }
-        else if (code == GLFW_VERSION_UNAVAILABLE)
+        else if (code == GRWL_VERSION_UNAVAILABLE)
         {
             strcpy(description, "The requested API version is unavailable");
         }
-        else if (code == GLFW_PLATFORM_ERROR)
+        else if (code == GRWL_PLATFORM_ERROR)
         {
             strcpy(description, "A platform-specific error occurred");
         }
-        else if (code == GLFW_FORMAT_UNAVAILABLE)
+        else if (code == GRWL_FORMAT_UNAVAILABLE)
         {
             strcpy(description, "The requested format is unavailable");
         }
-        else if (code == GLFW_NO_WINDOW_CONTEXT)
+        else if (code == GRWL_NO_WINDOW_CONTEXT)
         {
             strcpy(description, "The specified window has no context");
         }
-        else if (code == GLFW_CURSOR_UNAVAILABLE)
+        else if (code == GRWL_CURSOR_UNAVAILABLE)
         {
             strcpy(description, "The specified cursor shape is unavailable");
         }
-        else if (code == GLFW_FEATURE_UNAVAILABLE)
+        else if (code == GRWL_FEATURE_UNAVAILABLE)
         {
             strcpy(description, "The requested feature cannot be implemented for this platform");
         }
-        else if (code == GLFW_FEATURE_UNIMPLEMENTED)
+        else if (code == GRWL_FEATURE_UNIMPLEMENTED)
         {
             strcpy(description, "The requested feature has not yet been implemented for this platform");
         }
-        else if (code == GLFW_PLATFORM_UNAVAILABLE)
+        else if (code == GRWL_PLATFORM_UNAVAILABLE)
         {
             strcpy(description, "The requested platform is unavailable");
         }
         else
         {
-            strcpy(description, "ERROR: UNKNOWN GLFW ERROR");
+            strcpy(description, "ERROR: UNKNOWN GRWL ERROR");
         }
     }
 
-    if (_glfw.initialized)
+    if (_grwl.initialized)
     {
-        error = _glfwPlatformGetTls(&_glfw.errorSlot);
+        error = _grwlPlatformGetTls(&_grwl.errorSlot);
         if (!error)
         {
-            error = _glfw_calloc(1, sizeof(_GLFWerror));
-            _glfwPlatformSetTls(&_glfw.errorSlot, error);
-            _glfwPlatformLockMutex(&_glfw.errorLock);
-            error->next = _glfw.errorListHead;
-            _glfw.errorListHead = error;
-            _glfwPlatformUnlockMutex(&_glfw.errorLock);
+            error = _grwl_calloc(1, sizeof(_GRWLerror));
+            _grwlPlatformSetTls(&_grwl.errorSlot, error);
+            _grwlPlatformLockMutex(&_grwl.errorLock);
+            error->next = _grwl.errorListHead;
+            _grwl.errorListHead = error;
+            _grwlPlatformUnlockMutex(&_grwl.errorLock);
         }
     }
     else
     {
-        error = &_glfwMainThreadError;
+        error = &_grwlMainThreadError;
     }
 
     error->code = code;
     strcpy(error->description, description);
 
-    if (_glfwErrorCallback)
+    if (_grwlErrorCallback)
     {
-        _glfwErrorCallback(code, description);
+        _grwlErrorCallback(code, description);
     }
 }
 
 //////////////////////////////////////////////////////////////////////////
-//////                        GLFW public API                       //////
+//////                        GRWL public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWAPI int glfwInit(void)
+GRWLAPI int grwlInit(void)
 {
-    if (_glfw.initialized)
+    if (_grwl.initialized)
     {
-        return GLFW_TRUE;
+        return GRWL_TRUE;
     }
 
-    memset(&_glfw, 0, sizeof(_glfw));
-    _glfw.hints.init = _glfwInitHints;
+    memset(&_grwl, 0, sizeof(_grwl));
+    _grwl.hints.init = _grwlInitHints;
 
-    _glfw.allocator = _glfwInitAllocator;
-    if (!_glfw.allocator.allocate)
+    _grwl.allocator = _grwlInitAllocator;
+    if (!_grwl.allocator.allocate)
     {
-        _glfw.allocator.allocate = defaultAllocate;
-        _glfw.allocator.reallocate = defaultReallocate;
-        _glfw.allocator.deallocate = defaultDeallocate;
+        _grwl.allocator.allocate = defaultAllocate;
+        _grwl.allocator.reallocate = defaultReallocate;
+        _grwl.allocator.deallocate = defaultDeallocate;
     }
 
-    if (!_glfwSelectPlatform(_glfw.hints.init.platformID, &_glfw.platform))
+    if (!_grwlSelectPlatform(_grwl.hints.init.platformID, &_grwl.platform))
     {
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
-    if (!_glfw.platform.init())
-    {
-        terminate();
-        return GLFW_FALSE;
-    }
-
-    if (!_glfwPlatformCreateMutex(&_glfw.errorLock) || !_glfwPlatformCreateTls(&_glfw.errorSlot) ||
-        !_glfwPlatformCreateTls(&_glfw.contextSlot) || !_glfwPlatformCreateTls(&_glfw.usercontextSlot))
+    if (!_grwl.platform.init())
     {
         terminate();
-        return GLFW_FALSE;
+        return GRWL_FALSE;
     }
 
-    _glfwPlatformSetTls(&_glfw.errorSlot, &_glfwMainThreadError);
+    if (!_grwlPlatformCreateMutex(&_grwl.errorLock) || !_grwlPlatformCreateTls(&_grwl.errorSlot) ||
+        !_grwlPlatformCreateTls(&_grwl.contextSlot) || !_grwlPlatformCreateTls(&_grwl.usercontextSlot))
+    {
+        terminate();
+        return GRWL_FALSE;
+    }
 
-    _glfwInitGamepadMappings();
+    _grwlPlatformSetTls(&_grwl.errorSlot, &_grwlMainThreadError);
 
-    _glfwPlatformInitTimer();
-    _glfw.timer.offset = _glfwPlatformGetTimerValue();
+    _grwlInitGamepadMappings();
 
-    _glfw.initialized = GLFW_TRUE;
+    _grwlPlatformInitTimer();
+    _grwl.timer.offset = _grwlPlatformGetTimerValue();
 
-    glfwDefaultWindowHints();
-    return GLFW_TRUE;
+    _grwl.initialized = GRWL_TRUE;
+
+    grwlDefaultWindowHints();
+    return GRWL_TRUE;
 }
 
-GLFWAPI void glfwTerminate(void)
+GRWLAPI void grwlTerminate(void)
 {
-    if (!_glfw.initialized)
+    if (!_grwl.initialized)
     {
         return;
     }
@@ -532,105 +532,105 @@ GLFWAPI void glfwTerminate(void)
     terminate();
 }
 
-GLFWAPI void glfwInitHint(int hint, int value)
+GRWLAPI void grwlInitHint(int hint, int value)
 {
     switch (hint)
     {
-        case GLFW_JOYSTICK_HAT_BUTTONS:
-            _glfwInitHints.hatButtons = value;
+        case GRWL_JOYSTICK_HAT_BUTTONS:
+            _grwlInitHints.hatButtons = value;
             return;
-        case GLFW_ANGLE_PLATFORM_TYPE:
-            _glfwInitHints.angleType = value;
+        case GRWL_ANGLE_PLATFORM_TYPE:
+            _grwlInitHints.angleType = value;
             return;
-        case GLFW_PLATFORM:
-            _glfwInitHints.platformID = value;
+        case GRWL_PLATFORM:
+            _grwlInitHints.platformID = value;
             return;
-        case GLFW_MANAGE_PREEDIT_CANDIDATE:
-            _glfwInitHints.managePreeditCandidate = value;
+        case GRWL_MANAGE_PREEDIT_CANDIDATE:
+            _grwlInitHints.managePreeditCandidate = value;
             return;
-        case GLFW_COCOA_CHDIR_RESOURCES:
-            _glfwInitHints.ns.chdir = value;
+        case GRWL_COCOA_CHDIR_RESOURCES:
+            _grwlInitHints.ns.chdir = value;
             return;
-        case GLFW_COCOA_MENUBAR:
-            _glfwInitHints.ns.menubar = value;
+        case GRWL_COCOA_MENUBAR:
+            _grwlInitHints.ns.menubar = value;
             return;
-        case GLFW_X11_XCB_VULKAN_SURFACE:
-            _glfwInitHints.x11.xcbVulkanSurface = value;
+        case GRWL_X11_XCB_VULKAN_SURFACE:
+            _grwlInitHints.x11.xcbVulkanSurface = value;
             return;
-        case GLFW_X11_ONTHESPOT:
-            _glfwInitHints.x11.onTheSpotIMStyle = value;
+        case GRWL_X11_ONTHESPOT:
+            _grwlInitHints.x11.onTheSpotIMStyle = value;
             return;
-        case GLFW_WAYLAND_LIBDECOR:
-            _glfwInitHints.wl.libdecorMode = value;
+        case GRWL_WAYLAND_LIBDECOR:
+            _grwlInitHints.wl.libdecorMode = value;
             return;
     }
 
-    _glfwInputError(GLFW_INVALID_ENUM, "Invalid init hint 0x%08X", hint);
+    _grwlInputError(GRWL_INVALID_ENUM, "Invalid init hint 0x%08X", hint);
 }
 
-GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator)
+GRWLAPI void grwlInitAllocator(const GRWLallocator* allocator)
 {
     if (allocator)
     {
         if (allocator->allocate && allocator->reallocate && allocator->deallocate)
         {
-            _glfwInitAllocator = *allocator;
+            _grwlInitAllocator = *allocator;
         }
         else
         {
-            _glfwInputError(GLFW_INVALID_VALUE, "Missing function in allocator");
+            _grwlInputError(GRWL_INVALID_VALUE, "Missing function in allocator");
         }
     }
     else
     {
-        memset(&_glfwInitAllocator, 0, sizeof(GLFWallocator));
+        memset(&_grwlInitAllocator, 0, sizeof(GRWLallocator));
     }
 }
 
-GLFWAPI void glfwInitVulkanLoader(PFN_vkGetInstanceProcAddr loader)
+GRWLAPI void grwlInitVulkanLoader(PFN_vkGetInstanceProcAddr loader)
 {
-    _glfwInitHints.vulkanLoader = loader;
+    _grwlInitHints.vulkanLoader = loader;
 }
 
-GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev)
+GRWLAPI void grwlGetVersion(int* major, int* minor, int* rev)
 {
     if (major != NULL)
     {
-        *major = GLFW_VERSION_MAJOR;
+        *major = GRWL_VERSION_MAJOR;
     }
     if (minor != NULL)
     {
-        *minor = GLFW_VERSION_MINOR;
+        *minor = GRWL_VERSION_MINOR;
     }
     if (rev != NULL)
     {
-        *rev = GLFW_VERSION_REVISION;
+        *rev = GRWL_VERSION_REVISION;
     }
 }
 
-GLFWAPI int glfwGetError(const char** description)
+GRWLAPI int grwlGetError(const char** description)
 {
-    _GLFWerror* error;
-    int code = GLFW_NO_ERROR;
+    _GRWLerror* error;
+    int code = GRWL_NO_ERROR;
 
     if (description)
     {
         *description = NULL;
     }
 
-    if (_glfw.initialized)
+    if (_grwl.initialized)
     {
-        error = _glfwPlatformGetTls(&_glfw.errorSlot);
+        error = _grwlPlatformGetTls(&_grwl.errorSlot);
     }
     else
     {
-        error = &_glfwMainThreadError;
+        error = &_grwlMainThreadError;
     }
 
     if (error)
     {
         code = error->code;
-        error->code = GLFW_NO_ERROR;
+        error->code = GRWL_NO_ERROR;
         if (description && code)
         {
             *description = error->description;
@@ -640,13 +640,13 @@ GLFWAPI int glfwGetError(const char** description)
     return code;
 }
 
-GLFWAPI int glfwIsInitialized(void)
+GRWLAPI int grwlIsInitialized(void)
 {
-    return _glfw.initialized;
+    return _grwl.initialized;
 }
 
-GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
+GRWLAPI GRWLerrorfun grwlSetErrorCallback(GRWLerrorfun cbfun)
 {
-    _GLFW_SWAP(GLFWerrorfun, _glfwErrorCallback, cbfun);
+    _GRWL_SWAP(GRWLerrorfun, _grwlErrorCallback, cbfun);
     return cbfun;
 }

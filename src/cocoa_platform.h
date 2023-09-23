@@ -3,7 +3,7 @@
 // See file LICENSE.md for full license details
 //===========================================================================
 
-#if defined(_GLFW_COCOA)
+#if defined(_GRWL_COCOA)
     #include <stdint.h>
 
     #include <Carbon/Carbon.h>
@@ -82,80 +82,80 @@ typedef VkResult(APIENTRY* PFN_vkCreateMacOSSurfaceMVK)(VkInstance, const VkMacO
 typedef VkResult(APIENTRY* PFN_vkCreateMetalSurfaceEXT)(VkInstance, const VkMetalSurfaceCreateInfoEXT*,
                                                         const VkAllocationCallbacks*, VkSurfaceKHR*);
 
-    #define GLFW_COCOA_WINDOW_STATE _GLFWwindowNS ns;
-    #define GLFW_COCOA_LIBRARY_WINDOW_STATE _GLFWlibraryNS ns;
-    #define GLFW_COCOA_MONITOR_STATE _GLFWmonitorNS ns;
-    #define GLFW_COCOA_CURSOR_STATE _GLFWcursorNS ns;
+    #define GRWL_COCOA_WINDOW_STATE _GRWLwindowNS ns;
+    #define GRWL_COCOA_LIBRARY_WINDOW_STATE _GRWLlibraryNS ns;
+    #define GRWL_COCOA_MONITOR_STATE _GRWLmonitorNS ns;
+    #define GRWL_COCOA_CURSOR_STATE _GRWLcursorNS ns;
 
-    #define GLFW_NSGL_CONTEXT_STATE _GLFWcontextNSGL nsgl;
-    #define GLFW_NSGL_LIBRARY_CONTEXT_STATE _GLFWlibraryNSGL nsgl;
-    #define GLFW_NSGL_USER_CONTEXT_STATE _GLFWusercontextNSGL nsgl;
+    #define GRWL_NSGL_CONTEXT_STATE _GRWLcontextNSGL nsgl;
+    #define GRWL_NSGL_LIBRARY_CONTEXT_STATE _GRWLlibraryNSGL nsgl;
+    #define GRWL_NSGL_USER_CONTEXT_STATE _GRWLusercontextNSGL nsgl;
 
     // HIToolbox.framework pointer typedefs
-    #define kTISCategoryKeyboardInputSource _glfw.ns.tis.kCategoryKeyboardInputSource
-    #define kTISPropertyInputSourceCategory _glfw.ns.tis.kPropertyInputSourceCategory
-    #define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
-    #define kTISPropertyInputSourceIsSelectCapable _glfw.ns.tis.kPropertyInputSourceIsSelectCapable
-    #define kTISPropertyInputSourceType _glfw.ns.tis.kPropertyInputSourceType
-    #define kTISPropertyUnicodeKeyLayoutData _glfw.ns.tis.kPropertyUnicodeKeyLayoutData
-    #define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
-    #define kTISPropertyLocalizedName _glfw.ns.tis.kPropertyLocalizedName
-    #define kTISTypeKeyboardInputMethodModeEnabled _glfw.ns.tis.kTypeKeyboardInputMethodModeEnabled
+    #define kTISCategoryKeyboardInputSource _grwl.ns.tis.kCategoryKeyboardInputSource
+    #define kTISPropertyInputSourceCategory _grwl.ns.tis.kPropertyInputSourceCategory
+    #define kTISPropertyInputSourceID _grwl.ns.tis.kPropertyInputSourceID
+    #define kTISPropertyInputSourceIsSelectCapable _grwl.ns.tis.kPropertyInputSourceIsSelectCapable
+    #define kTISPropertyInputSourceType _grwl.ns.tis.kPropertyInputSourceType
+    #define kTISPropertyUnicodeKeyLayoutData _grwl.ns.tis.kPropertyUnicodeKeyLayoutData
+    #define kTISPropertyInputSourceID _grwl.ns.tis.kPropertyInputSourceID
+    #define kTISPropertyLocalizedName _grwl.ns.tis.kPropertyLocalizedName
+    #define kTISTypeKeyboardInputMethodModeEnabled _grwl.ns.tis.kTypeKeyboardInputMethodModeEnabled
 typedef TISInputSourceRef (*PFN_TISCopyCurrentASCIICapableKeyboardInputSource)(void);
-    #define TISCopyCurrentASCIICapableKeyboardInputSource _glfw.ns.tis.CopyCurrentASCIICapableKeyboardInputSource
+    #define TISCopyCurrentASCIICapableKeyboardInputSource _grwl.ns.tis.CopyCurrentASCIICapableKeyboardInputSource
 typedef TISInputSourceRef (*PFN_TISCopyCurrentKeyboardInputSource)(void);
-    #define TISCopyCurrentKeyboardInputSource _glfw.ns.tis.CopyCurrentKeyboardInputSource
+    #define TISCopyCurrentKeyboardInputSource _grwl.ns.tis.CopyCurrentKeyboardInputSource
 typedef TISInputSourceRef (*PFN_TISCopyCurrentKeyboardLayoutInputSource)(void);
-    #define TISCopyCurrentKeyboardLayoutInputSource _glfw.ns.tis.CopyCurrentKeyboardLayoutInputSource
+    #define TISCopyCurrentKeyboardLayoutInputSource _grwl.ns.tis.CopyCurrentKeyboardLayoutInputSource
 typedef TISInputSourceRef (*PFN_TISCopyInputSourceForLanguage)(CFStringRef);
-    #define TISCopyInputSourceForLanguage _glfw.ns.tis.CopyInputSourceForLanguage
+    #define TISCopyInputSourceForLanguage _grwl.ns.tis.CopyInputSourceForLanguage
 typedef CFArrayRef (*PFN_TISCreateASCIICapableInputSourceList)(void);
-    #define TISCreateASCIICapableInputSourceList _glfw.ns.tis.CreateASCIICapableInputSourceList
+    #define TISCreateASCIICapableInputSourceList _grwl.ns.tis.CreateASCIICapableInputSourceList
 typedef CFArrayRef (*PEN_TISCreateInputSourceList)(CFDictionaryRef, Boolean);
-    #define TISCreateInputSourceList _glfw.ns.tis.CreateInputSourceList
+    #define TISCreateInputSourceList _grwl.ns.tis.CreateInputSourceList
 typedef void* (*PFN_TISGetInputSourceProperty)(TISInputSourceRef, CFStringRef);
-    #define TISGetInputSourceProperty _glfw.ns.tis.GetInputSourceProperty
+    #define TISGetInputSourceProperty _grwl.ns.tis.GetInputSourceProperty
 typedef OSStatus (*PFN_TISSelectInputSource)(TISInputSourceRef);
-    #define TISSelectInputSource _glfw.ns.tis.SelectInputSource
+    #define TISSelectInputSource _grwl.ns.tis.SelectInputSource
 typedef UInt8 (*PFN_LMGetKbdType)(void);
-    #define LMGetKbdType _glfw.ns.tis.GetKbdType
+    #define LMGetKbdType _grwl.ns.tis.GetKbdType
 
 // NSGL-specific per-context data
 //
-typedef struct _GLFWcontextNSGL
+typedef struct _GRWLcontextNSGL
 {
     id pixelFormat;
     id object;
-} _GLFWcontextNSGL;
+} _GRWLcontextNSGL;
 
 // NSGL-specific global data
 //
-typedef struct _GLFWlibraryNSGL
+typedef struct _GRWLlibraryNSGL
 {
-    // dlopen handle for OpenGL.framework (for glfwGetProcAddress)
+    // dlopen handle for OpenGL.framework (for grwlGetProcAddress)
     CFBundleRef framework;
-} _GLFWlibraryNSGL;
+} _GRWLlibraryNSGL;
 
 // NSGL-specific per usercontext data
 //
-typedef struct _GLFWusercontextNSGL
+typedef struct _GRWLusercontextNSGL
 {
     id object;
 
-} _GLFWusercontextNSGL;
+} _GRWLusercontextNSGL;
 
 // Cocoa-specific per-window data
 //
-typedef struct _GLFWwindowNS
+typedef struct _GRWLwindowNS
 {
     id object;
     id delegate;
     id view;
     id layer;
 
-    GLFWbool maximized;
-    GLFWbool occluded;
-    GLFWbool retina;
+    GRWLbool maximized;
+    GRWLbool occluded;
+    GRWLbool retina;
 
     // Cached window properties to filter out duplicate events
     int width, height;
@@ -172,15 +172,15 @@ typedef struct _GLFWwindowNS
         int state;
         double value;
     } dockProgressIndicator;
-} _GLFWwindowNS;
+} _GRWLwindowNS;
 
 // Cocoa-specific global data
 //
-typedef struct _GLFWlibraryNS
+typedef struct _GRWLlibraryNS
 {
     CGEventSourceRef eventSource;
     id delegate;
-    GLFWbool cursorHidden;
+    GRWLbool cursorHidden;
     TISInputSourceRef inputSource;
     TISInputSourceRef keyboardLayout;
     IOHIDManagerRef hidManager;
@@ -189,16 +189,16 @@ typedef struct _GLFWlibraryNS
     id keyUpMonitor;
     id nibObjects;
 
-    char keynames[GLFW_KEY_LAST + 1][17];
+    char keynames[GRWL_KEY_LAST + 1][17];
     short int keycodes[256];
-    short int scancodes[GLFW_KEY_LAST + 1];
+    short int scancodes[GRWL_KEY_LAST + 1];
     char* clipboardString;
     char* keyboardLayoutName;
     CGPoint cascadePoint;
     // Where to place the cursor when re-enabled
     double restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
-    _GLFWwindow* disabledCursorWindow;
+    _GRWLwindow* disabledCursorWindow;
 
     struct
     {
@@ -230,128 +230,128 @@ typedef struct _GLFWlibraryNS
         int indeterminateCount;
         double totalValue;
     } dockProgressIndicator;
-} _GLFWlibraryNS;
+} _GRWLlibraryNS;
 
 // Cocoa-specific per-monitor data
 //
-typedef struct _GLFWmonitorNS
+typedef struct _GRWLmonitorNS
 {
     CGDirectDisplayID displayID;
     CGDisplayModeRef previousMode;
     uint32_t unitNumber;
     id screen;
     double fallbackRefreshRate;
-} _GLFWmonitorNS;
+} _GRWLmonitorNS;
 
 // Cocoa-specific per-cursor data
 //
-typedef struct _GLFWcursorNS
+typedef struct _GRWLcursorNS
 {
     id object;
-} _GLFWcursorNS;
+} _GRWLcursorNS;
 
-GLFWbool _glfwConnectCocoa(int platformID, _GLFWplatform* platform);
-int _glfwInitCocoa(void);
-void _glfwTerminateCocoa(void);
+GRWLbool _grwlConnectCocoa(int platformID, _GRWLplatform* platform);
+int _grwlInitCocoa(void);
+void _grwlTerminateCocoa(void);
 
-GLFWbool _glfwCreateWindowCocoa(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig,
-                                const _GLFWfbconfig* fbconfig);
-void _glfwDestroyWindowCocoa(_GLFWwindow* window);
-void _glfwSetWindowTitleCocoa(_GLFWwindow* window, const char* title);
-void _glfwSetWindowIconCocoa(_GLFWwindow* window, int count, const GLFWimage* images);
-void _glfwSetWindowProgressIndicatorCocoa(_GLFWwindow* window, int progressState, double value);
-void _glfwSetWindowBadgeCocoa(_GLFWwindow* window, int count);
-void _glfwSetWindowBadgeStringCocoa(_GLFWwindow* window, const char* string);
-void _glfwGetWindowPosCocoa(_GLFWwindow* window, int* xpos, int* ypos);
-void _glfwSetWindowPosCocoa(_GLFWwindow* window, int xpos, int ypos);
-void _glfwGetWindowSizeCocoa(_GLFWwindow* window, int* width, int* height);
-void _glfwSetWindowSizeCocoa(_GLFWwindow* window, int width, int height);
-void _glfwSetWindowSizeLimitsCocoa(_GLFWwindow* window, int minwidth, int minheight, int maxwidth, int maxheight);
-void _glfwSetWindowAspectRatioCocoa(_GLFWwindow* window, int numer, int denom);
-void _glfwGetFramebufferSizeCocoa(_GLFWwindow* window, int* width, int* height);
-void _glfwGetWindowFrameSizeCocoa(_GLFWwindow* window, int* left, int* top, int* right, int* bottom);
-void _glfwGetWindowContentScaleCocoa(_GLFWwindow* window, float* xscale, float* yscale);
-void _glfwIconifyWindowCocoa(_GLFWwindow* window);
-void _glfwRestoreWindowCocoa(_GLFWwindow* window);
-void _glfwMaximizeWindowCocoa(_GLFWwindow* window);
-void _glfwShowWindowCocoa(_GLFWwindow* window);
-void _glfwHideWindowCocoa(_GLFWwindow* window);
-void _glfwRequestWindowAttentionCocoa(_GLFWwindow* window);
-void _glfwFocusWindowCocoa(_GLFWwindow* window);
-void _glfwSetWindowMonitorCocoa(_GLFWwindow* window, _GLFWmonitor* monitor, int xpos, int ypos, int width, int height,
+GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                                const _GRWLfbconfig* fbconfig);
+void _grwlDestroyWindowCocoa(_GRWLwindow* window);
+void _grwlSetWindowTitleCocoa(_GRWLwindow* window, const char* title);
+void _grwlSetWindowIconCocoa(_GRWLwindow* window, int count, const GRWLimage* images);
+void _grwlSetWindowProgressIndicatorCocoa(_GRWLwindow* window, int progressState, double value);
+void _grwlSetWindowBadgeCocoa(_GRWLwindow* window, int count);
+void _grwlSetWindowBadgeStringCocoa(_GRWLwindow* window, const char* string);
+void _grwlGetWindowPosCocoa(_GRWLwindow* window, int* xpos, int* ypos);
+void _grwlSetWindowPosCocoa(_GRWLwindow* window, int xpos, int ypos);
+void _grwlGetWindowSizeCocoa(_GRWLwindow* window, int* width, int* height);
+void _grwlSetWindowSizeCocoa(_GRWLwindow* window, int width, int height);
+void _grwlSetWindowSizeLimitsCocoa(_GRWLwindow* window, int minwidth, int minheight, int maxwidth, int maxheight);
+void _grwlSetWindowAspectRatioCocoa(_GRWLwindow* window, int numer, int denom);
+void _grwlGetFramebufferSizeCocoa(_GRWLwindow* window, int* width, int* height);
+void _grwlGetWindowFrameSizeCocoa(_GRWLwindow* window, int* left, int* top, int* right, int* bottom);
+void _grwlGetWindowContentScaleCocoa(_GRWLwindow* window, float* xscale, float* yscale);
+void _grwlIconifyWindowCocoa(_GRWLwindow* window);
+void _grwlRestoreWindowCocoa(_GRWLwindow* window);
+void _grwlMaximizeWindowCocoa(_GRWLwindow* window);
+void _grwlShowWindowCocoa(_GRWLwindow* window);
+void _grwlHideWindowCocoa(_GRWLwindow* window);
+void _grwlRequestWindowAttentionCocoa(_GRWLwindow* window);
+void _grwlFocusWindowCocoa(_GRWLwindow* window);
+void _grwlSetWindowMonitorCocoa(_GRWLwindow* window, _GRWLmonitor* monitor, int xpos, int ypos, int width, int height,
                                 int refreshRate);
-GLFWbool _glfwWindowFocusedCocoa(_GLFWwindow* window);
-GLFWbool _glfwWindowIconifiedCocoa(_GLFWwindow* window);
-GLFWbool _glfwWindowVisibleCocoa(_GLFWwindow* window);
-GLFWbool _glfwWindowMaximizedCocoa(_GLFWwindow* window);
-GLFWbool _glfwWindowHoveredCocoa(_GLFWwindow* window);
-GLFWbool _glfwFramebufferTransparentCocoa(_GLFWwindow* window);
-void _glfwSetWindowResizableCocoa(_GLFWwindow* window, GLFWbool enabled);
-void _glfwSetWindowDecoratedCocoa(_GLFWwindow* window, GLFWbool enabled);
-void _glfwSetWindowFloatingCocoa(_GLFWwindow* window, GLFWbool enabled);
-float _glfwGetWindowOpacityCocoa(_GLFWwindow* window);
-void _glfwSetWindowOpacityCocoa(_GLFWwindow* window, float opacity);
-void _glfwSetWindowMousePassthroughCocoa(_GLFWwindow* window, GLFWbool enabled);
+GRWLbool _grwlWindowFocusedCocoa(_GRWLwindow* window);
+GRWLbool _grwlWindowIconifiedCocoa(_GRWLwindow* window);
+GRWLbool _grwlWindowVisibleCocoa(_GRWLwindow* window);
+GRWLbool _grwlWindowMaximizedCocoa(_GRWLwindow* window);
+GRWLbool _grwlWindowHoveredCocoa(_GRWLwindow* window);
+GRWLbool _grwlFramebufferTransparentCocoa(_GRWLwindow* window);
+void _grwlSetWindowResizableCocoa(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowDecoratedCocoa(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowFloatingCocoa(_GRWLwindow* window, GRWLbool enabled);
+float _grwlGetWindowOpacityCocoa(_GRWLwindow* window);
+void _grwlSetWindowOpacityCocoa(_GRWLwindow* window, float opacity);
+void _grwlSetWindowMousePassthroughCocoa(_GRWLwindow* window, GRWLbool enabled);
 
-void _glfwSetRawMouseMotionCocoa(_GLFWwindow* window, GLFWbool enabled);
-GLFWbool _glfwRawMouseMotionSupportedCocoa(void);
+void _grwlSetRawMouseMotionCocoa(_GRWLwindow* window, GRWLbool enabled);
+GRWLbool _grwlRawMouseMotionSupportedCocoa(void);
 
-void _glfwPollEventsCocoa(void);
-void _glfwWaitEventsCocoa(void);
-void _glfwWaitEventsTimeoutCocoa(double timeout);
-void _glfwPostEmptyEventCocoa(void);
+void _grwlPollEventsCocoa(void);
+void _grwlWaitEventsCocoa(void);
+void _grwlWaitEventsTimeoutCocoa(double timeout);
+void _grwlPostEmptyEventCocoa(void);
 
-void _glfwGetCursorPosCocoa(_GLFWwindow* window, double* xpos, double* ypos);
-void _glfwSetCursorPosCocoa(_GLFWwindow* window, double xpos, double ypos);
-void _glfwSetCursorModeCocoa(_GLFWwindow* window, int mode);
-const char* _glfwGetScancodeNameCocoa(int scancode);
-int _glfwGetKeyScancodeCocoa(int key);
-const char* _glfwGetKeyboardLayoutNameCocoa(void);
-GLFWbool _glfwCreateCursorCocoa(_GLFWcursor* cursor, const GLFWimage* image, int xhot, int yhot);
-GLFWbool _glfwCreateStandardCursorCocoa(_GLFWcursor* cursor, int shape);
-void _glfwDestroyCursorCocoa(_GLFWcursor* cursor);
-void _glfwSetCursorCocoa(_GLFWwindow* window, _GLFWcursor* cursor);
-void _glfwSetClipboardStringCocoa(const char* string);
-const char* _glfwGetClipboardStringCocoa(void);
+void _grwlGetCursorPosCocoa(_GRWLwindow* window, double* xpos, double* ypos);
+void _grwlSetCursorPosCocoa(_GRWLwindow* window, double xpos, double ypos);
+void _grwlSetCursorModeCocoa(_GRWLwindow* window, int mode);
+const char* _grwlGetScancodeNameCocoa(int scancode);
+int _grwlGetKeyScancodeCocoa(int key);
+const char* _grwlGetKeyboardLayoutNameCocoa(void);
+GRWLbool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
+GRWLbool _grwlCreateStandardCursorCocoa(_GRWLcursor* cursor, int shape);
+void _grwlDestroyCursorCocoa(_GRWLcursor* cursor);
+void _grwlSetCursorCocoa(_GRWLwindow* window, _GRWLcursor* cursor);
+void _grwlSetClipboardStringCocoa(const char* string);
+const char* _grwlGetClipboardStringCocoa(void);
 
-void _glfwUpdatePreeditCursorRectangleCocoa(_GLFWwindow* window);
-void _glfwResetPreeditTextCocoa(_GLFWwindow* window);
-void _glfwSetIMEStatusCocoa(_GLFWwindow* window, int active);
-int _glfwGetIMEStatusCocoa(_GLFWwindow* window);
+void _grwlUpdatePreeditCursorRectangleCocoa(_GRWLwindow* window);
+void _grwlResetPreeditTextCocoa(_GRWLwindow* window);
+void _grwlSetIMEStatusCocoa(_GRWLwindow* window, int active);
+int _grwlGetIMEStatusCocoa(_GRWLwindow* window);
 
-EGLenum _glfwGetEGLPlatformCocoa(EGLint** attribs);
-EGLNativeDisplayType _glfwGetEGLNativeDisplayCocoa(void);
-EGLNativeWindowType _glfwGetEGLNativeWindowCocoa(_GLFWwindow* window);
+EGLenum _grwlGetEGLPlatformCocoa(EGLint** attribs);
+EGLNativeDisplayType _grwlGetEGLNativeDisplayCocoa(void);
+EGLNativeWindowType _grwlGetEGLNativeWindowCocoa(_GRWLwindow* window);
 
-void _glfwGetRequiredInstanceExtensionsCocoa(char** extensions);
-GLFWbool _glfwGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device,
+void _grwlGetRequiredInstanceExtensionsCocoa(char** extensions);
+GRWLbool _grwlGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device,
                                                         uint32_t queuefamily);
-VkResult _glfwCreateWindowSurfaceCocoa(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator,
+VkResult _grwlCreateWindowSurfaceCocoa(VkInstance instance, _GRWLwindow* window, const VkAllocationCallbacks* allocator,
                                        VkSurfaceKHR* surface);
 
-void _glfwFreeMonitorCocoa(_GLFWmonitor* monitor);
-void _glfwGetMonitorPosCocoa(_GLFWmonitor* monitor, int* xpos, int* ypos);
-void _glfwGetMonitorContentScaleCocoa(_GLFWmonitor* monitor, float* xscale, float* yscale);
-void _glfwGetMonitorWorkareaCocoa(_GLFWmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
-GLFWvidmode* _glfwGetVideoModesCocoa(_GLFWmonitor* monitor, int* count);
-void _glfwGetVideoModeCocoa(_GLFWmonitor* monitor, GLFWvidmode* mode);
-GLFWbool _glfwGetGammaRampCocoa(_GLFWmonitor* monitor, GLFWgammaramp* ramp);
-void _glfwSetGammaRampCocoa(_GLFWmonitor* monitor, const GLFWgammaramp* ramp);
+void _grwlFreeMonitorCocoa(_GRWLmonitor* monitor);
+void _grwlGetMonitorPosCocoa(_GRWLmonitor* monitor, int* xpos, int* ypos);
+void _grwlGetMonitorContentScaleCocoa(_GRWLmonitor* monitor, float* xscale, float* yscale);
+void _grwlGetMonitorWorkareaCocoa(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
+GRWLvidmode* _grwlGetVideoModesCocoa(_GRWLmonitor* monitor, int* count);
+void _grwlGetVideoModeCocoa(_GRWLmonitor* monitor, GRWLvidmode* mode);
+GRWLbool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
+void _grwlSetGammaRampCocoa(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
-void _glfwPollMonitorsCocoa(void);
-void _glfwSetVideoModeCocoa(_GLFWmonitor* monitor, const GLFWvidmode* desired);
-void _glfwRestoreVideoModeCocoa(_GLFWmonitor* monitor);
+void _grwlPollMonitorsCocoa(void);
+void _grwlSetVideoModeCocoa(_GRWLmonitor* monitor, const GRWLvidmode* desired);
+void _grwlRestoreVideoModeCocoa(_GRWLmonitor* monitor);
 
-float _glfwTransformYCocoa(float y);
+float _grwlTransformYCocoa(float y);
 
-void* _glfwLoadLocalVulkanLoaderCocoa(void);
+void* _grwlLoadLocalVulkanLoaderCocoa(void);
 
-GLFWbool _glfwInitNSGL(void);
-void _glfwTerminateNSGL(void);
-GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
-void _glfwDestroyContextNSGL(_GLFWwindow* window);
+GRWLbool _grwlInitNSGL(void);
+void _grwlTerminateNSGL(void);
+GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
+void _grwlDestroyContextNSGL(_GRWLwindow* window);
 
-_GLFWusercontext* _glfwCreateUserContextCocoa(_GLFWwindow* window);
-_GLFWusercontext* _glfwCreateUserContextNSGL(_GLFWwindow* window);
+_GRWLusercontext* _grwlCreateUserContextCocoa(_GRWLwindow* window);
+_GRWLusercontext* _grwlCreateUserContextNSGL(_GRWLwindow* window);
 
 #endif
