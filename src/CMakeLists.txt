@@ -2,69 +2,100 @@
 add_library(grwl ${GRWL_LIBRARY_TYPE}
                  "${GRWL_SOURCE_DIR}/include/GRWL/grwl.h"
                  "${GRWL_SOURCE_DIR}/include/GRWL/grwlnative.h"
-                 internal.h platform.h mappings.h
-                 context.c init.c input.c monitor.c platform.c vulkan.c webgpu.c
-                 window.c egl_context.c osmesa_context.c null_platform.h
-                 null_joystick.h null_init.c null_monitor.c null_window.c
-                 null_joystick.c)
+                 internal.hpp platform.hpp mappings.hpp
+                 context.cpp init.cpp input.cpp monitor.cpp platform.cpp vulkan.cpp webgpu.cpp
+                 window.cpp egl_context.cpp)
 
-add_library(grwl::grwl ALIAS grwl)
-
-# The time, thread and module code is shared between all backends on a given OS,
-# including the null backend, which still needs those bits to be functional
 if (APPLE)
-    target_sources(grwl PRIVATE cocoa_time.h cocoa_time.c posix_thread.h
-                                posix_module.c posix_thread.c)
+    target_sources(grwl PRIVATE
+        mac/cocoa_time.hpp
+        mac/cocoa_time.cpp
+        posix_module.cpp
+        posix_thread.cpp
+        posix_thread.hpp)
 elseif (WIN32)
-    target_sources(grwl PRIVATE win32_time.h win32_thread.h win32_module.c
-                                win32_time.c win32_thread.c)
+    target_sources(grwl PRIVATE
+        win32/win32_time.hpp
+        win32/win32_thread.hpp
+        win32/win32_module.cpp
+        win32/win32_time.cpp
+        win32/win32_thread.cpp)
 else()
-    target_sources(grwl PRIVATE posix_time.h posix_thread.h posix_module.c
-                                posix_time.c posix_thread.c posix_dbus.h
-                                posix_dbus.c)
+    target_sources(grwl PRIVATE
+        linux/posix_time.hpp
+        linux/posix_time.cpp
+        linux/posix_dbus.hpp
+        linux/posix_dbus.cpp
+        posix_module.cpp
+        posix_thread.cpp
+        posix_thread.hpp)
 endif()
 
 add_custom_target(update_mappings
-    COMMAND "${CMAKE_COMMAND}" -P "${GRWL_SOURCE_DIR}/CMake/GenerateMappings.cmake" mappings.h.in mappings.h
+    COMMAND "${CMAKE_COMMAND}" -P "${GRWL_SOURCE_DIR}/CMake/GenerateMappings.cmake" mappings.hpp.in mappings.hpp
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     COMMENT "Updating gamepad mappings from upstream repository"
-    SOURCES mappings.h.in "${GRWL_SOURCE_DIR}/CMake/GenerateMappings.cmake"
+    SOURCES mappings.hpp.in "${GRWL_SOURCE_DIR}/CMake/GenerateMappings.cmake"
     VERBATIM)
 
 set_target_properties(update_mappings PROPERTIES FOLDER "GRWL")
 
 if (GRWL_BUILD_COCOA)
     target_compile_definitions(grwl PRIVATE _GRWL_COCOA)
-    target_sources(grwl PRIVATE cocoa_platform.h cocoa_joystick.h cocoa_init.m
-                                cocoa_joystick.m cocoa_monitor.m cocoa_window.m
-                                nsgl_context.m)
+    target_sources(grwl PRIVATE
+        mac/cocoa_platform.hpp
+        mac/cocoa_joystick.hpp
+        mac/cocoa_init.m
+        mac/cocoa_joystick.m
+        mac/cocoa_monitor.m
+        mac/cocoa_window.m
+        mac/nsgl_context.m)
 endif()
 
 if (GRWL_BUILD_WIN32)
     target_compile_definitions(grwl PRIVATE _GRWL_WIN32)
-    target_sources(grwl PRIVATE win32_platform.h win32_joystick.h win32_init.c
-                                win32_joystick.c win32_monitor.c win32_window.c
-                                wgl_context.c)
+    target_sources(grwl PRIVATE
+        win32/win32_platform.hpp
+        win32/win32_joystick.hpp
+        win32/win32_init.cpp
+        win32/win32_joystick.cpp
+        win32/win32_monitor.cpp
+        win32/win32_window.cpp
+        win32/wgl_context.cpp)
 endif()
 
 if (GRWL_BUILD_X11)
     target_compile_definitions(grwl PRIVATE _GRWL_X11)
-    target_sources(grwl PRIVATE x11_platform.h xkb_unicode.h x11_init.c
-                                x11_monitor.c x11_window.c xkb_unicode.c
-                                glx_context.c)
+    target_sources(grwl PRIVATE
+        linux/x11_platform.hpp
+        linux/xkb_unicode.hpp
+        linux/x11_init.cpp
+        linux/x11_monitor.cpp
+        linux/x11_window.cpp
+        linux/xkb_unicode.cpp
+        linux/glx_context.cpp)
 endif()
 
 if (GRWL_BUILD_WAYLAND)
     target_compile_definitions(grwl PRIVATE _GRWL_WAYLAND)
-    target_sources(grwl PRIVATE wl_platform.h xkb_unicode.h wl_init.c
-                                wl_monitor.c wl_window.c xkb_unicode.c)
+    target_sources(grwl PRIVATE
+        linux/wl_platform.hpp
+        linux/xkb_unicode.hpp
+        linux/wl_init.cpp
+        linux/wl_monitor.cpp
+        linux/wl_window.cpp
+        linux/xkb_unicode.cpp)
 endif()
 
 if (GRWL_BUILD_X11 OR GRWL_BUILD_WAYLAND)
     if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        target_sources(grwl PRIVATE linux_joystick.h linux_joystick.c)
+        target_sources(grwl PRIVATE
+            linux/linux_joystick.hpp
+            linux/linux_joystick.cpp)
     endif()
-    target_sources(grwl PRIVATE posix_poll.h posix_poll.c)
+    target_sources(grwl PRIVATE
+        linux/posix_poll.hpp
+        linux/posix_poll.cpp)
 endif()
 
 if (GRWL_BUILD_WAYLAND)
@@ -156,14 +187,6 @@ target_include_directories(grwl PUBLIC
 target_include_directories(grwl PRIVATE
                            "${GRWL_SOURCE_DIR}/src"
                            "${GRWL_BINARY_DIR}/src")
-target_link_libraries(grwl PRIVATE Threads::Threads)
-
-# Workaround for CMake not knowing about .m files before version 3.16
-if (CMAKE_VERSION VERSION_LESS "3.16" AND APPLE)
-    set_source_files_properties(cocoa_init.m cocoa_joystick.m cocoa_monitor.m
-                                cocoa_window.m nsgl_context.m PROPERTIES
-                                LANGUAGE C)
-endif()
 
 if (GRWL_BUILD_WIN32)
     list(APPEND grwl_PKG_LIBS "-lgdi32")
@@ -245,28 +268,10 @@ if (UNIX AND NOT APPLE)
         list(APPEND grwl_PKG_LIBS "-lrt")
     endif()
 
-    find_library(MATH_LIBRARY m)
-    mark_as_advanced(MATH_LIBRARY)
-    if (MATH_LIBRARY)
-        target_link_libraries(grwl PRIVATE "${MATH_LIBRARY}")
-        list(APPEND grwl_PKG_LIBS "-lm")
-    endif()
-
     if (CMAKE_DL_LIBS)
         target_link_libraries(grwl PRIVATE "${CMAKE_DL_LIBS}")
         list(APPEND grwl_PKG_LIBS "-l${CMAKE_DL_LIBS}")
     endif()
-endif()
-
-# Make GCC warn about declarations that VS 2010 and 2012 won't accept for all
-# source files that VS will build (Clang ignores this because we set -std=c99)
-if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    set_source_files_properties(context.c init.c input.c monitor.c platform.c vulkan.c
-                                webgpu.c window.c null_init.c null_joystick.c null_monitor.c
-                                null_window.c win32_init.c win32_joystick.c win32_module.c
-                                win32_monitor.c win32_time.c win32_thread.c win32_window.c
-                                wgl_context.c egl_context.c osmesa_context.c PROPERTIES
-                                COMPILE_FLAGS -Wdeclaration-after-statement)
 endif()
 
 if (WIN32)
@@ -290,41 +295,9 @@ if (GRWL_BUILD_WIN32)
     target_compile_definitions(grwl PRIVATE UNICODE _UNICODE)
 endif()
 
-# HACK: When building on MinGW, WINVER and UNICODE need to be defined before
-# the inclusion of stddef.h (by grwl.h), which is itself included before
-# win32_platform.h.  We define them here until a saner solution can be found
-# NOTE: MinGW-w64 and Visual C++ do /not/ need this hack.
-if (MINGW)
-    target_compile_definitions(grwl PRIVATE WINVER=0x0501)
-endif()
-
-# Workaround for legacy MinGW not providing XInput and DirectInput
-if (MINGW)
-    include(CheckIncludeFile)
-    check_include_file(dinput.h DINPUT_H_FOUND)
-    check_include_file(xinput.h XINPUT_H_FOUND)
-    if (NOT DINPUT_H_FOUND OR NOT XINPUT_H_FOUND)
-        target_include_directories(grwl PRIVATE "${GRWL_SOURCE_DIR}/deps/mingw")
-    endif()
-endif()
-
 # Workaround for the MS CRT deprecating parts of the standard library
 if (MSVC OR CMAKE_C_SIMULATE_ID STREQUAL "MSVC")
     target_compile_definitions(grwl PRIVATE _CRT_SECURE_NO_WARNINGS)
-endif()
-
-# Workaround for VS 2008 not shipping with stdint.h
-if (MSVC90)
-    target_include_directories(grwl PUBLIC "${GRWL_SOURCE_DIR}/deps/vs2008")
-endif()
-
-# Check for the DirectX 9 SDK as it is not included with VS 2008
-if (MSVC90)
-    include(CheckIncludeFile)
-    check_include_file(dinput.h DINPUT_H_FOUND)
-    if (NOT DINPUT_H_FOUND)
-        message(FATAL_ERROR "DirectX 9 headers not found; install DirectX 9 SDK")
-    endif()
 endif()
 
 # Workaround for -std=c99 on Linux disabling _DEFAULT_SOURCE (POSIX 2008 and more)
@@ -345,15 +318,9 @@ endif ()
 if (GRWL_BUILD_SHARED_LIBRARY)
     if (WIN32)
         if (MINGW)
-            # Remove the dependency on the shared version of libgcc
-            # NOTE: MinGW-w64 has the correct default but MinGW needs this
-            target_link_libraries(grwl PRIVATE "-static-libgcc")
-
-            # Remove the lib prefix on the DLL (but not the import library)
-            set_target_properties(grwl PROPERTIES PREFIX "")
-
-            # Add a suffix to the import library to avoid naming conflicts
-            set_target_properties(grwl PROPERTIES IMPORT_SUFFIX "dll.a")
+            set_target_properties(grwl PROPERTIES
+                PREFIX ""              # Remove the lib prefix on the DLL (but not the import library)
+                IMPORT_SUFFIX "dll.a") # Add a suffix to the import library to avoid naming conflicts
         else()
             # Add a suffix to the import library to avoid naming conflicts
             set_target_properties(grwl PROPERTIES IMPORT_SUFFIX "dll.lib")
@@ -362,39 +329,13 @@ if (GRWL_BUILD_SHARED_LIBRARY)
         target_compile_definitions(grwl INTERFACE GRWL_DLL)
     endif()
 
-    if (MINGW)
-        # Enable link-time exploit mitigation features enabled by default on MSVC
-        include(CheckCCompilerFlag)
+    # set default visibility
+    set_target_properties(grwl PROPERTIES
+        C_VISIBILITY_PRESET hidden
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN 1
+    )
 
-        # Compatibility with data execution prevention (DEP)
-        set(CMAKE_REQUIRED_FLAGS "-Wl,--nxcompat")
-        check_c_compiler_flag("" _GRWL_HAS_DEP)
-        if (_GRWL_HAS_DEP)
-            target_link_libraries(grwl PRIVATE "-Wl,--nxcompat")
-        endif()
-
-        # Compatibility with address space layout randomization (ASLR)
-        set(CMAKE_REQUIRED_FLAGS "-Wl,--dynamicbase")
-        check_c_compiler_flag("" _GRWL_HAS_ASLR)
-        if (_GRWL_HAS_ASLR)
-            target_link_libraries(grwl PRIVATE "-Wl,--dynamicbase")
-        endif()
-
-        # Compatibility with 64-bit address space layout randomization (ASLR)
-        set(CMAKE_REQUIRED_FLAGS "-Wl,--high-entropy-va")
-        check_c_compiler_flag("" _GRWL_HAS_64ASLR)
-        if (_GRWL_HAS_64ASLR)
-            target_link_libraries(grwl PRIVATE "-Wl,--high-entropy-va")
-        endif()
-
-        # Clear flags again to avoid breaking later tests
-        set(CMAKE_REQUIRED_FLAGS)
-    endif()
-
-    if (UNIX)
-        # Hide symbols not explicitly tagged for export from the shared library
-        target_compile_options(grwl PRIVATE "-fvisibility=hidden")
-    endif()
 endif()
 
 foreach(arg ${grwl_PKG_DEPS})

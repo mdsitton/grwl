@@ -2,6 +2,15 @@
     "files.associations": {
         "internal.h": "c",
         "stdbool.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "getopt.h": "c",
+        "float.h": "c",
+        "cmath": "c",
+        "cstdlib": "c",
+        "assert.h": "c",
+        "cstring": "c",
+        "cstdio": "c",
+        "cassert": "c",
+        "climits": "c"
     }
 }

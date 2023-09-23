@@ -41,7 +41,7 @@ Examples: `glfwGetX11Window`, `glfwGetWGLContext`
 The internal interface consists of utility functions used by all other
 interfaces.  It is shared code implemented in the same shared source files as
 the public and event interfaces.  The internal interface is described in the
-internal.h header file.
+internal.hpp header file.
 
 The internal interface is in charge of GRWL's global data, which it stores in
 a `_GRWLlibrary` struct named `_glfw`.

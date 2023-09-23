@@ -94,20 +94,6 @@ in the documentation for more information.
 GLFW itself needs only CMake 3.1 or later and the headers and libraries for your
 OS and window system.
 
-The examples and test programs depend on a number of tiny libraries.  These are
-located in the `deps/` directory.
-
- - [getopt\_port](https://github.com/kimgr/getopt_port/) for examples
-   with command-line options
- - [TinyCThread](https://github.com/tinycthread/tinycthread) for threaded
-   examples
- - [glad2](https://github.com/Dav1dde/glad) for loading OpenGL and Vulkan
-   functions
- - [linmath.h](https://github.com/datenwolf/linmath.h) for linear algebra in
-   examples
- - [Nuklear](https://github.com/Immediate-Mode-UI/Nuklear) for test and example UI
- - [stb\_image\_write](https://github.com/nothings/stb) for writing images to disk
-
 The documentation is generated with [Doxygen](https://doxygen.org/) if CMake can
 find that tool.
 

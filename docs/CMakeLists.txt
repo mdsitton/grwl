@@ -5,7 +5,6 @@ set(source_files
     main.dox
     news.dox
     quick.dox
-    moving.dox
     compile.dox
     build.dox
     intro.dox

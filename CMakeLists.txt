@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.4...3.20 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16...3.20 FATAL_ERROR)
 
-project(GRWL VERSION 3.4.0 LANGUAGES C)
+project(GRWL VERSION 3.4.0 LANGUAGES C CXX)
 
 if (POLICY CMP0069)
     cmake_policy(SET CMP0069 NEW)
@@ -22,10 +22,6 @@ option(GRWL_INSTALL "Generate installation target" ON)
 
 include(GNUInstallDirs)
 include(CMakeDependentOption)
-
-if (GRWL_USE_OSMESA)
-    message(FATAL_ERROR "GRWL_USE_OSMESA has been removed; set the GRWL_PLATFORM init hint")
-endif()
 
 cmake_dependent_option(GRWL_BUILD_WIN32 "Build support for Win32" ON "WIN32" OFF)
 cmake_dependent_option(GRWL_BUILD_COCOA "Build support for Cocoa" ON "APPLE" OFF)
@@ -54,8 +50,6 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${GRWL_SOURCE_DIR}/CMake/modules")
 
-find_package(Threads REQUIRED)
-
 if (GRWL_BUILD_DOCS)
     set(DOXYGEN_SKIP_DOT TRUE)
     find_package(Doxygen)
@@ -80,30 +74,6 @@ if (GRWL_BUILD_WEBGPU)
     message(STATUS "Including WebGPU support")
 endif()
 
-#--------------------------------------------------------------------
-# Apply Microsoft C runtime library option
-# This is here because it also applies to tests and examples
-#--------------------------------------------------------------------
-if (MSVC AND NOT USE_MSVC_RUNTIME_LIBRARY_DLL)
-    if (CMAKE_VERSION VERSION_LESS 3.15)
-        foreach (flag CMAKE_C_FLAGS
-                      CMAKE_C_FLAGS_DEBUG
-                      CMAKE_C_FLAGS_RELEASE
-                      CMAKE_C_FLAGS_MINSIZEREL
-                      CMAKE_C_FLAGS_RELWITHDEBINFO)
-
-            if (flag MATCHES "/MD")
-                string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
-            endif()
-            if (flag MATCHES "/MDd")
-                string(REGEX REPLACE "/MDd" "/MTd" ${flag} "${${flag}}")
-            endif()
-
-        endforeach()
-    else()
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    endif()
-endif()
 
 #--------------------------------------------------------------------
 # Create generated files
@@ -151,17 +121,6 @@ if (GRWL_INSTALL)
     if (DOXYGEN_FOUND AND GRWL_BUILD_DOCS)
         install(DIRECTORY "${GRWL_BINARY_DIR}/docs/html"
                 DESTINATION "${CMAKE_INSTALL_DOCDIR}")
-    endif()
-
-    # Only generate this target if no higher-level project already has
-    if (NOT TARGET uninstall)
-        configure_file(CMake/cmake_uninstall.cmake.in
-                       cmake_uninstall.cmake IMMEDIATE @ONLY)
-
-        add_custom_target(uninstall
-                          "${CMAKE_COMMAND}" -P
-                          "${GRWL_BINARY_DIR}/cmake_uninstall.cmake")
-        set_target_properties(uninstall PROPERTIES FOLDER "GRWL")
     endif()
 endif()
 
