@@ -96,7 +96,7 @@ void _grwlPollMonitorsX11(void)
         disconnectedCount = _grwl.monitorCount;
         if (disconnectedCount)
         {
-            disconnected = _grwl_calloc(_grwl.monitorCount, sizeof(_GRWLmonitor*));
+            disconnected = (_GRWLmonitor**)_grwl_calloc(_grwl.monitorCount, sizeof(_GRWLmonitor*));
             memcpy(disconnected, _grwl.monitors, _grwl.monitorCount * sizeof(_GRWLmonitor*));
         }
 
@@ -439,7 +439,7 @@ GRWLvidmode* _grwlGetVideoModesX11(_GRWLmonitor* monitor, int* count)
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_grwl.x11.display, sr, monitor->x11.crtc);
         XRROutputInfo* oi = XRRGetOutputInfo(_grwl.x11.display, sr, monitor->x11.output);
 
-        result = _grwl_calloc(oi->nmode, sizeof(GRWLvidmode));
+        result = (GRWLvidmode*)_grwl_calloc(oi->nmode, sizeof(GRWLvidmode));
 
         for (int i = 0; i < oi->nmode; i++)
         {
@@ -477,7 +477,7 @@ GRWLvidmode* _grwlGetVideoModesX11(_GRWLmonitor* monitor, int* count)
     else
     {
         *count = 1;
-        result = _grwl_calloc(1, sizeof(GRWLvidmode));
+        result = (GRWLvidmode*)_grwl_calloc(1, sizeof(GRWLvidmode));
         _grwlGetVideoModeX11(monitor, result);
     }
 
