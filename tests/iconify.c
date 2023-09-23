@@ -56,12 +56,12 @@ static void error_callback(int error, const char* description)
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    printf("%0.2f Key %s\n",
-           glfwGetTime(),
-           action == GLFW_PRESS ? "pressed" : "released");
+    printf("%0.2f Key %s\n", glfwGetTime(), action == GLFW_PRESS ? "pressed" : "released");
 
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -93,14 +93,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         case GLFW_KEY_ENTER:
         {
             if (mods != GLFW_MOD_ALT)
+            {
                 return;
+            }
 
             if (glfwGetWindowMonitor(window))
             {
-                glfwSetWindowMonitor(window, NULL,
-                                     windowed_xpos, windowed_ypos,
-                                     windowed_width, windowed_height,
-                                     0);
+                glfwSetWindowMonitor(window, NULL, windowed_xpos, windowed_ypos, windowed_width, windowed_height, 0);
             }
             else
             {
@@ -110,9 +109,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
                     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
                     glfwGetWindowPos(window, &windowed_xpos, &windowed_ypos);
                     glfwGetWindowSize(window, &windowed_width, &windowed_height);
-                    glfwSetWindowMonitor(window, monitor,
-                                         0, 0, mode->width, mode->height,
-                                         mode->refreshRate);
+                    glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
                 }
             }
 
@@ -133,23 +130,17 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 static void window_focus_callback(GLFWwindow* window, int focused)
 {
-    printf("%0.2f Window %s\n",
-           glfwGetTime(),
-           focused ? "focused" : "defocused");
+    printf("%0.2f Window %s\n", glfwGetTime(), focused ? "focused" : "defocused");
 }
 
 static void window_iconify_callback(GLFWwindow* window, int iconified)
 {
-    printf("%0.2f Window %s\n",
-           glfwGetTime(),
-           iconified ? "iconified" : "uniconified");
+    printf("%0.2f Window %s\n", glfwGetTime(), iconified ? "iconified" : "uniconified");
 }
 
 static void window_maximize_callback(GLFWwindow* window, int maximized)
 {
-    printf("%0.2f Window %s\n",
-           glfwGetTime(),
-           maximized ? "maximized" : "unmaximized");
+    printf("%0.2f Window %s\n", glfwGetTime(), maximized ? "maximized" : "unmaximized");
 }
 
 static void window_refresh_callback(GLFWwindow* window)
@@ -229,7 +220,9 @@ int main(int argc, char** argv)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     if (fullscreen && all_monitors)
     {
@@ -239,11 +232,13 @@ int main(int argc, char** argv)
         window_count = monitor_count;
         windows = calloc(window_count, sizeof(GLFWwindow*));
 
-        for (i = 0;  i < monitor_count;  i++)
+        for (i = 0; i < monitor_count; i++)
         {
             windows[i] = create_window(monitors[i]);
             if (!windows[i])
+            {
                 break;
+            }
         }
     }
     else
@@ -251,14 +246,16 @@ int main(int argc, char** argv)
         GLFWmonitor* monitor = NULL;
 
         if (fullscreen)
+        {
             monitor = glfwGetPrimaryMonitor();
+        }
 
         window_count = 1;
         windows = calloc(window_count, sizeof(GLFWwindow*));
         windows[0] = create_window(monitor);
     }
 
-    for (i = 0;  i < window_count;  i++)
+    for (i = 0; i < window_count; i++)
     {
         glfwSetKeyCallback(windows[i], key_callback);
         glfwSetFramebufferSizeCallback(windows[i], framebuffer_size_callback);
@@ -270,23 +267,26 @@ int main(int argc, char** argv)
 
         window_refresh_callback(windows[i]);
 
-        printf("Window is %s and %s\n",
-            glfwGetWindowAttrib(windows[i], GLFW_ICONIFIED) ? "iconified" : "restored",
-            glfwGetWindowAttrib(windows[i], GLFW_FOCUSED) ? "focused" : "defocused");
+        printf("Window is %s and %s\n", glfwGetWindowAttrib(windows[i], GLFW_ICONIFIED) ? "iconified" : "restored",
+               glfwGetWindowAttrib(windows[i], GLFW_FOCUSED) ? "focused" : "defocused");
     }
 
     for (;;)
     {
         glfwWaitEvents();
 
-        for (i = 0;  i < window_count;  i++)
+        for (i = 0; i < window_count; i++)
         {
             if (glfwWindowShouldClose(windows[i]))
+            {
                 break;
+            }
         }
 
         if (i < window_count)
+        {
             break;
+        }
 
         // Workaround for an issue with msvcrt and mintty
         fflush(stdout);
@@ -295,4 +295,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

@@ -37,33 +37,17 @@
 #include <string.h>
 
 // a simple glfw logo
-const char* const logo[] =
-{
-    "................",
-    "................",
-    "...0000..0......",
-    "...0.....0......",
-    "...0.00..0......",
-    "...0..0..0......",
-    "...0000..0000...",
-    "................",
-    "................",
-    "...000..0...0...",
-    "...0....0...0...",
-    "...000..0.0.0...",
-    "...0....0.0.0...",
-    "...0....00000...",
-    "................",
-    "................"
-};
+const char* const logo[] = { "................", "................", "...0000..0......", "...0.....0......",
+                             "...0.00..0......", "...0..0..0......", "...0000..0000...", "................",
+                             "................", "...000..0...0...", "...0....0...0...", "...000..0.0.0...",
+                             "...0....0.0.0...", "...0....00000...", "................", "................" };
 
-const unsigned char icon_colors[5][4] =
-{
-    {   0,   0,   0, 255 }, // black
-    { 255,   0,   0, 255 }, // red
-    {   0, 255,   0, 255 }, // green
-    {   0,   0, 255, 255 }, // blue
-    { 255, 255, 255, 255 }  // white
+const unsigned char icon_colors[5][4] = {
+    { 0, 0, 0, 255 },      // black
+    { 255, 0, 0, 255 },    // red
+    { 0, 255, 0, 255 },    // green
+    { 0, 0, 255, 255 },    // blue
+    { 255, 255, 255, 255 } // white
 };
 
 static int cur_icon_color = 0;
@@ -75,14 +59,18 @@ static void set_icon(GLFWwindow* window, int icon_color)
     unsigned char* target = pixels;
     GLFWimage img = { 16, 16, pixels };
 
-    for (y = 0;  y < img.width;  y++)
+    for (y = 0; y < img.width; y++)
     {
-        for (x = 0;  x < img.height;  x++)
+        for (x = 0; x < img.height; x++)
         {
             if (logo[y][x] == '0')
+            {
                 memcpy(target, icon_colors[icon_color], 4);
+            }
             else
+            {
                 memset(target, 0, 4);
+            }
 
             target += 4;
         }
@@ -94,7 +82,9 @@ static void set_icon(GLFWwindow* window, int icon_color)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -147,4 +137,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

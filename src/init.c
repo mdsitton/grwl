@@ -35,7 +35,6 @@
 #include <stdarg.h>
 #include <assert.h>
 
-
 // NOTE: The global variables below comprise all mutable global data in GLFW
 //       Any other mutable global variable is a bug
 
@@ -49,20 +48,19 @@ _GLFWlibrary _glfw = { GLFW_FALSE };
 static _GLFWerror _glfwMainThreadError;
 static GLFWerrorfun _glfwErrorCallback;
 static GLFWallocator _glfwInitAllocator;
-static _GLFWinitconfig _glfwInitHints =
-{
-    GLFW_TRUE,      // hat buttons
+static _GLFWinitconfig _glfwInitHints = {
+    GLFW_TRUE,                     // hat buttons
     GLFW_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
-    GLFW_ANY_PLATFORM, // preferred platform
-    GLFW_FALSE, // whether to manage preedit candidate
-    NULL,           // vkGetInstanceProcAddr function
+    GLFW_ANY_PLATFORM,             // preferred platform
+    GLFW_FALSE,                    // whether to manage preedit candidate
+    NULL,                          // vkGetInstanceProcAddr function
     {
-        GLFW_TRUE,  // macOS menu bar
-        GLFW_TRUE   // macOS bundle chdir
+        GLFW_TRUE, // macOS menu bar
+        GLFW_TRUE  // macOS bundle chdir
     },
     {
-        GLFW_TRUE,  // X11 XCB Vulkan surface
-        GLFW_FALSE  // X11 on-the-spot IM-style
+        GLFW_TRUE, // X11 XCB Vulkan surface
+        GLFW_FALSE // X11 on-the-spot IM-style
     },
     {
         GLFW_WAYLAND_PREFER_LIBDECOR // Wayland libdecor mode
@@ -99,16 +97,22 @@ static void terminate(void)
     memset(&_glfw.callbacks, 0, sizeof(_glfw.callbacks));
 
     while (_glfw.windowListHead)
-        glfwDestroyWindow((GLFWwindow*) _glfw.windowListHead);
+    {
+        glfwDestroyWindow((GLFWwindow*)_glfw.windowListHead);
+    }
 
     while (_glfw.cursorListHead)
-        glfwDestroyCursor((GLFWcursor*) _glfw.cursorListHead);
+    {
+        glfwDestroyCursor((GLFWcursor*)_glfw.cursorListHead);
+    }
 
-    for (i = 0;  i < _glfw.monitorCount;  i++)
+    for (i = 0; i < _glfw.monitorCount; i++)
     {
         _GLFWmonitor* monitor = _glfw.monitors[i];
         if (monitor->originalRamp.size)
+        {
             _glfw.platform.setGammaRamp(monitor, &monitor->originalRamp);
+        }
         _glfwFreeMonitor(monitor);
     }
 
@@ -141,7 +145,6 @@ static void terminate(void)
     memset(&_glfw, 0, sizeof(_glfw));
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
@@ -154,7 +157,9 @@ size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
     size_t count = 0;
 
     if (codepoint < 0x80)
-        s[count++] = (char) codepoint;
+    {
+        s[count++] = (char)codepoint;
+    }
     else if (codepoint < 0x800)
     {
         s[count++] = (codepoint >> 6) | 0xc0;
@@ -183,15 +188,11 @@ size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
 uint32_t _glfwDecodeUTF8(const char** s)
 {
     uint32_t codepoint = 0, count = 0;
-    static const uint32_t offsets[] =
-    {
-        0x00000000u, 0x00003080u, 0x000e2080u,
-        0x03c82080u, 0xfa082080u, 0x82082080u
-    };
+    static const uint32_t offsets[] = { 0x00000000u, 0x00003080u, 0x000e2080u, 0x03c82080u, 0xfa082080u, 0x82082080u };
 
     do
     {
-        codepoint = (codepoint << 6) + (unsigned char) **s;
+        codepoint = (codepoint << 6) + (unsigned char)**s;
         (*s)++;
         count++;
     } while ((**s & 0xc0) == 0x80);
@@ -218,14 +219,18 @@ char** _glfwParseUriList(char* text, int* count)
         text = NULL;
 
         if (line[0] == '#')
+        {
             continue;
+        }
 
         if (strncmp(line, prefix, strlen(prefix)) == 0)
         {
             line += strlen(prefix);
             // TODO: Validate hostname
             while (*line != '/')
+            {
                 line++;
+            }
         }
 
         (*count)++;
@@ -239,11 +244,13 @@ char** _glfwParseUriList(char* text, int* count)
             if (line[0] == '%' && line[1] && line[2])
             {
                 const char digits[3] = { line[1], line[2], '\0' };
-                *path = (char) strtol(digits, NULL, 16);
+                *path = (char)strtol(digits, NULL, 16);
                 line += 2;
             }
             else
+            {
                 *path = *line;
+            }
 
             path++;
             line++;
@@ -274,25 +281,41 @@ int _glfw_max(int a, int b)
 float _glfw_fminf(float a, float b)
 {
     if (a != a)
+    {
         return b;
+    }
     else if (b != b)
+    {
         return a;
+    }
     else if (a < b)
+    {
         return a;
+    }
     else
+    {
         return b;
+    }
 }
 
 float _glfw_fmaxf(float a, float b)
 {
     if (a != a)
+    {
         return b;
+    }
     else if (b != b)
+    {
         return a;
+    }
     else if (a > b)
+    {
         return a;
+    }
     else
+    {
         return b;
+    }
 }
 
 void* _glfw_calloc(size_t count, size_t size)
@@ -309,7 +332,9 @@ void* _glfw_calloc(size_t count, size_t size)
 
         block = _glfw.allocator.allocate(count * size, _glfw.allocator.user);
         if (block)
+        {
             return memset(block, 0, count * size);
+        }
         else
         {
             _glfwInputError(GLFW_OUT_OF_MEMORY, NULL);
@@ -317,7 +342,9 @@ void* _glfw_calloc(size_t count, size_t size)
         }
     }
     else
+    {
         return NULL;
+    }
 }
 
 void* _glfw_realloc(void* block, size_t size)
@@ -326,7 +353,9 @@ void* _glfw_realloc(void* block, size_t size)
     {
         void* resized = _glfw.allocator.reallocate(block, size, _glfw.allocator.user);
         if (resized)
+        {
             return resized;
+        }
         else
         {
             _glfwInputError(GLFW_OUT_OF_MEMORY, NULL);
@@ -339,15 +368,18 @@ void* _glfw_realloc(void* block, size_t size)
         return NULL;
     }
     else
+    {
         return _glfw_calloc(1, size);
+    }
 }
 
 void _glfw_free(void* block)
 {
     if (block)
+    {
         _glfw.allocator.deallocate(block, _glfw.allocator.user);
+    }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                         GLFW event API                       //////
@@ -373,35 +405,65 @@ void _glfwInputError(int code, const char* format, ...)
     else
     {
         if (code == GLFW_NOT_INITIALIZED)
+        {
             strcpy(description, "The GLFW library is not initialized");
+        }
         else if (code == GLFW_NO_CURRENT_CONTEXT)
+        {
             strcpy(description, "There is no current context");
+        }
         else if (code == GLFW_INVALID_ENUM)
+        {
             strcpy(description, "Invalid argument for enum parameter");
+        }
         else if (code == GLFW_INVALID_VALUE)
+        {
             strcpy(description, "Invalid value for parameter");
+        }
         else if (code == GLFW_OUT_OF_MEMORY)
+        {
             strcpy(description, "Out of memory");
+        }
         else if (code == GLFW_API_UNAVAILABLE)
+        {
             strcpy(description, "The requested API is unavailable");
+        }
         else if (code == GLFW_VERSION_UNAVAILABLE)
+        {
             strcpy(description, "The requested API version is unavailable");
+        }
         else if (code == GLFW_PLATFORM_ERROR)
+        {
             strcpy(description, "A platform-specific error occurred");
+        }
         else if (code == GLFW_FORMAT_UNAVAILABLE)
+        {
             strcpy(description, "The requested format is unavailable");
+        }
         else if (code == GLFW_NO_WINDOW_CONTEXT)
+        {
             strcpy(description, "The specified window has no context");
+        }
         else if (code == GLFW_CURSOR_UNAVAILABLE)
+        {
             strcpy(description, "The specified cursor shape is unavailable");
+        }
         else if (code == GLFW_FEATURE_UNAVAILABLE)
+        {
             strcpy(description, "The requested feature cannot be implemented for this platform");
+        }
         else if (code == GLFW_FEATURE_UNIMPLEMENTED)
+        {
             strcpy(description, "The requested feature has not yet been implemented for this platform");
+        }
         else if (code == GLFW_PLATFORM_UNAVAILABLE)
+        {
             strcpy(description, "The requested platform is unavailable");
+        }
         else
+        {
             strcpy(description, "ERROR: UNKNOWN GLFW ERROR");
+        }
     }
 
     if (_glfw.initialized)
@@ -418,15 +480,18 @@ void _glfwInputError(int code, const char* format, ...)
         }
     }
     else
+    {
         error = &_glfwMainThreadError;
+    }
 
     error->code = code;
     strcpy(error->description, description);
 
     if (_glfwErrorCallback)
+    {
         _glfwErrorCallback(code, description);
+    }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW public API                       //////
@@ -435,7 +500,9 @@ void _glfwInputError(int code, const char* format, ...)
 GLFWAPI int glfwInit(void)
 {
     if (_glfw.initialized)
+    {
         return GLFW_TRUE;
+    }
 
     memset(&_glfw, 0, sizeof(_glfw));
     _glfw.hints.init = _glfwInitHints;
@@ -443,13 +510,15 @@ GLFWAPI int glfwInit(void)
     _glfw.allocator = _glfwInitAllocator;
     if (!_glfw.allocator.allocate)
     {
-        _glfw.allocator.allocate   = defaultAllocate;
+        _glfw.allocator.allocate = defaultAllocate;
         _glfw.allocator.reallocate = defaultReallocate;
         _glfw.allocator.deallocate = defaultDeallocate;
     }
 
     if (!_glfwSelectPlatform(_glfw.hints.init.platformID, &_glfw.platform))
+    {
         return GLFW_FALSE;
+    }
 
     if (!_glfw.platform.init())
     {
@@ -457,10 +526,8 @@ GLFWAPI int glfwInit(void)
         return GLFW_FALSE;
     }
 
-    if (!_glfwPlatformCreateMutex(&_glfw.errorLock) ||
-        !_glfwPlatformCreateTls(&_glfw.errorSlot) ||
-        !_glfwPlatformCreateTls(&_glfw.contextSlot) ||
-        !_glfwPlatformCreateTls(&_glfw.usercontextSlot))
+    if (!_glfwPlatformCreateMutex(&_glfw.errorLock) || !_glfwPlatformCreateTls(&_glfw.errorSlot) ||
+        !_glfwPlatformCreateTls(&_glfw.contextSlot) || !_glfwPlatformCreateTls(&_glfw.usercontextSlot))
     {
         terminate();
         return GLFW_FALSE;
@@ -482,7 +549,9 @@ GLFWAPI int glfwInit(void)
 GLFWAPI void glfwTerminate(void)
 {
     if (!_glfw.initialized)
+    {
         return;
+    }
 
     terminate();
 }
@@ -520,8 +589,7 @@ GLFWAPI void glfwInitHint(int hint, int value)
             return;
     }
 
-    _glfwInputError(GLFW_INVALID_ENUM,
-                    "Invalid init hint 0x%08X", hint);
+    _glfwInputError(GLFW_INVALID_ENUM, "Invalid init hint 0x%08X", hint);
 }
 
 GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator)
@@ -529,12 +597,18 @@ GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator)
     if (allocator)
     {
         if (allocator->allocate && allocator->reallocate && allocator->deallocate)
+        {
             _glfwInitAllocator = *allocator;
+        }
         else
+        {
             _glfwInputError(GLFW_INVALID_VALUE, "Missing function in allocator");
+        }
     }
     else
+    {
         memset(&_glfwInitAllocator, 0, sizeof(GLFWallocator));
+    }
 }
 
 GLFWAPI void glfwInitVulkanLoader(PFN_vkGetInstanceProcAddr loader)
@@ -545,11 +619,17 @@ GLFWAPI void glfwInitVulkanLoader(PFN_vkGetInstanceProcAddr loader)
 GLFWAPI void glfwGetVersion(int* major, int* minor, int* rev)
 {
     if (major != NULL)
+    {
         *major = GLFW_VERSION_MAJOR;
+    }
     if (minor != NULL)
+    {
         *minor = GLFW_VERSION_MINOR;
+    }
     if (rev != NULL)
+    {
         *rev = GLFW_VERSION_REVISION;
+    }
 }
 
 GLFWAPI int glfwGetError(const char** description)
@@ -558,19 +638,27 @@ GLFWAPI int glfwGetError(const char** description)
     int code = GLFW_NO_ERROR;
 
     if (description)
+    {
         *description = NULL;
+    }
 
     if (_glfw.initialized)
+    {
         error = _glfwPlatformGetTls(&_glfw.errorSlot);
+    }
     else
+    {
         error = &_glfwMainThreadError;
+    }
 
     if (error)
     {
         code = error->code;
         error->code = GLFW_NO_ERROR;
         if (description && code)
+        {
             *description = error->description;
+        }
     }
 
     return code;
@@ -586,4 +674,3 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
     _GLFW_SWAP(GLFWerrorfun, _glfwErrorCallback, cbfun);
     return cbfun;
 }
-

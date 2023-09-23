@@ -31,11 +31,10 @@
 
 #if defined(_GLFW_X11)
 
-#include <limits.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
+    #include <limits.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <math.h>
 
 // Check whether the display mode should be included in enumeration
 //
@@ -49,19 +48,25 @@ static GLFWbool modeIsGood(const XRRModeInfo* mi)
 static int calculateRefreshRate(const XRRModeInfo* mi)
 {
     if (mi->hTotal && mi->vTotal)
-        return (int) round((double) mi->dotClock / ((double) mi->hTotal * (double) mi->vTotal));
+    {
+        return (int)round((double)mi->dotClock / ((double)mi->hTotal * (double)mi->vTotal));
+    }
     else
+    {
         return 0;
+    }
 }
 
 // Returns the mode info for a RandR mode XID
 //
 static const XRRModeInfo* getModeInfo(const XRRScreenResources* sr, RRMode id)
 {
-    for (int i = 0;  i < sr->nmode;  i++)
+    for (int i = 0; i < sr->nmode; i++)
     {
         if (sr->modes[i].id == id)
+        {
             return sr->modes + i;
+        }
     }
 
     return NULL;
@@ -69,30 +74,27 @@ static const XRRModeInfo* getModeInfo(const XRRScreenResources* sr, RRMode id)
 
 // Convert RandR mode info to GLFW video mode
 //
-static GLFWvidmode vidmodeFromModeInfo(const XRRModeInfo* mi,
-                                       const XRRCrtcInfo* ci)
+static GLFWvidmode vidmodeFromModeInfo(const XRRModeInfo* mi, const XRRCrtcInfo* ci)
 {
     GLFWvidmode mode;
 
     if (ci->rotation == RR_Rotate_90 || ci->rotation == RR_Rotate_270)
     {
-        mode.width  = mi->height;
+        mode.width = mi->height;
         mode.height = mi->width;
     }
     else
     {
-        mode.width  = mi->width;
+        mode.width = mi->width;
         mode.height = mi->height;
     }
 
     mode.refreshRate = calculateRefreshRate(mi);
 
-    _glfwSplitBPP(DefaultDepth(_glfw.x11.display, _glfw.x11.screen),
-                  &mode.redBits, &mode.greenBits, &mode.blueBits);
+    _glfwSplitBPP(DefaultDepth(_glfw.x11.display, _glfw.x11.screen), &mode.redBits, &mode.greenBits, &mode.blueBits);
 
     return mode;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
@@ -107,24 +109,22 @@ void _glfwPollMonitorsX11(void)
         int disconnectedCount, screenCount = 0;
         _GLFWmonitor** disconnected = NULL;
         XineramaScreenInfo* screens = NULL;
-        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display,
-                                                              _glfw.x11.root);
-        RROutput primary = XRRGetOutputPrimary(_glfw.x11.display,
-                                               _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        RROutput primary = XRRGetOutputPrimary(_glfw.x11.display, _glfw.x11.root);
 
         if (_glfw.x11.xinerama.available)
+        {
             screens = XineramaQueryScreens(_glfw.x11.display, &screenCount);
+        }
 
         disconnectedCount = _glfw.monitorCount;
         if (disconnectedCount)
         {
             disconnected = _glfw_calloc(_glfw.monitorCount, sizeof(_GLFWmonitor*));
-            memcpy(disconnected,
-                   _glfw.monitors,
-                   _glfw.monitorCount * sizeof(_GLFWmonitor*));
+            memcpy(disconnected, _glfw.monitors, _glfw.monitorCount * sizeof(_GLFWmonitor*));
         }
 
-        for (int i = 0;  i < sr->noutput;  i++)
+        for (int i = 0; i < sr->noutput; i++)
         {
             int j, type, widthMM, heightMM;
 
@@ -135,10 +135,9 @@ void _glfwPollMonitorsX11(void)
                 continue;
             }
 
-            for (j = 0;  j < disconnectedCount;  j++)
+            for (j = 0; j < disconnectedCount; j++)
             {
-                if (disconnected[j] &&
-                    disconnected[j]->x11.output == sr->outputs[i])
+                if (disconnected[j] && disconnected[j]->x11.output == sr->outputs[i])
                 {
                     disconnected[j] = NULL;
                     break;
@@ -154,12 +153,12 @@ void _glfwPollMonitorsX11(void)
             XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, oi->crtc);
             if (ci->rotation == RR_Rotate_90 || ci->rotation == RR_Rotate_270)
             {
-                widthMM  = oi->mm_height;
+                widthMM = oi->mm_height;
                 heightMM = oi->mm_width;
             }
             else
             {
-                widthMM  = oi->mm_width;
+                widthMM = oi->mm_width;
                 heightMM = oi->mm_height;
             }
 
@@ -169,19 +168,17 @@ void _glfwPollMonitorsX11(void)
                 //       X11 default 96 DPI and calculate from the CRTC viewport
                 // NOTE: These members are affected by rotation, unlike the mode
                 //       info and output info members
-                widthMM  = (int) (ci->width * 25.4f / 96.f);
-                heightMM = (int) (ci->height * 25.4f / 96.f);
+                widthMM = (int)(ci->width * 25.4f / 96.f);
+                heightMM = (int)(ci->height * 25.4f / 96.f);
             }
 
             _GLFWmonitor* monitor = _glfwAllocMonitor(oi->name, widthMM, heightMM);
             monitor->x11.output = sr->outputs[i];
-            monitor->x11.crtc   = oi->crtc;
+            monitor->x11.crtc = oi->crtc;
 
-            for (j = 0;  j < screenCount;  j++)
+            for (j = 0; j < screenCount; j++)
             {
-                if (screens[j].x_org == ci->x &&
-                    screens[j].y_org == ci->y &&
-                    screens[j].width == ci->width &&
+                if (screens[j].x_org == ci->x && screens[j].y_org == ci->y && screens[j].width == ci->width &&
                     screens[j].height == ci->height)
                 {
                     monitor->x11.index = j;
@@ -190,9 +187,13 @@ void _glfwPollMonitorsX11(void)
             }
 
             if (monitor->x11.output == primary)
+            {
                 type = _GLFW_INSERT_FIRST;
+            }
             else
+            {
                 type = _GLFW_INSERT_LAST;
+            }
 
             _glfwInputMonitor(monitor, GLFW_CONNECTED, type);
 
@@ -203,12 +204,16 @@ void _glfwPollMonitorsX11(void)
         XRRFreeScreenResources(sr);
 
         if (screens)
+        {
             XFree(screens);
+        }
 
-        for (int i = 0;  i < disconnectedCount;  i++)
+        for (int i = 0; i < disconnectedCount; i++)
         {
             if (disconnected[i])
+            {
                 _glfwInputMonitor(disconnected[i], GLFW_DISCONNECTED, 0);
+            }
         }
 
         _glfw_free(disconnected);
@@ -218,9 +223,7 @@ void _glfwPollMonitorsX11(void)
         const int widthMM = DisplayWidthMM(_glfw.x11.display, _glfw.x11.screen);
         const int heightMM = DisplayHeightMM(_glfw.x11.display, _glfw.x11.screen);
 
-        _glfwInputMonitor(_glfwAllocMonitor("Display", widthMM, heightMM),
-                          GLFW_CONNECTED,
-                          _GLFW_INSERT_FIRST);
+        _glfwInputMonitor(_glfwAllocMonitor("Display", widthMM, heightMM), GLFW_CONNECTED, _GLFW_INSERT_FIRST);
     }
 }
 
@@ -236,18 +239,21 @@ void _glfwSetVideoModeX11(_GLFWmonitor* monitor, const GLFWvidmode* desired)
         const GLFWvidmode* best = _glfwChooseVideoMode(monitor, desired);
         _glfwGetVideoModeX11(monitor, &current);
         if (_glfwCompareVideoModes(&current, best) == 0)
+        {
             return;
+        }
 
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
         XRROutputInfo* oi = XRRGetOutputInfo(_glfw.x11.display, sr, monitor->x11.output);
 
-        for (int i = 0;  i < oi->nmode;  i++)
+        for (int i = 0; i < oi->nmode; i++)
         {
             const XRRModeInfo* mi = getModeInfo(sr, oi->modes[i]);
             if (!modeIsGood(mi))
+            {
                 continue;
+            }
 
             const GLFWvidmode mode = vidmodeFromModeInfo(mi, ci);
             if (_glfwCompareVideoModes(best, &mode) == 0)
@@ -260,16 +266,12 @@ void _glfwSetVideoModeX11(_GLFWmonitor* monitor, const GLFWvidmode* desired)
         if (native)
         {
             if (monitor->x11.oldMode == None)
+            {
                 monitor->x11.oldMode = ci->mode;
+            }
 
-            XRRSetCrtcConfig(_glfw.x11.display,
-                             sr, monitor->x11.crtc,
-                             CurrentTime,
-                             ci->x, ci->y,
-                             native,
-                             ci->rotation,
-                             ci->outputs,
-                             ci->noutput);
+            XRRSetCrtcConfig(_glfw.x11.display, sr, monitor->x11.crtc, CurrentTime, ci->x, ci->y, native, ci->rotation,
+                             ci->outputs, ci->noutput);
         }
 
         XRRFreeOutputInfo(oi);
@@ -285,20 +287,15 @@ void _glfwRestoreVideoModeX11(_GLFWmonitor* monitor)
     if (_glfw.x11.randr.available && !_glfw.x11.randr.monitorBroken)
     {
         if (monitor->x11.oldMode == None)
+        {
             return;
+        }
 
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
 
-        XRRSetCrtcConfig(_glfw.x11.display,
-                         sr, monitor->x11.crtc,
-                         CurrentTime,
-                         ci->x, ci->y,
-                         monitor->x11.oldMode,
-                         ci->rotation,
-                         ci->outputs,
-                         ci->noutput);
+        XRRSetCrtcConfig(_glfw.x11.display, sr, monitor->x11.crtc, CurrentTime, ci->x, ci->y, monitor->x11.oldMode,
+                         ci->rotation, ci->outputs, ci->noutput);
 
         XRRFreeCrtcInfo(ci);
         XRRFreeScreenResources(sr);
@@ -306,7 +303,6 @@ void _glfwRestoreVideoModeX11(_GLFWmonitor* monitor)
         monitor->x11.oldMode = None;
     }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
@@ -320,16 +316,19 @@ void _glfwGetMonitorPosX11(_GLFWmonitor* monitor, int* xpos, int* ypos)
 {
     if (_glfw.x11.randr.available && !_glfw.x11.randr.monitorBroken)
     {
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
 
         if (ci)
         {
             if (xpos)
+            {
                 *xpos = ci->x;
+            }
             if (ypos)
+            {
                 *ypos = ci->y;
+            }
 
             XRRFreeCrtcInfo(ci);
         }
@@ -338,25 +337,25 @@ void _glfwGetMonitorPosX11(_GLFWmonitor* monitor, int* xpos, int* ypos)
     }
 }
 
-void _glfwGetMonitorContentScaleX11(_GLFWmonitor* monitor,
-                                    float* xscale, float* yscale)
+void _glfwGetMonitorContentScaleX11(_GLFWmonitor* monitor, float* xscale, float* yscale)
 {
     if (xscale)
+    {
         *xscale = _glfw.x11.contentScaleX;
+    }
     if (yscale)
+    {
         *yscale = _glfw.x11.contentScaleY;
+    }
 }
 
-void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor,
-                                int* xpos, int* ypos,
-                                int* width, int* height)
+void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor, int* xpos, int* ypos, int* width, int* height)
 {
     int areaX = 0, areaY = 0, areaWidth = 0, areaHeight = 0;
 
     if (_glfw.x11.randr.available && !_glfw.x11.randr.monitorBroken)
     {
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
 
         areaX = ci->x;
@@ -366,12 +365,12 @@ void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor,
 
         if (ci->rotation == RR_Rotate_90 || ci->rotation == RR_Rotate_270)
         {
-            areaWidth  = mi->height;
+            areaWidth = mi->height;
             areaHeight = mi->width;
         }
         else
         {
-            areaWidth  = mi->width;
+            areaWidth = mi->width;
             areaHeight = mi->height;
         }
 
@@ -380,7 +379,7 @@ void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor,
     }
     else
     {
-        areaWidth  = DisplayWidth(_glfw.x11.display, _glfw.x11.screen);
+        areaWidth = DisplayWidth(_glfw.x11.display, _glfw.x11.screen);
         areaHeight = DisplayHeight(_glfw.x11.display, _glfw.x11.screen);
     }
 
@@ -389,21 +388,16 @@ void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor,
         Atom* extents = NULL;
         Atom* desktop = NULL;
         const unsigned long extentCount =
-            _glfwGetWindowPropertyX11(_glfw.x11.root,
-                                      _glfw.x11.NET_WORKAREA,
-                                      XA_CARDINAL,
-                                      (unsigned char**) &extents);
+            _glfwGetWindowPropertyX11(_glfw.x11.root, _glfw.x11.NET_WORKAREA, XA_CARDINAL, (unsigned char**)&extents);
 
-        if (_glfwGetWindowPropertyX11(_glfw.x11.root,
-                                      _glfw.x11.NET_CURRENT_DESKTOP,
-                                      XA_CARDINAL,
-                                      (unsigned char**) &desktop) > 0)
+        if (_glfwGetWindowPropertyX11(_glfw.x11.root, _glfw.x11.NET_CURRENT_DESKTOP, XA_CARDINAL,
+                                      (unsigned char**)&desktop) > 0)
         {
             if (extentCount >= 4 && *desktop < extentCount / 4)
             {
                 const int globalX = extents[*desktop * 4 + 0];
                 const int globalY = extents[*desktop * 4 + 1];
-                const int globalWidth  = extents[*desktop * 4 + 2];
+                const int globalWidth = extents[*desktop * 4 + 2];
                 const int globalHeight = extents[*desktop * 4 + 3];
 
                 if (areaX < globalX)
@@ -419,26 +413,42 @@ void _glfwGetMonitorWorkareaX11(_GLFWmonitor* monitor,
                 }
 
                 if (areaX + areaWidth > globalX + globalWidth)
+                {
                     areaWidth = globalX - areaX + globalWidth;
+                }
                 if (areaY + areaHeight > globalY + globalHeight)
+                {
                     areaHeight = globalY - areaY + globalHeight;
+                }
             }
         }
 
         if (extents)
+        {
             XFree(extents);
+        }
         if (desktop)
+        {
             XFree(desktop);
+        }
     }
 
     if (xpos)
+    {
         *xpos = areaX;
+    }
     if (ypos)
+    {
         *ypos = areaY;
+    }
     if (width)
+    {
         *width = areaWidth;
+    }
     if (height)
+    {
         *height = areaHeight;
+    }
 }
 
 GLFWvidmode* _glfwGetVideoModesX11(_GLFWmonitor* monitor, int* count)
@@ -449,31 +459,36 @@ GLFWvidmode* _glfwGetVideoModesX11(_GLFWmonitor* monitor, int* count)
 
     if (_glfw.x11.randr.available && !_glfw.x11.randr.monitorBroken)
     {
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
         XRROutputInfo* oi = XRRGetOutputInfo(_glfw.x11.display, sr, monitor->x11.output);
 
         result = _glfw_calloc(oi->nmode, sizeof(GLFWvidmode));
 
-        for (int i = 0;  i < oi->nmode;  i++)
+        for (int i = 0; i < oi->nmode; i++)
         {
             const XRRModeInfo* mi = getModeInfo(sr, oi->modes[i]);
             if (!modeIsGood(mi))
+            {
                 continue;
+            }
 
             const GLFWvidmode mode = vidmodeFromModeInfo(mi, ci);
             int j;
 
-            for (j = 0;  j < *count;  j++)
+            for (j = 0; j < *count; j++)
             {
                 if (_glfwCompareVideoModes(result + j, &mode) == 0)
+                {
                     break;
+                }
             }
 
             // Skip duplicate modes
             if (j < *count)
+            {
                 continue;
+            }
 
             (*count)++;
             result[*count - 1] = mode;
@@ -497,15 +512,16 @@ void _glfwGetVideoModeX11(_GLFWmonitor* monitor, GLFWvidmode* mode)
 {
     if (_glfw.x11.randr.available && !_glfw.x11.randr.monitorBroken)
     {
-        XRRScreenResources* sr =
-            XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
+        XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_glfw.x11.display, _glfw.x11.root);
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
 
         if (ci)
         {
             const XRRModeInfo* mi = getModeInfo(sr, ci->mode);
-            if (mi)  // mi can be NULL if the monitor has been disconnected
+            if (mi) // mi can be NULL if the monitor has been disconnected
+            {
                 *mode = vidmodeFromModeInfo(mi, ci);
+            }
 
             XRRFreeCrtcInfo(ci);
         }
@@ -518,8 +534,8 @@ void _glfwGetVideoModeX11(_GLFWmonitor* monitor, GLFWvidmode* mode)
         mode->height = DisplayHeight(_glfw.x11.display, _glfw.x11.screen);
         mode->refreshRate = 0;
 
-        _glfwSplitBPP(DefaultDepth(_glfw.x11.display, _glfw.x11.screen),
-                      &mode->redBits, &mode->greenBits, &mode->blueBits);
+        _glfwSplitBPP(DefaultDepth(_glfw.x11.display, _glfw.x11.screen), &mode->redBits, &mode->greenBits,
+                      &mode->blueBits);
     }
 }
 
@@ -527,16 +543,14 @@ GLFWbool _glfwGetGammaRampX11(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 {
     if (_glfw.x11.randr.available && !_glfw.x11.randr.gammaBroken)
     {
-        const size_t size = XRRGetCrtcGammaSize(_glfw.x11.display,
-                                                monitor->x11.crtc);
-        XRRCrtcGamma* gamma = XRRGetCrtcGamma(_glfw.x11.display,
-                                              monitor->x11.crtc);
+        const size_t size = XRRGetCrtcGammaSize(_glfw.x11.display, monitor->x11.crtc);
+        XRRCrtcGamma* gamma = XRRGetCrtcGamma(_glfw.x11.display, monitor->x11.crtc);
 
         _glfwAllocGammaArrays(ramp, size);
 
-        memcpy(ramp->red,   gamma->red,   size * sizeof(unsigned short));
+        memcpy(ramp->red, gamma->red, size * sizeof(unsigned short));
         memcpy(ramp->green, gamma->green, size * sizeof(unsigned short));
-        memcpy(ramp->blue,  gamma->blue,  size * sizeof(unsigned short));
+        memcpy(ramp->blue, gamma->blue, size * sizeof(unsigned short));
 
         XRRFreeGamma(gamma);
         return GLFW_TRUE;
@@ -548,15 +562,12 @@ GLFWbool _glfwGetGammaRampX11(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 
         _glfwAllocGammaArrays(ramp, size);
 
-        XF86VidModeGetGammaRamp(_glfw.x11.display,
-                                _glfw.x11.screen,
-                                ramp->size, ramp->red, ramp->green, ramp->blue);
+        XF86VidModeGetGammaRamp(_glfw.x11.display, _glfw.x11.screen, ramp->size, ramp->red, ramp->green, ramp->blue);
         return GLFW_TRUE;
     }
     else
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "X11: Gamma ramp access not supported by server");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "X11: Gamma ramp access not supported by server");
         return GLFW_FALSE;
     }
 }
@@ -567,36 +578,29 @@ void _glfwSetGammaRampX11(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
     {
         if (XRRGetCrtcGammaSize(_glfw.x11.display, monitor->x11.crtc) != ramp->size)
         {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "X11: Gamma ramp size must match current ramp size");
+            _glfwInputError(GLFW_PLATFORM_ERROR, "X11: Gamma ramp size must match current ramp size");
             return;
         }
 
         XRRCrtcGamma* gamma = XRRAllocGamma(ramp->size);
 
-        memcpy(gamma->red,   ramp->red,   ramp->size * sizeof(unsigned short));
+        memcpy(gamma->red, ramp->red, ramp->size * sizeof(unsigned short));
         memcpy(gamma->green, ramp->green, ramp->size * sizeof(unsigned short));
-        memcpy(gamma->blue,  ramp->blue,  ramp->size * sizeof(unsigned short));
+        memcpy(gamma->blue, ramp->blue, ramp->size * sizeof(unsigned short));
 
         XRRSetCrtcGamma(_glfw.x11.display, monitor->x11.crtc, gamma);
         XRRFreeGamma(gamma);
     }
     else if (_glfw.x11.vidmode.available)
     {
-        XF86VidModeSetGammaRamp(_glfw.x11.display,
-                                _glfw.x11.screen,
-                                ramp->size,
-                                (unsigned short*) ramp->red,
-                                (unsigned short*) ramp->green,
-                                (unsigned short*) ramp->blue);
+        XF86VidModeSetGammaRamp(_glfw.x11.display, _glfw.x11.screen, ramp->size, (unsigned short*)ramp->red,
+                                (unsigned short*)ramp->green, (unsigned short*)ramp->blue);
     }
     else
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "X11: Gamma ramp access not supported by server");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "X11: Gamma ramp access not supported by server");
     }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW native API                       //////
@@ -604,17 +608,16 @@ void _glfwSetGammaRampX11(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 
 GLFWAPI RRCrtc glfwGetX11Adapter(GLFWmonitor* handle)
 {
-    _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
+    _GLFWmonitor* monitor = (_GLFWmonitor*)handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(None);
     return monitor->x11.crtc;
 }
 
 GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* handle)
 {
-    _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
+    _GLFWmonitor* monitor = (_GLFWmonitor*)handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(None);
     return monitor->x11.output;
 }
 
 #endif // _GLFW_X11
-

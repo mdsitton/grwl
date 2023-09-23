@@ -24,7 +24,7 @@
 //
 //========================================================================
 
-//Taken from DBus docs (https://dbus.freedesktop.org/doc/api/html/index.html)
+// Taken from DBus docs (https://dbus.freedesktop.org/doc/api/html/index.html)
 typedef struct DBusConnection DBusConnection;
 typedef struct DBusMessage DBusMessage;
 typedef unsigned int dbus_bool_t;
@@ -80,20 +80,21 @@ struct DBusMessageIter
 #define DBUS_TYPE_OBJECT_PATH (unsigned int)'o'
 #define DBUS_TYPE_SIGNATURE (unsigned int)'g'
 
-typedef void (* PFN_dbus_error_init)(struct DBusError*);
-typedef dbus_bool_t (* PFN_dbus_error_is_set)(const struct DBusError*);
-typedef void (* PFN_dbus_error_free)(struct DBusError*);
-typedef void (* PFN_dbus_connection_unref)(DBusConnection*);
-typedef dbus_bool_t (* PFN_dbus_connection_send)(DBusConnection*, DBusMessage*, dbus_uint32_t*);
-typedef void (* PFN_dbus_connection_flush)(DBusConnection*);
-typedef int (* PFN_dbus_bus_request_name)(DBusConnection*, const char*, unsigned int, struct DBusError*);
-typedef DBusConnection* (* PFN_dbus_bus_get)(enum DBusBusType, struct DBusError*);
-typedef void (* PFN_dbus_message_unref)(DBusMessage*);
-typedef DBusMessage* (* PFN_dbus_message_new_signal)(const char*, const char*, const char*);
-typedef void (* PFN_dbus_message_iter_init_append)(DBusMessage*, struct DBusMessageIter*);
-typedef dbus_bool_t (* PFN_dbus_message_iter_append_basic)(struct DBusMessageIter*, int, const void*);
-typedef dbus_bool_t (* PFN_dbus_message_iter_open_container)(struct DBusMessageIter*, int, const char*, struct DBusMessageIter*);
-typedef dbus_bool_t (* PFN_dbus_message_iter_close_container)(struct DBusMessageIter*, struct DBusMessageIter*);
+typedef void (*PFN_dbus_error_init)(struct DBusError*);
+typedef dbus_bool_t (*PFN_dbus_error_is_set)(const struct DBusError*);
+typedef void (*PFN_dbus_error_free)(struct DBusError*);
+typedef void (*PFN_dbus_connection_unref)(DBusConnection*);
+typedef dbus_bool_t (*PFN_dbus_connection_send)(DBusConnection*, DBusMessage*, dbus_uint32_t*);
+typedef void (*PFN_dbus_connection_flush)(DBusConnection*);
+typedef int (*PFN_dbus_bus_request_name)(DBusConnection*, const char*, unsigned int, struct DBusError*);
+typedef DBusConnection* (*PFN_dbus_bus_get)(enum DBusBusType, struct DBusError*);
+typedef void (*PFN_dbus_message_unref)(DBusMessage*);
+typedef DBusMessage* (*PFN_dbus_message_new_signal)(const char*, const char*, const char*);
+typedef void (*PFN_dbus_message_iter_init_append)(DBusMessage*, struct DBusMessageIter*);
+typedef dbus_bool_t (*PFN_dbus_message_iter_append_basic)(struct DBusMessageIter*, int, const void*);
+typedef dbus_bool_t (*PFN_dbus_message_iter_open_container)(struct DBusMessageIter*, int, const char*,
+                                                            struct DBusMessageIter*);
+typedef dbus_bool_t (*PFN_dbus_message_iter_close_container)(struct DBusMessageIter*, struct DBusMessageIter*);
 
 #define dbus_error_init _glfw.dbus.error_init
 #define dbus_error_is_set _glfw.dbus.error_is_set
@@ -110,7 +111,7 @@ typedef dbus_bool_t (* PFN_dbus_message_iter_close_container)(struct DBusMessage
 #define dbus_message_iter_open_container _glfw.dbus.message_iter_open_container
 #define dbus_message_iter_close_container _glfw.dbus.message_iter_close_container
 
-#define GLFW_POSIX_LIBRARY_DBUS_STATE    _GLFWDBusPOSIX   dbus;
+#define GLFW_POSIX_LIBRARY_DBUS_STATE _GLFWDBusPOSIX dbus;
 
 // POSIX-specific dbus data
 //
@@ -151,9 +152,12 @@ void _glfwTerminateDBusPOSIX(void);
 void _glfwUpdateTaskbarProgressDBusPOSIX(dbus_bool_t progressVisible, double progressValue);
 void _glfwUpdateBadgeDBusPOSIX(dbus_bool_t badgeVisible, int badgeCount);
 
-dbus_bool_t _glfwNewMessageSignalDBusPOSIX(const char* objectPath, const char* interfaceName, const char* signalName, struct DBusMessage** outMessage);
-dbus_bool_t _glfwOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const char* signature, struct DBusMessageIter* subIterator);
+dbus_bool_t _glfwNewMessageSignalDBusPOSIX(const char* objectPath, const char* interfaceName, const char* signalName,
+                                           struct DBusMessage** outMessage);
+dbus_bool_t _glfwOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const char* signature,
+                                        struct DBusMessageIter* subIterator);
 dbus_bool_t _glfwCloseContainerDBusPOSIX(struct DBusMessageIter* iterator, struct DBusMessageIter* subIterator);
 dbus_bool_t _glfwAppendDataDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const void* data);
-dbus_bool_t _glfwAppendDictDataDBusPOSIX(struct DBusMessageIter* iterator, int keyType, const void* keyData, int valueType, const void* valueData);
+dbus_bool_t _glfwAppendDictDataDBusPOSIX(struct DBusMessageIter* iterator, int keyType, const void* keyData,
+                                         int valueType, const void* valueData);
 dbus_bool_t _glfwSendMessageDBusPOSIX(struct DBusMessage* message);

@@ -64,7 +64,9 @@ int main(int argc, char** argv)
     int may_close = true;
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
     glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_TRUE);
@@ -89,7 +91,9 @@ int main(int argc, char** argv)
     sprintf(xpos_buffer, "%i", last_xpos);
     sprintf(ypos_buffer, "%i", last_ypos);
     if (glfwGetError(NULL) == GLFW_FEATURE_UNAVAILABLE)
+    {
         position_supported = false;
+    }
 
     glfwGetWindowSize(window, &last_width, &last_height);
     sprintf(width_buffer, "%i", last_width);
@@ -115,7 +119,7 @@ int main(int argc, char** argv)
 
         glfwGetWindowSize(window, &width, &height);
 
-        struct nk_rect area = nk_rect(0.f, 0.f, (float) width, (float) height);
+        struct nk_rect area = nk_rect(0.f, 0.f, (float)width, (float)height);
         nk_window_set_bounds(nk, "main", area);
 
         nk_glfw3_new_frame();
@@ -127,9 +131,7 @@ int main(int argc, char** argv)
             {
                 if (glfwGetWindowMonitor(window))
                 {
-                    glfwSetWindowMonitor(window, NULL,
-                                         windowed_x, windowed_y,
-                                         windowed_width, windowed_height, 0);
+                    glfwSetWindowMonitor(window, NULL, windowed_x, windowed_y, windowed_width, windowed_height, 0);
                 }
                 else
                 {
@@ -137,25 +139,31 @@ int main(int argc, char** argv)
                     const GLFWvidmode* mode = glfwGetVideoMode(monitor);
                     glfwGetWindowPos(window, &windowed_x, &windowed_y);
                     glfwGetWindowSize(window, &windowed_width, &windowed_height);
-                    glfwSetWindowMonitor(window, monitor,
-                                         0, 0, mode->width, mode->height,
-                                         mode->refreshRate);
+                    glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
                 }
             }
 
             if (nk_button_label(nk, "Maximize"))
+            {
                 glfwMaximizeWindow(window);
+            }
             if (nk_button_label(nk, "Iconify"))
+            {
                 glfwIconifyWindow(window);
+            }
             if (nk_button_label(nk, "Restore"))
+            {
                 glfwRestoreWindow(window);
+            }
             if (nk_button_label(nk, "Hide (briefly)"))
             {
                 glfwHideWindow(window);
 
                 const double time = glfwGetTime() + 3.0;
                 while (glfwGetTime() < time)
+                {
                     glfwWaitEventsTimeout(1.0);
+                }
 
                 glfwShowWindow(window);
             }
@@ -167,15 +175,15 @@ int main(int argc, char** argv)
                 nk_label(nk, "Press H to disable mouse passthrough", NK_TEXT_CENTERED);
 
                 if (glfwGetKey(window, GLFW_KEY_H))
+                {
                     glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, false);
+                }
             }
 
             nk_label(nk, "Press Enter in a text field to set value", NK_TEXT_CENTERED);
 
             nk_flags events;
-            const nk_flags flags = NK_EDIT_FIELD |
-                                   NK_EDIT_SIG_ENTER |
-                                   NK_EDIT_GOTO_END_ON_ACTIVATE;
+            const nk_flags flags = NK_EDIT_FIELD | NK_EDIT_SIG_ENTER | NK_EDIT_GOTO_END_ON_ACTIVATE;
 
             if (position_supported)
             {
@@ -185,103 +193,112 @@ int main(int argc, char** argv)
                 nk_layout_row_dynamic(nk, 30, 3);
                 nk_label(nk, "Position", NK_TEXT_LEFT);
 
-                events = nk_edit_string_zero_terminated(nk, flags, xpos_buffer,
-                                                        sizeof(xpos_buffer),
-                                                        nk_filter_decimal);
+                events = nk_edit_string_zero_terminated(nk, flags, xpos_buffer, sizeof(xpos_buffer), nk_filter_decimal);
                 if (events & NK_EDIT_COMMITED)
                 {
                     xpos = atoi(xpos_buffer);
                     glfwSetWindowPos(window, xpos, ypos);
                 }
                 else if (xpos != last_xpos || (events & NK_EDIT_DEACTIVATED))
+                {
                     sprintf(xpos_buffer, "%i", xpos);
+                }
 
-                events = nk_edit_string_zero_terminated(nk, flags, ypos_buffer,
-                                                        sizeof(ypos_buffer),
-                                                        nk_filter_decimal);
+                events = nk_edit_string_zero_terminated(nk, flags, ypos_buffer, sizeof(ypos_buffer), nk_filter_decimal);
                 if (events & NK_EDIT_COMMITED)
                 {
                     ypos = atoi(ypos_buffer);
                     glfwSetWindowPos(window, xpos, ypos);
                 }
                 else if (ypos != last_ypos || (events & NK_EDIT_DEACTIVATED))
+                {
                     sprintf(ypos_buffer, "%i", ypos);
+                }
 
                 last_xpos = xpos;
                 last_ypos = ypos;
             }
             else
+            {
                 nk_label(nk, "Position not supported", NK_TEXT_LEFT);
+            }
 
             nk_layout_row_dynamic(nk, 30, 3);
             nk_label(nk, "Size", NK_TEXT_LEFT);
 
-            events = nk_edit_string_zero_terminated(nk, flags, width_buffer,
-                                                    sizeof(width_buffer),
-                                                    nk_filter_decimal);
+            events = nk_edit_string_zero_terminated(nk, flags, width_buffer, sizeof(width_buffer), nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
                 width = atoi(width_buffer);
                 glfwSetWindowSize(window, width, height);
             }
             else if (width != last_width || (events & NK_EDIT_DEACTIVATED))
+            {
                 sprintf(width_buffer, "%i", width);
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, height_buffer,
-                                                    sizeof(height_buffer),
-                                                    nk_filter_decimal);
+            events = nk_edit_string_zero_terminated(nk, flags, height_buffer, sizeof(height_buffer), nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
                 height = atoi(height_buffer);
                 glfwSetWindowSize(window, width, height);
             }
             else if (height != last_height || (events & NK_EDIT_DEACTIVATED))
+            {
                 sprintf(height_buffer, "%i", height);
+            }
 
             last_width = width;
             last_height = height;
 
             bool update_ratio_limit = false;
             if (nk_checkbox_label(nk, "Aspect Ratio", &limit_aspect_ratio))
+            {
                 update_ratio_limit = true;
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, numer_buffer,
-                                                    sizeof(numer_buffer),
-                                                    nk_filter_decimal);
+            events = nk_edit_string_zero_terminated(nk, flags, numer_buffer, sizeof(numer_buffer), nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
                 aspect_numer = abs(atoi(numer_buffer));
                 update_ratio_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(numer_buffer, "%i", aspect_numer);
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, denom_buffer,
-                                                    sizeof(denom_buffer),
-                                                    nk_filter_decimal);
+            events = nk_edit_string_zero_terminated(nk, flags, denom_buffer, sizeof(denom_buffer), nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
                 aspect_denom = abs(atoi(denom_buffer));
                 update_ratio_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(denom_buffer, "%i", aspect_denom);
+            }
 
             if (update_ratio_limit)
             {
                 if (limit_aspect_ratio)
+                {
                     glfwSetWindowAspectRatio(window, aspect_numer, aspect_denom);
+                }
                 else
+                {
                     glfwSetWindowAspectRatio(window, GLFW_DONT_CARE, GLFW_DONT_CARE);
+                }
             }
 
             bool update_size_limit = false;
 
             if (nk_checkbox_label(nk, "Minimum Size", &limit_min_size))
+            {
                 update_size_limit = true;
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, min_width_buffer,
-                                                    sizeof(min_width_buffer),
+            events = nk_edit_string_zero_terminated(nk, flags, min_width_buffer, sizeof(min_width_buffer),
                                                     nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
@@ -289,10 +306,11 @@ int main(int argc, char** argv)
                 update_size_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(min_width_buffer, "%i", min_width);
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, min_height_buffer,
-                                                    sizeof(min_height_buffer),
+            events = nk_edit_string_zero_terminated(nk, flags, min_height_buffer, sizeof(min_height_buffer),
                                                     nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
@@ -300,13 +318,16 @@ int main(int argc, char** argv)
                 update_size_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(min_height_buffer, "%i", min_height);
+            }
 
             if (nk_checkbox_label(nk, "Maximum Size", &limit_max_size))
+            {
                 update_size_limit = true;
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, max_width_buffer,
-                                                    sizeof(max_width_buffer),
+            events = nk_edit_string_zero_terminated(nk, flags, max_width_buffer, sizeof(max_width_buffer),
                                                     nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
@@ -314,10 +335,11 @@ int main(int argc, char** argv)
                 update_size_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(max_width_buffer, "%i", max_width);
+            }
 
-            events = nk_edit_string_zero_terminated(nk, flags, max_height_buffer,
-                                                    sizeof(max_height_buffer),
+            events = nk_edit_string_zero_terminated(nk, flags, max_height_buffer, sizeof(max_height_buffer),
                                                     nk_filter_decimal);
             if (events & NK_EDIT_COMMITED)
             {
@@ -325,15 +347,15 @@ int main(int argc, char** argv)
                 update_size_limit = true;
             }
             else if (events & NK_EDIT_DEACTIVATED)
+            {
                 sprintf(max_height_buffer, "%i", max_height);
+            }
 
             if (update_size_limit)
             {
-                glfwSetWindowSizeLimits(window,
-                                        limit_min_size ? min_width : GLFW_DONT_CARE,
-                                        limit_min_size ? min_height : GLFW_DONT_CARE,
-                                        limit_max_size ? max_width : GLFW_DONT_CARE,
-                                        limit_max_size ? max_height : GLFW_DONT_CARE);
+                glfwSetWindowSizeLimits(
+                    window, limit_min_size ? min_width : GLFW_DONT_CARE, limit_min_size ? min_height : GLFW_DONT_CARE,
+                    limit_max_size ? max_width : GLFW_DONT_CARE, limit_max_size ? max_height : GLFW_DONT_CARE);
             }
 
             int fb_width, fb_height;
@@ -369,14 +391,18 @@ int main(int argc, char** argv)
             nk_labelf(nk, NK_TEXT_LEFT, "Opacity: %0.3f", opacity);
             nk_layout_row_push(nk, 2.f / 3.f);
             if (nk_slider_float(nk, 0.f, &opacity, 1.f, 0.001f))
+            {
                 glfwSetWindowOpacity(window, opacity);
+            }
             nk_layout_row_end(nk);
 
             nk_layout_row_begin(nk, NK_DYNAMIC, 30, 2);
             int should_close = glfwWindowShouldClose(window);
             nk_layout_row_push(nk, 1.f / 3.f);
             if (nk_checkbox_label(nk, "Should Close", &should_close))
+            {
                 glfwSetWindowShouldClose(window, should_close);
+            }
             nk_layout_row_push(nk, 2.f / 3.f);
             nk_checkbox_label(nk, "May Close", &may_close);
             nk_layout_row_end(nk);
@@ -388,23 +414,33 @@ int main(int argc, char** argv)
 
             int decorated = glfwGetWindowAttrib(window, GLFW_DECORATED);
             if (nk_checkbox_label(nk, "Decorated", &decorated))
+            {
                 glfwSetWindowAttrib(window, GLFW_DECORATED, decorated);
+            }
 
             int resizable = glfwGetWindowAttrib(window, GLFW_RESIZABLE);
             if (nk_checkbox_label(nk, "Resizable", &resizable))
+            {
                 glfwSetWindowAttrib(window, GLFW_RESIZABLE, resizable);
+            }
 
             int floating = glfwGetWindowAttrib(window, GLFW_FLOATING);
             if (nk_checkbox_label(nk, "Floating", &floating))
+            {
                 glfwSetWindowAttrib(window, GLFW_FLOATING, floating);
+            }
 
             int passthrough = glfwGetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH);
             if (nk_checkbox_label(nk, "Mouse Passthrough", &passthrough))
+            {
                 glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH, passthrough);
+            }
 
             int auto_iconify = glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY);
             if (nk_checkbox_label(nk, "Auto Iconify", &auto_iconify))
+            {
                 glfwSetWindowAttrib(window, GLFW_AUTO_ICONIFY, auto_iconify);
+            }
 
             nk_value_bool(nk, "Focused", glfwGetWindowAttrib(window, GLFW_FOCUSED));
             nk_value_bool(nk, "Hovered", glfwGetWindowAttrib(window, GLFW_HOVERED));
@@ -420,20 +456,32 @@ int main(int argc, char** argv)
 
             static int state = GLFW_PROGRESS_INDICATOR_DISABLED;
             static float progress = 0;
-            if(nk_button_label(nk, "No progress"))
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_DISABLED, (double) progress);
+            if (nk_button_label(nk, "No progress"))
+            {
+                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_DISABLED, (double)progress);
+            }
             if (nk_button_label(nk, "Indeterminate"))
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_INDETERMINATE, (double) progress);
+            {
+                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_INDETERMINATE, (double)progress);
+            }
             if (nk_button_label(nk, "Normal"))
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_NORMAL, (double) progress);
+            {
+                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_NORMAL, (double)progress);
+            }
             if (nk_button_label(nk, "Error"))
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_ERROR, (double) progress);
+            {
+                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_ERROR, (double)progress);
+            }
             if (nk_button_label(nk, "Paused"))
-                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_PAUSED, (double) progress);
+            {
+                glfwSetWindowProgressIndicator(window, state = GLFW_PROGRESS_INDICATOR_PAUSED, (double)progress);
+            }
 
             nk_label(nk, "Progress: ", NK_TEXT_ALIGN_LEFT);
             if (nk_slider_float(nk, 0.0f, &progress, 1.0f, 0.05f))
-                glfwSetWindowProgressIndicator(window, state, (double) progress);
+            {
+                glfwSetWindowProgressIndicator(window, state, (double)progress);
+            }
 
             nk_layout_row_dynamic(nk, 30, 1);
 
@@ -464,4 +512,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

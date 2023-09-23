@@ -31,8 +31,7 @@
 
 #if defined(GLFW_BUILD_WIN32_THREAD)
 
-#include <assert.h>
-
+    #include <assert.h>
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
@@ -56,7 +55,9 @@ GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
 void _glfwPlatformDestroyTls(_GLFWtls* tls)
 {
     if (tls->win32.allocated)
+    {
         TlsFree(tls->win32.index);
+    }
     memset(tls, 0, sizeof(_GLFWtls));
 }
 
@@ -82,7 +83,9 @@ GLFWbool _glfwPlatformCreateMutex(_GLFWmutex* mutex)
 void _glfwPlatformDestroyMutex(_GLFWmutex* mutex)
 {
     if (mutex->win32.allocated)
+    {
         DeleteCriticalSection(&mutex->win32.section);
+    }
     memset(mutex, 0, sizeof(_GLFWmutex));
 }
 
@@ -99,4 +102,3 @@ void _glfwPlatformUnlockMutex(_GLFWmutex* mutex)
 }
 
 #endif // GLFW_BUILD_WIN32_THREAD
-

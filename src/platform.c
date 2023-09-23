@@ -40,9 +40,8 @@
 static const struct
 {
     int ID;
-    GLFWbool (*connect)(int,_GLFWplatform*);
-} supportedPlatforms[] =
-{
+    GLFWbool (*connect)(int, _GLFWplatform*);
+} supportedPlatforms[] = {
 #if defined(_GLFW_WIN32)
     { GLFW_PLATFORM_WIN32, _glfwConnectWin32 },
 #endif
@@ -62,12 +61,8 @@ GLFWbool _glfwSelectPlatform(int desiredID, _GLFWplatform* platform)
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
     size_t i;
 
-    if (desiredID != GLFW_ANY_PLATFORM &&
-        desiredID != GLFW_PLATFORM_WIN32 &&
-        desiredID != GLFW_PLATFORM_COCOA &&
-        desiredID != GLFW_PLATFORM_WAYLAND &&
-        desiredID != GLFW_PLATFORM_X11 &&
-        desiredID != GLFW_PLATFORM_NULL)
+    if (desiredID != GLFW_ANY_PLATFORM && desiredID != GLFW_PLATFORM_WIN32 && desiredID != GLFW_PLATFORM_COCOA &&
+        desiredID != GLFW_PLATFORM_WAYLAND && desiredID != GLFW_PLATFORM_X11 && desiredID != GLFW_PLATFORM_NULL)
     {
         _glfwInputError(GLFW_INVALID_ENUM, "Invalid platform ID 0x%08X", desiredID);
         return GLFW_FALSE;
@@ -75,7 +70,9 @@ GLFWbool _glfwSelectPlatform(int desiredID, _GLFWplatform* platform)
 
     // Only allow the Null platform if specifically requested
     if (desiredID == GLFW_PLATFORM_NULL)
+    {
         return _glfwConnectNull(desiredID, platform);
+    }
     else if (count == 0)
     {
         _glfwInputError(GLFW_PLATFORM_UNAVAILABLE, "This binary only supports the Null platform");
@@ -87,22 +84,28 @@ GLFWbool _glfwSelectPlatform(int desiredID, _GLFWplatform* platform)
         // If there is exactly one platform available for auto-selection, let it emit the
         // error on failure as the platform-specific error description may be more helpful
         if (count == 1)
+        {
             return supportedPlatforms[0].connect(supportedPlatforms[0].ID, platform);
+        }
 
-        for (i = 0;  i < count;  i++)
+        for (i = 0; i < count; i++)
         {
             if (supportedPlatforms[i].connect(desiredID, platform))
+            {
                 return GLFW_TRUE;
+            }
         }
 
         _glfwInputError(GLFW_PLATFORM_UNAVAILABLE, "Failed to detect any supported platform");
     }
     else
     {
-        for (i = 0;  i < count;  i++)
+        for (i = 0; i < count; i++)
         {
             if (supportedPlatforms[i].ID == desiredID)
+            {
                 return supportedPlatforms[i].connect(desiredID, platform);
+            }
         }
 
         _glfwInputError(GLFW_PLATFORM_UNAVAILABLE, "The requested platform is not supported");
@@ -126,23 +129,24 @@ GLFWAPI int glfwPlatformSupported(int platformID)
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
     size_t i;
 
-    if (platformID != GLFW_PLATFORM_WIN32 &&
-        platformID != GLFW_PLATFORM_COCOA &&
-        platformID != GLFW_PLATFORM_WAYLAND &&
-        platformID != GLFW_PLATFORM_X11 &&
-        platformID != GLFW_PLATFORM_NULL)
+    if (platformID != GLFW_PLATFORM_WIN32 && platformID != GLFW_PLATFORM_COCOA && platformID != GLFW_PLATFORM_WAYLAND &&
+        platformID != GLFW_PLATFORM_X11 && platformID != GLFW_PLATFORM_NULL)
     {
         _glfwInputError(GLFW_INVALID_ENUM, "Invalid platform ID 0x%08X", platformID);
         return GLFW_FALSE;
     }
 
     if (platformID == GLFW_PLATFORM_NULL)
+    {
         return GLFW_TRUE;
+    }
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
     {
         if (platformID == supportedPlatforms[i].ID)
+        {
             return GLFW_TRUE;
+        }
     }
 
     return GLFW_FALSE;
@@ -150,9 +154,7 @@ GLFWAPI int glfwPlatformSupported(int platformID)
 
 GLFWAPI const char* glfwGetVersionString(void)
 {
-    return _GLFW_MAKE_VERSION(GLFW_VERSION_MAJOR,
-                              GLFW_VERSION_MINOR,
-                              GLFW_VERSION_REVISION)
+    return _GLFW_MAKE_VERSION(GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION)
 #if defined(_GLFW_WIN32)
         " Win32 WGL"
 #endif
@@ -182,14 +184,13 @@ GLFWAPI const char* glfwGetVersionString(void)
         " monotonic"
 #endif
 #if defined(_GLFW_BUILD_DLL)
-#if defined(_WIN32)
+    #if defined(_WIN32)
         " DLL"
-#elif defined(__APPLE__)
+    #elif defined(__APPLE__)
         " dynamic"
-#else
+    #else
         " shared"
-#endif
+    #endif
 #endif
         ;
 }
-

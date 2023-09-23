@@ -57,7 +57,9 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
 }
 
 static int thread_main(void* data)
@@ -69,7 +71,7 @@ static int thread_main(void* data)
 
     while (running)
     {
-        const float v = (float) fabs(sin(glfwGetTime() * 2.f));
+        const float v = (float)fabs(sin(glfwGetTime() * 2.f));
         glClearColor(thread->r * v, thread->g * v, thread->b * v, 0.f);
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -83,27 +85,24 @@ static int thread_main(void* data)
 int main(void)
 {
     int i, result;
-    Thread threads[] =
-    {
-        { NULL, "Red", 1.f, 0.f, 0.f, 0 },
-        { NULL, "Green", 0.f, 1.f, 0.f, 0 },
-        { NULL, "Blue", 0.f, 0.f, 1.f, 0 }
-    };
+    Thread threads[] = { { NULL, "Red", 1.f, 0.f, 0.f, 0 },
+                         { NULL, "Green", 0.f, 1.f, 0.f, 0 },
+                         { NULL, "Blue", 0.f, 0.f, 1.f, 0 } };
     const int count = sizeof(threads) / sizeof(Thread);
 
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
     {
         glfwWindowHint(GLFW_POSITION_X, 200 + 250 * i);
         glfwWindowHint(GLFW_POSITION_Y, 200);
 
-        threads[i].window = glfwCreateWindow(200, 200,
-                                             threads[i].title,
-                                             NULL, NULL);
+        threads[i].window = glfwCreateWindow(200, 200, threads[i].title, NULL, NULL);
         if (!threads[i].window)
         {
             glfwTerminate();
@@ -117,10 +116,9 @@ int main(void)
     gladLoadGL(glfwGetProcAddress);
     glfwMakeContextCurrent(NULL);
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
     {
-        if (thrd_create(&threads[i].id, thread_main, threads + i) !=
-            thrd_success)
+        if (thrd_create(&threads[i].id, thread_main, threads + i) != thrd_success)
         {
             fprintf(stderr, "Failed to create secondary thread\n");
 
@@ -133,19 +131,24 @@ int main(void)
     {
         glfwWaitEvents();
 
-        for (i = 0;  i < count;  i++)
+        for (i = 0; i < count; i++)
         {
             if (glfwWindowShouldClose(threads[i].window))
+            {
                 running = GLFW_FALSE;
+            }
         }
     }
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
+    {
         glfwHideWindow(threads[i].window);
+    }
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
+    {
         thrd_join(threads[i].id, &result);
+    }
 
     exit(EXIT_SUCCESS);
 }
-

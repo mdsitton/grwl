@@ -31,18 +31,20 @@
 
 #if defined(_GLFW_WIN32)
 
-#include <stdlib.h>
+    #include <stdlib.h>
 
-static const GUID _glfw_GUID_DEVINTERFACE_HID =
-    {0x4d1e55b2,0xf16f,0x11cf,{0x88,0xcb,0x00,0x11,0x11,0x00,0x00,0x30}};
+static const GUID _glfw_GUID_DEVINTERFACE_HID = { 0x4d1e55b2,
+                                                  0xf16f,
+                                                  0x11cf,
+                                                  { 0x88, 0xcb, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30 } };
 
-#define GUID_DEVINTERFACE_HID _glfw_GUID_DEVINTERFACE_HID
+    #define GUID_DEVINTERFACE_HID _glfw_GUID_DEVINTERFACE_HID
 
-#if defined(_GLFW_USE_HYBRID_HPG) || defined(_GLFW_USE_OPTIMUS_HPG)
+    #if defined(_GLFW_USE_HYBRID_HPG) || defined(_GLFW_USE_OPTIMUS_HPG)
 
-#if defined(_GLFW_BUILD_DLL)
- #pragma message("These symbols must be exported by the executable and have no effect in a DLL")
-#endif
+        #if defined(_GLFW_BUILD_DLL)
+            #pragma message("These symbols must be exported by the executable and have no effect in a DLL")
+        #endif
 
 // Executables (but not DLLs) exporting this symbol with this value will be
 // automatically directed to the high-performance GPU on Nvidia Optimus systems
@@ -56,9 +58,9 @@ __declspec(dllexport) DWORD NvOptimusEnablement = 1;
 //
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
-#endif // _GLFW_USE_HYBRID_HPG
+    #endif // _GLFW_USE_HYBRID_HPG
 
-#if defined(_GLFW_BUILD_DLL)
+    #if defined(_GLFW_BUILD_DLL)
 
 // GLFW DLL entry point
 //
@@ -67,19 +69,16 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
     return TRUE;
 }
 
-#endif // _GLFW_BUILD_DLL
+    #endif // _GLFW_BUILD_DLL
 
 // Load necessary libraries (DLLs)
 //
 static GLFWbool loadLibraries(void)
 {
-    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-                                GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                            (const WCHAR*) &_glfw,
-                            (HMODULE*) &_glfw.win32.instance))
+    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                            (const WCHAR*)&_glfw, (HMODULE*)&_glfw.win32.instance))
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to retrieve own module handle");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to retrieve own module handle");
         return GLFW_FALSE;
     }
 
@@ -87,82 +86,74 @@ static GLFWbool loadLibraries(void)
     _glfw.win32.ntdll.instance = _glfwPlatformLoadModule("ntdll.dll");
     if (_glfw.win32.ntdll.instance)
     {
-        _glfw.win32.ntdll.RtlVerifyVersionInfo_ = (PFN_RtlVerifyVersionInfo)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.ntdll.instance, "RtlVerifyVersionInfo");
+        _glfw.win32.ntdll.RtlVerifyVersionInfo_ =
+            (PFN_RtlVerifyVersionInfo)_glfwPlatformGetModuleSymbol(_glfw.win32.ntdll.instance, "RtlVerifyVersionInfo");
     }
 
     _glfw.win32.user32.instance = _glfwPlatformLoadModule("user32.dll");
     if (!_glfw.win32.user32.instance)
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to load user32.dll");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to load user32.dll");
         return GLFW_FALSE;
     }
 
-    _glfw.win32.user32.SetProcessDPIAware_ = (PFN_SetProcessDPIAware)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "SetProcessDPIAware");
-    _glfw.win32.user32.ChangeWindowMessageFilterEx_ = (PFN_ChangeWindowMessageFilterEx)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "ChangeWindowMessageFilterEx");
-    _glfw.win32.user32.EnableNonClientDpiScaling_ = (PFN_EnableNonClientDpiScaling)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "EnableNonClientDpiScaling");
-    _glfw.win32.user32.SetProcessDpiAwarenessContext_ = (PFN_SetProcessDpiAwarenessContext)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "SetProcessDpiAwarenessContext");
-    _glfw.win32.user32.GetDpiForWindow_ = (PFN_GetDpiForWindow)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "GetDpiForWindow");
-    _glfw.win32.user32.AdjustWindowRectExForDpi_ = (PFN_AdjustWindowRectExForDpi)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "AdjustWindowRectExForDpi");
-    _glfw.win32.user32.GetSystemMetricsForDpi_ = (PFN_GetSystemMetricsForDpi)
-        _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "GetSystemMetricsForDpi");
+    _glfw.win32.user32.SetProcessDPIAware_ =
+        (PFN_SetProcessDPIAware)_glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "SetProcessDPIAware");
+    _glfw.win32.user32.ChangeWindowMessageFilterEx_ = (PFN_ChangeWindowMessageFilterEx)_glfwPlatformGetModuleSymbol(
+        _glfw.win32.user32.instance, "ChangeWindowMessageFilterEx");
+    _glfw.win32.user32.EnableNonClientDpiScaling_ = (PFN_EnableNonClientDpiScaling)_glfwPlatformGetModuleSymbol(
+        _glfw.win32.user32.instance, "EnableNonClientDpiScaling");
+    _glfw.win32.user32.SetProcessDpiAwarenessContext_ = (PFN_SetProcessDpiAwarenessContext)_glfwPlatformGetModuleSymbol(
+        _glfw.win32.user32.instance, "SetProcessDpiAwarenessContext");
+    _glfw.win32.user32.GetDpiForWindow_ =
+        (PFN_GetDpiForWindow)_glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "GetDpiForWindow");
+    _glfw.win32.user32.AdjustWindowRectExForDpi_ = (PFN_AdjustWindowRectExForDpi)_glfwPlatformGetModuleSymbol(
+        _glfw.win32.user32.instance, "AdjustWindowRectExForDpi");
+    _glfw.win32.user32.GetSystemMetricsForDpi_ =
+        (PFN_GetSystemMetricsForDpi)_glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "GetSystemMetricsForDpi");
 
     // Strictly speaking only QueryDisplayConfig requires Windows 7.
     // The others two require Windows Vista but we use them in conjunction so I put them all here.
     // If down the road someone needs them separately feel free to put the others two in if(IsWindowsVistaOrGreater())
     // You will also probably need to move the structures defined in win32_platform.h #ifdef WINVER < 0x0601 to another
     // block with WINVER < 0x0600 aka _WIN32_WINNT_VISTA
-    if(IsWindows7OrGreater())
+    if (IsWindows7OrGreater())
     {
-        _glfw.win32.user32.GetDisplayConfigBufferSizes_ = (PFN_GetDisplayConfigBufferSizes)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "GetDisplayConfigBufferSizes");
-        _glfw.win32.user32.QueryDisplayConfig_ = (PFN_QueryDisplayConfig)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "QueryDisplayConfig");
-        _glfw.win32.user32.DisplayConfigGetDeviceInfo_ = (PFN_DisplayConfigGetDeviceInfo)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "DisplayConfigGetDeviceInfo");
+        _glfw.win32.user32.GetDisplayConfigBufferSizes_ = (PFN_GetDisplayConfigBufferSizes)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.user32.instance, "GetDisplayConfigBufferSizes");
+        _glfw.win32.user32.QueryDisplayConfig_ =
+            (PFN_QueryDisplayConfig)_glfwPlatformGetModuleSymbol(_glfw.win32.user32.instance, "QueryDisplayConfig");
+        _glfw.win32.user32.DisplayConfigGetDeviceInfo_ = (PFN_DisplayConfigGetDeviceInfo)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.user32.instance, "DisplayConfigGetDeviceInfo");
     }
     else
     {
         _glfw.win32.user32.GetDisplayConfigBufferSizes_ = NULL;
-        _glfw.win32.user32.QueryDisplayConfig_          = NULL;
-        _glfw.win32.user32.DisplayConfigGetDeviceInfo_  = NULL;
+        _glfw.win32.user32.QueryDisplayConfig_ = NULL;
+        _glfw.win32.user32.DisplayConfigGetDeviceInfo_ = NULL;
     }
 
     _glfw.win32.dinput8.instance = _glfwPlatformLoadModule("dinput8.dll");
     if (_glfw.win32.dinput8.instance)
     {
-        _glfw.win32.dinput8.Create = (PFN_DirectInput8Create)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dinput8.instance, "DirectInput8Create");
+        _glfw.win32.dinput8.Create =
+            (PFN_DirectInput8Create)_glfwPlatformGetModuleSymbol(_glfw.win32.dinput8.instance, "DirectInput8Create");
     }
 
     {
         int i;
-        const char* names[] =
-        {
-            "xinput1_4.dll",
-            "xinput1_3.dll",
-            "xinput9_1_0.dll",
-            "xinput1_2.dll",
-            "xinput1_1.dll",
-            NULL
-        };
+        const char* names[] = { "xinput1_4.dll", "xinput1_3.dll", "xinput9_1_0.dll",
+                                "xinput1_2.dll", "xinput1_1.dll", NULL };
 
-        for (i = 0;  names[i];  i++)
+        for (i = 0; names[i]; i++)
         {
             _glfw.win32.xinput.instance = _glfwPlatformLoadModule(names[i]);
             if (_glfw.win32.xinput.instance)
             {
-                _glfw.win32.xinput.GetCapabilities = (PFN_XInputGetCapabilities)
-                    _glfwPlatformGetModuleSymbol(_glfw.win32.xinput.instance, "XInputGetCapabilities");
-                _glfw.win32.xinput.GetState = (PFN_XInputGetState)
-                    _glfwPlatformGetModuleSymbol(_glfw.win32.xinput.instance, "XInputGetState");
+                _glfw.win32.xinput.GetCapabilities = (PFN_XInputGetCapabilities)_glfwPlatformGetModuleSymbol(
+                    _glfw.win32.xinput.instance, "XInputGetCapabilities");
+                _glfw.win32.xinput.GetState =
+                    (PFN_XInputGetState)_glfwPlatformGetModuleSymbol(_glfw.win32.xinput.instance, "XInputGetState");
 
                 break;
             }
@@ -172,68 +163,76 @@ static GLFWbool loadLibraries(void)
     _glfw.win32.dwmapi.instance = _glfwPlatformLoadModule("dwmapi.dll");
     if (_glfw.win32.dwmapi.instance)
     {
-        _glfw.win32.dwmapi.IsCompositionEnabled = (PFN_DwmIsCompositionEnabled)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmIsCompositionEnabled");
-        _glfw.win32.dwmapi.Flush = (PFN_DwmFlush)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmFlush");
-        _glfw.win32.dwmapi.EnableBlurBehindWindow = (PFN_DwmEnableBlurBehindWindow)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmEnableBlurBehindWindow");
-        _glfw.win32.dwmapi.GetColorizationColor = (PFN_DwmGetColorizationColor)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmGetColorizationColor");
-        _glfw.win32.dwmapi.SetWindowAttribute = (PFN_DwmSetWindowAttribute)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmSetWindowAttribute");
+        _glfw.win32.dwmapi.IsCompositionEnabled = (PFN_DwmIsCompositionEnabled)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.dwmapi.instance, "DwmIsCompositionEnabled");
+        _glfw.win32.dwmapi.Flush = (PFN_DwmFlush)_glfwPlatformGetModuleSymbol(_glfw.win32.dwmapi.instance, "DwmFlush");
+        _glfw.win32.dwmapi.EnableBlurBehindWindow = (PFN_DwmEnableBlurBehindWindow)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.dwmapi.instance, "DwmEnableBlurBehindWindow");
+        _glfw.win32.dwmapi.GetColorizationColor = (PFN_DwmGetColorizationColor)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.dwmapi.instance, "DwmGetColorizationColor");
+        _glfw.win32.dwmapi.SetWindowAttribute = (PFN_DwmSetWindowAttribute)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.dwmapi.instance, "DwmSetWindowAttribute");
     }
 
     _glfw.win32.shcore.instance = _glfwPlatformLoadModule("shcore.dll");
     if (_glfw.win32.shcore.instance)
     {
-        _glfw.win32.shcore.SetProcessDpiAwareness_ = (PFN_SetProcessDpiAwareness)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.shcore.instance, "SetProcessDpiAwareness");
-        _glfw.win32.shcore.GetDpiForMonitor_ = (PFN_GetDpiForMonitor)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.shcore.instance, "GetDpiForMonitor");
+        _glfw.win32.shcore.SetProcessDpiAwareness_ = (PFN_SetProcessDpiAwareness)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.shcore.instance, "SetProcessDpiAwareness");
+        _glfw.win32.shcore.GetDpiForMonitor_ =
+            (PFN_GetDpiForMonitor)_glfwPlatformGetModuleSymbol(_glfw.win32.shcore.instance, "GetDpiForMonitor");
     }
 
     _glfw.win32.ntdll.instance = _glfwPlatformLoadModule("ntdll.dll");
     if (_glfw.win32.ntdll.instance)
     {
-        _glfw.win32.ntdll.RtlVerifyVersionInfo_ = (PFN_RtlVerifyVersionInfo)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.ntdll.instance, "RtlVerifyVersionInfo");
+        _glfw.win32.ntdll.RtlVerifyVersionInfo_ =
+            (PFN_RtlVerifyVersionInfo)_glfwPlatformGetModuleSymbol(_glfw.win32.ntdll.instance, "RtlVerifyVersionInfo");
     }
 
     _glfw.win32.imm32.instance = _glfwPlatformLoadModule("imm32.dll");
     if (_glfw.win32.imm32.instance)
     {
-        _glfw.win32.imm32.ImmGetCandidateListW_ = (PFN_ImmGetCandidateListW)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetCandidateListW");
-        _glfw.win32.imm32.ImmGetCompositionStringW_ = (PFN_ImmGetCompositionStringW)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetCompositionStringW");
-        _glfw.win32.imm32.ImmGetContext_ = (PFN_ImmGetContext)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetContext");
-        _glfw.win32.imm32.ImmGetConversionStatus_ = (PFN_ImmGetConversionStatus)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetConversionStatus");
-        _glfw.win32.imm32.ImmGetDescriptionW_ = (PFN_ImmGetDescriptionW)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetDescriptionW");
-        _glfw.win32.imm32.ImmGetOpenStatus_ = (PFN_ImmGetOpenStatus)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetOpenStatus");
-        _glfw.win32.imm32.ImmNotifyIME_ = (PFN_ImmNotifyIME)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmNotifyIME");
-        _glfw.win32.imm32.ImmReleaseContext_ = (PFN_ImmReleaseContext)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmReleaseContext");
-        _glfw.win32.imm32.ImmSetCandidateWindow_ = (PFN_ImmSetCandidateWindow)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmSetCandidateWindow");
-        _glfw.win32.imm32.ImmSetOpenStatus_ = (PFN_ImmSetOpenStatus)
-            _glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmSetOpenStatus");
+        _glfw.win32.imm32.ImmGetCandidateListW_ =
+            (PFN_ImmGetCandidateListW)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetCandidateListW");
+        _glfw.win32.imm32.ImmGetCompositionStringW_ = (PFN_ImmGetCompositionStringW)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.imm32.instance, "ImmGetCompositionStringW");
+        _glfw.win32.imm32.ImmGetContext_ =
+            (PFN_ImmGetContext)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetContext");
+        _glfw.win32.imm32.ImmGetConversionStatus_ = (PFN_ImmGetConversionStatus)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.imm32.instance, "ImmGetConversionStatus");
+        _glfw.win32.imm32.ImmGetDescriptionW_ =
+            (PFN_ImmGetDescriptionW)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetDescriptionW");
+        _glfw.win32.imm32.ImmGetOpenStatus_ =
+            (PFN_ImmGetOpenStatus)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmGetOpenStatus");
+        _glfw.win32.imm32.ImmNotifyIME_ =
+            (PFN_ImmNotifyIME)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmNotifyIME");
+        _glfw.win32.imm32.ImmReleaseContext_ =
+            (PFN_ImmReleaseContext)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmReleaseContext");
+        _glfw.win32.imm32.ImmSetCandidateWindow_ = (PFN_ImmSetCandidateWindow)_glfwPlatformGetModuleSymbol(
+            _glfw.win32.imm32.instance, "ImmSetCandidateWindow");
+        _glfw.win32.imm32.ImmSetOpenStatus_ =
+            (PFN_ImmSetOpenStatus)_glfwPlatformGetModuleSymbol(_glfw.win32.imm32.instance, "ImmSetOpenStatus");
     }
 
     _glfw.win32.uxtheme.instance = _glfwPlatformLoadModule("uxtheme.dll");
     if (_glfw.win32.uxtheme.instance)
     {
-        _glfw.win32.uxtheme.ShouldAppsUseDarkMode = (ShouldAppsUseDarkModePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(132));
-        _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx = (GetImmersiveColorFromColorSetExPtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(95));
-        _glfw.win32.uxtheme.GetImmersiveColorTypeFromName = (GetImmersiveColorTypeFromNamePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(96));
-        _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference = (GetImmersiveUserColorSetPreferencePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(98));
+        _glfw.win32.uxtheme.ShouldAppsUseDarkMode =
+            (ShouldAppsUseDarkModePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance, MAKEINTRESOURCEA(132));
+        _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx =
+            (GetImmersiveColorFromColorSetExPtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance,
+                                                                             MAKEINTRESOURCEA(95));
+        _glfw.win32.uxtheme.GetImmersiveColorTypeFromName =
+            (GetImmersiveColorTypeFromNamePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance,
+                                                                           MAKEINTRESOURCEA(96));
+        _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference =
+            (GetImmersiveUserColorSetPreferencePtr)_glfwPlatformGetModuleSymbol(_glfw.win32.uxtheme.instance,
+                                                                                MAKEINTRESOURCEA(98));
 
-        _glfw.win32.uxtheme.uxThemeAvailable = _glfw.win32.uxtheme.ShouldAppsUseDarkMode && _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx && _glfw.win32.uxtheme.GetImmersiveColorTypeFromName && _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference;
+        _glfw.win32.uxtheme.uxThemeAvailable =
+            _glfw.win32.uxtheme.ShouldAppsUseDarkMode && _glfw.win32.uxtheme.GetImmersiveColorFromColorSetEx &&
+            _glfw.win32.uxtheme.GetImmersiveColorTypeFromName && _glfw.win32.uxtheme.GetImmersiveUserColorSetPreference;
         _glfw.win32.uxtheme.darkTitleAvailable = _glfwIsWindows10BuildOrGreaterWin32(22000);
     }
 
@@ -245,28 +244,44 @@ static GLFWbool loadLibraries(void)
 static void freeLibraries(void)
 {
     if (_glfw.win32.xinput.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.xinput.instance);
+    }
 
     if (_glfw.win32.dinput8.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.dinput8.instance);
+    }
 
     if (_glfw.win32.user32.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.user32.instance);
+    }
 
     if (_glfw.win32.dwmapi.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.dwmapi.instance);
+    }
 
     if (_glfw.win32.shcore.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.shcore.instance);
+    }
 
     if (_glfw.win32.ntdll.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.ntdll.instance);
+    }
 
     if (_glfw.win32.imm32.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.imm32.instance);
+    }
 
     if (_glfw.win32.uxtheme.instance)
+    {
         _glfwPlatformFreeModule(_glfw.win32.uxtheme.instance);
+    }
 }
 
 // Create key code translation tables
@@ -400,10 +415,12 @@ static void createKeyTables(void)
     _glfw.win32.keycodes[0x037] = GLFW_KEY_KP_MULTIPLY;
     _glfw.win32.keycodes[0x04A] = GLFW_KEY_KP_SUBTRACT;
 
-    for (scancode = 0;  scancode < 512;  scancode++)
+    for (scancode = 0; scancode < 512; scancode++)
     {
         if (_glfw.win32.keycodes[scancode] > 0)
+        {
             _glfw.win32.scancodes[_glfw.win32.keycodes[scancode]] = scancode;
+        }
     }
 }
 
@@ -420,19 +437,25 @@ static LRESULT CALLBACK helperWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
         case WM_DEVICECHANGE:
         {
             if (!_glfw.joysticksInitialized)
+            {
                 break;
+            }
 
             if (wParam == DBT_DEVICEARRIVAL)
             {
-                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*) lParam;
+                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
                 if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                {
                     _glfwDetectJoystickConnectionWin32();
+                }
             }
             else if (wParam == DBT_DEVICEREMOVECOMPLETE)
             {
-                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*) lParam;
+                DEV_BROADCAST_HDR* dbh = (DEV_BROADCAST_HDR*)lParam;
                 if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                {
                     _glfwDetectJoystickDisconnectionWin32();
+                }
             }
 
             break;
@@ -449,33 +472,25 @@ static GLFWbool createHelperWindow(void)
     MSG msg;
     WNDCLASSEXW wc = { sizeof(wc) };
 
-    wc.style         = CS_OWNDC;
-    wc.lpfnWndProc   = (WNDPROC) helperWindowProc;
-    wc.hInstance     = _glfw.win32.instance;
+    wc.style = CS_OWNDC;
+    wc.lpfnWndProc = (WNDPROC)helperWindowProc;
+    wc.hInstance = _glfw.win32.instance;
     wc.lpszClassName = L"GLFW3 Helper";
 
     _glfw.win32.helperWindowClass = RegisterClassExW(&wc);
     if (!_glfw.win32.helperWindowClass)
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to register helper window class");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to register helper window class");
         return GLFW_FALSE;
     }
 
-    _glfw.win32.helperWindowHandle =
-        CreateWindowExW(WS_EX_OVERLAPPEDWINDOW,
-                        MAKEINTATOM(_glfw.win32.helperWindowClass),
-                        L"GLFW message window",
-                        WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-                        0, 0, 1, 1,
-                        NULL, NULL,
-                        _glfw.win32.instance,
-                        NULL);
+    _glfw.win32.helperWindowHandle = CreateWindowExW(WS_EX_OVERLAPPEDWINDOW, MAKEINTATOM(_glfw.win32.helperWindowClass),
+                                                     L"GLFW message window", WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0, 1,
+                                                     1, NULL, NULL, _glfw.win32.instance, NULL);
 
     if (!_glfw.win32.helperWindowHandle)
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to create helper window");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to create helper window");
         return GLFW_FALSE;
     }
 
@@ -491,10 +506,8 @@ static GLFWbool createHelperWindow(void)
         dbi.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
         dbi.dbcc_classguid = GUID_DEVINTERFACE_HID;
 
-        _glfw.win32.deviceNotificationHandle =
-            RegisterDeviceNotificationW(_glfw.win32.helperWindowHandle,
-                                        (DEV_BROADCAST_HDR*) &dbi,
-                                        DEVICE_NOTIFY_WINDOW_HANDLE);
+        _glfw.win32.deviceNotificationHandle = RegisterDeviceNotificationW(
+            _glfw.win32.helperWindowHandle, (DEV_BROADCAST_HDR*)&dbi, DEVICE_NOTIFY_WINDOW_HANDLE);
     }
 
     while (PeekMessageW(&msg, _glfw.win32.helperWindowHandle, 0, 0, PM_REMOVE))
@@ -503,9 +516,8 @@ static GLFWbool createHelperWindow(void)
         DispatchMessageW(&msg);
     }
 
-   return GLFW_TRUE;
+    return GLFW_TRUE;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
@@ -521,8 +533,7 @@ WCHAR* _glfwCreateWideStringFromUTF8Win32(const char* source)
     count = MultiByteToWideChar(CP_UTF8, 0, source, -1, NULL, 0);
     if (!count)
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to convert string from UTF-8");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to convert string from UTF-8");
         return NULL;
     }
 
@@ -530,8 +541,7 @@ WCHAR* _glfwCreateWideStringFromUTF8Win32(const char* source)
 
     if (!MultiByteToWideChar(CP_UTF8, 0, source, -1, target, count))
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to convert string from UTF-8");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to convert string from UTF-8");
         _glfw_free(target);
         return NULL;
     }
@@ -549,8 +559,7 @@ char* _glfwCreateUTF8FromWideStringWin32(const WCHAR* source)
     size = WideCharToMultiByte(CP_UTF8, 0, source, -1, NULL, 0, NULL, NULL);
     if (!size)
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to convert string to UTF-8");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to convert string to UTF-8");
         return NULL;
     }
 
@@ -558,8 +567,7 @@ char* _glfwCreateUTF8FromWideStringWin32(const WCHAR* source)
 
     if (!WideCharToMultiByte(CP_UTF8, 0, source, -1, target, size, NULL, NULL))
     {
-        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
-                             "Win32: Failed to convert string to UTF-8");
+        _glfwInputErrorWin32(GLFW_PLATFORM_ERROR, "Win32: Failed to convert string to UTF-8");
         _glfw_free(target);
         return NULL;
     }
@@ -574,15 +582,9 @@ void _glfwInputErrorWin32(int error, const char* description)
     WCHAR buffer[_GLFW_MESSAGE_SIZE] = L"";
     char message[_GLFW_MESSAGE_SIZE] = "";
 
-    FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM |
-                       FORMAT_MESSAGE_IGNORE_INSERTS |
-                       FORMAT_MESSAGE_MAX_WIDTH_MASK,
-                   NULL,
-                   GetLastError() & 0xffff,
-                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                   buffer,
-                   sizeof(buffer) / sizeof(WCHAR),
-                   NULL);
+    FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK, NULL,
+                   GetLastError() & 0xffff, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer,
+                   sizeof(buffer) / sizeof(WCHAR), NULL);
     WideCharToMultiByte(CP_UTF8, 0, buffer, -1, message, sizeof(message), NULL, NULL);
 
     _glfwInputError(error, "%s: %s", description, message);
@@ -593,11 +595,11 @@ void _glfwInputErrorWin32(int error, const char* description)
 void _glfwUpdateKeyNamesWin32(void)
 {
     int key;
-    BYTE state[256] = {0};
+    BYTE state[256] = { 0 };
 
     memset(_glfw.win32.keynames, 0, sizeof(_glfw.win32.keynames));
 
-    for (key = GLFW_KEY_SPACE;  key <= GLFW_KEY_LAST;  key++)
+    for (key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; key++)
     {
         UINT vk;
         int scancode, length;
@@ -605,42 +607,39 @@ void _glfwUpdateKeyNamesWin32(void)
 
         scancode = _glfw.win32.scancodes[key];
         if (scancode == -1)
+        {
             continue;
+        }
 
         if (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_ADD)
         {
-            const UINT vks[] = {
-                VK_NUMPAD0,  VK_NUMPAD1,  VK_NUMPAD2, VK_NUMPAD3,
-                VK_NUMPAD4,  VK_NUMPAD5,  VK_NUMPAD6, VK_NUMPAD7,
-                VK_NUMPAD8,  VK_NUMPAD9,  VK_DECIMAL, VK_DIVIDE,
-                VK_MULTIPLY, VK_SUBTRACT, VK_ADD
-            };
+            const UINT vks[] = { VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2,  VK_NUMPAD3,  VK_NUMPAD4,
+                                 VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7,  VK_NUMPAD8,  VK_NUMPAD9,
+                                 VK_DECIMAL, VK_DIVIDE,  VK_MULTIPLY, VK_SUBTRACT, VK_ADD };
 
             vk = vks[key - GLFW_KEY_KP_0];
         }
         else
+        {
             vk = MapVirtualKeyW(scancode, MAPVK_VSC_TO_VK);
+        }
 
-        length = ToUnicode(vk, scancode, state,
-                           chars, sizeof(chars) / sizeof(WCHAR),
-                           0);
+        length = ToUnicode(vk, scancode, state, chars, sizeof(chars) / sizeof(WCHAR), 0);
 
         if (length == -1)
         {
             // This is a dead key, so we need a second simulated key press
             // to make it output its own character (usually a diacritic)
-            length = ToUnicode(vk, scancode, state,
-                               chars, sizeof(chars) / sizeof(WCHAR),
-                               0);
+            length = ToUnicode(vk, scancode, state, chars, sizeof(chars) / sizeof(WCHAR), 0);
         }
 
         if (length < 1)
+        {
             continue;
+        }
 
-        WideCharToMultiByte(CP_UTF8, 0, chars, 1,
-                            _glfw.win32.keynames[key],
-                            sizeof(_glfw.win32.keynames[key]),
-                            NULL, NULL);
+        WideCharToMultiByte(CP_UTF8, 0, chars, 1, _glfw.win32.keynames[key], sizeof(_glfw.win32.keynames[key]), NULL,
+                            NULL);
     }
 }
 
@@ -649,7 +648,7 @@ void _glfwUpdateKeyNamesWin32(void)
 //
 BOOL _glfwIsWindowsVersionOrGreaterWin32(WORD major, WORD minor, WORD sp)
 {
-    OSVERSIONINFOEXW osvi = { sizeof(osvi), major, minor, 0, 0, {0}, sp };
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), major, minor, 0, 0, { 0 }, sp };
     DWORD mask = VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR;
     ULONGLONG cond = VerSetConditionMask(0, VER_MAJORVERSION, VER_GREATER_EQUAL);
     cond = VerSetConditionMask(cond, VER_MINORVERSION, VER_GREATER_EQUAL);
@@ -677,8 +676,7 @@ BOOL _glfwIsWindows10BuildOrGreaterWin32(WORD build)
 
 GLFWbool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
 {
-    const _GLFWplatform win32 =
-    {
+    const _GLFWplatform win32 = {
         GLFW_PLATFORM_WIN32,
         _glfwInitWin32,
         _glfwTerminateWin32,
@@ -769,20 +767,30 @@ GLFWbool _glfwConnectWin32(int platformID, _GLFWplatform* platform)
 int _glfwInitWin32(void)
 {
     if (!loadLibraries())
+    {
         return GLFW_FALSE;
+    }
 
     createKeyTables();
     _glfwUpdateKeyNamesWin32();
 
     if (_glfwIsWindows10Version1703OrGreaterWin32())
+    {
         SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+    }
     else if (IsWindows8Point1OrGreater())
+    {
         SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
+    }
     else if (IsWindowsVistaOrGreater())
+    {
         SetProcessDPIAware();
+    }
 
     if (!createHelperWindow())
+    {
         return GLFW_FALSE;
+    }
 
     _glfwPollMonitorsWin32();
     return GLFW_TRUE;
@@ -791,14 +799,22 @@ int _glfwInitWin32(void)
 void _glfwTerminateWin32(void)
 {
     if (_glfw.win32.deviceNotificationHandle)
+    {
         UnregisterDeviceNotification(_glfw.win32.deviceNotificationHandle);
+    }
 
     if (_glfw.win32.helperWindowHandle)
+    {
         DestroyWindow(_glfw.win32.helperWindowHandle);
+    }
     if (_glfw.win32.helperWindowClass)
+    {
         UnregisterClassW(MAKEINTATOM(_glfw.win32.helperWindowClass), _glfw.win32.instance);
+    }
     if (_glfw.win32.mainWindowClass)
+    {
         UnregisterClassW(MAKEINTATOM(_glfw.win32.mainWindowClass), _glfw.win32.instance);
+    }
 
     _glfw_free(_glfw.win32.clipboardString);
     _glfw_free(_glfw.win32.keyboardLayoutName);
@@ -812,4 +828,3 @@ void _glfwTerminateWin32(void)
 }
 
 #endif // _GLFW_WIN32
-

@@ -58,25 +58,22 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action == GLFW_PRESS && key == GLFW_KEY_ESCAPE)
+    {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
 }
 
-static void chart_ramp_array(struct nk_context* nk,
-                             struct nk_color color,
-                             int count, unsigned short int* values)
+static void chart_ramp_array(struct nk_context* nk, struct nk_color color, int count, unsigned short int* values)
 {
-    if (nk_chart_begin_colored(nk, NK_CHART_LINES,
-                               color, nk_rgb(255, 255, 255),
-                               count, 0, 65535))
+    if (nk_chart_begin_colored(nk, NK_CHART_LINES, color, nk_rgb(255, 255, 255), count, 0, 65535))
     {
         int i;
-        for (i = 0;  i < count;  i++)
+        for (i = 0; i < count; i++)
         {
             char buffer[1024];
             if (nk_chart_push(nk, values[i]))
             {
-                snprintf(buffer, sizeof(buffer), "#%u: %u (%0.5f) ",
-                         i, values[i], values[i] / 65535.f);
+                snprintf(buffer, sizeof(buffer), "#%u: %u (%0.5f) ", i, values[i], values[i] / 65535.f);
                 nk_tooltip(nk, buffer);
             }
         }
@@ -97,7 +94,9 @@ int main(int argc, char** argv)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     monitor = glfwGetPrimaryMonitor();
 
@@ -145,7 +144,7 @@ int main(int argc, char** argv)
         struct nk_rect area;
 
         glfwGetWindowSize(window, &width, &height);
-        area = nk_rect(0.f, 0.f, (float) width, (float) height);
+        area = nk_rect(0.f, 0.f, (float)width, (float)height);
         nk_window_set_bounds(nk, "", area);
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -156,10 +155,14 @@ int main(int argc, char** argv)
 
             nk_layout_row_dynamic(nk, 30, 3);
             if (nk_slider_float(nk, 0.1f, &gamma_value, 5.f, 0.1f))
+            {
                 glfwSetGamma(monitor, gamma_value);
+            }
             nk_labelf(nk, NK_TEXT_LEFT, "%0.1f", gamma_value);
             if (nk_button_label(nk, "Revert"))
+            {
                 glfwSetGammaRamp(monitor, &orig_ramp);
+            }
 
             ramp = glfwGetGammaRamp(monitor);
 
@@ -184,4 +187,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

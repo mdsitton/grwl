@@ -38,9 +38,9 @@
 #include "getopt.h"
 
 #if defined(__APPLE__)
- #define MODIFIER GLFW_MOD_SUPER
+    #define MODIFIER GLFW_MOD_SUPER
 #else
- #define MODIFIER GLFW_MOD_CONTROL
+    #define MODIFIER GLFW_MOD_CONTROL
 #endif
 
 static void usage(void)
@@ -56,7 +56,9 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -71,9 +73,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
                 string = glfwGetClipboardString(NULL);
                 if (string)
+                {
                     printf("Clipboard contains \"%s\"\n", string);
+                }
                 else
+                {
                     printf("Clipboard does not contain a string\n");
+                }
             }
             break;
 
@@ -143,4 +149,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

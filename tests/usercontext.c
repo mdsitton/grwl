@@ -18,7 +18,9 @@ int main(void)
 
     /* Initialize the library */
     if (!glfwInit())
+    {
         return -1;
+    }
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "User Context", NULL, NULL);
@@ -40,7 +42,6 @@ int main(void)
         glfwTerminate();
         return -1;
     }
-
 
     /* set the user context current */
     glfwMakeUserContextCurrent(usercontext);
@@ -74,8 +75,7 @@ int main(void)
         return -1;
     }
 
-    glClearColor( 0.4f, 0.3f, 0.4f, 1.0f );
-
+    glClearColor(0.4f, 0.3f, 0.4f, 1.0f);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))

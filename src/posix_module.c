@@ -30,7 +30,7 @@
 
 #if defined(GLFW_BUILD_POSIX_MODULE)
 
-#include <dlfcn.h>
+    #include <dlfcn.h>
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
@@ -52,4 +52,3 @@ GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name)
 }
 
 #endif // GLFW_BUILD_POSIX_MODULE
-

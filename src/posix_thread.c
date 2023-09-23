@@ -31,9 +31,8 @@
 
 #if defined(GLFW_BUILD_POSIX_THREAD)
 
-#include <assert.h>
-#include <string.h>
-
+    #include <assert.h>
+    #include <string.h>
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
@@ -45,8 +44,7 @@ GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
 
     if (pthread_key_create(&tls->posix.key, NULL) != 0)
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "POSIX: Failed to create context TLS");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "POSIX: Failed to create context TLS");
         return GLFW_FALSE;
     }
 
@@ -57,7 +55,9 @@ GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
 void _glfwPlatformDestroyTls(_GLFWtls* tls)
 {
     if (tls->posix.allocated)
+    {
         pthread_key_delete(tls->posix.key);
+    }
     memset(tls, 0, sizeof(_GLFWtls));
 }
 
@@ -89,7 +89,9 @@ GLFWbool _glfwPlatformCreateMutex(_GLFWmutex* mutex)
 void _glfwPlatformDestroyMutex(_GLFWmutex* mutex)
 {
     if (mutex->posix.allocated)
+    {
         pthread_mutex_destroy(&mutex->posix.handle);
+    }
     memset(mutex, 0, sizeof(_GLFWmutex));
 }
 
@@ -106,4 +108,3 @@ void _glfwPlatformUnlockMutex(_GLFWmutex* mutex)
 }
 
 #endif // GLFW_BUILD_POSIX_THREAD
-

@@ -55,9 +55,8 @@ void _glfwPollMonitorsNull(void)
 {
     const float dpi = 141.f;
     const GLFWvidmode mode = getVideoMode();
-    _GLFWmonitor* monitor = _glfwAllocMonitor("Null SuperNoop 0",
-                                              (int) (mode.width * 25.4f / dpi),
-                                              (int) (mode.height * 25.4f / dpi));
+    _GLFWmonitor* monitor =
+        _glfwAllocMonitor("Null SuperNoop 0", (int)(mode.width * 25.4f / dpi), (int)(mode.height * 25.4f / dpi));
     _glfwInputMonitor(monitor, GLFW_CONNECTED, _GLFW_INSERT_FIRST);
 }
 
@@ -73,34 +72,47 @@ void _glfwFreeMonitorNull(_GLFWmonitor* monitor)
 void _glfwGetMonitorPosNull(_GLFWmonitor* monitor, int* xpos, int* ypos)
 {
     if (xpos)
+    {
         *xpos = 0;
+    }
     if (ypos)
+    {
         *ypos = 0;
+    }
 }
 
-void _glfwGetMonitorContentScaleNull(_GLFWmonitor* monitor,
-                                     float* xscale, float* yscale)
+void _glfwGetMonitorContentScaleNull(_GLFWmonitor* monitor, float* xscale, float* yscale)
 {
     if (xscale)
+    {
         *xscale = 1.f;
+    }
     if (yscale)
+    {
         *yscale = 1.f;
+    }
 }
 
-void _glfwGetMonitorWorkareaNull(_GLFWmonitor* monitor,
-                                 int* xpos, int* ypos,
-                                 int* width, int* height)
+void _glfwGetMonitorWorkareaNull(_GLFWmonitor* monitor, int* xpos, int* ypos, int* width, int* height)
 {
     const GLFWvidmode mode = getVideoMode();
 
     if (xpos)
+    {
         *xpos = 0;
+    }
     if (ypos)
+    {
         *ypos = 10;
+    }
     if (width)
+    {
         *width = mode.width;
+    }
     if (height)
+    {
         *height = mode.height - 10;
+    }
 }
 
 GLFWvidmode* _glfwGetVideoModesNull(_GLFWmonitor* monitor, int* found)
@@ -124,24 +136,24 @@ GLFWbool _glfwGetGammaRampNull(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 
         _glfwAllocGammaArrays(&monitor->null.ramp, 256);
 
-        for (i = 0;  i < monitor->null.ramp.size;  i++)
+        for (i = 0; i < monitor->null.ramp.size; i++)
         {
             const float gamma = 2.2f;
             float value;
-            value = i / (float) (monitor->null.ramp.size - 1);
+            value = i / (float)(monitor->null.ramp.size - 1);
             value = powf(value, 1.f / gamma) * 65535.f + 0.5f;
             value = _glfw_fminf(value, 65535.f);
 
-            monitor->null.ramp.red[i]   = (unsigned short) value;
-            monitor->null.ramp.green[i] = (unsigned short) value;
-            monitor->null.ramp.blue[i]  = (unsigned short) value;
+            monitor->null.ramp.red[i] = (unsigned short)value;
+            monitor->null.ramp.green[i] = (unsigned short)value;
+            monitor->null.ramp.blue[i] = (unsigned short)value;
         }
     }
 
     _glfwAllocGammaArrays(ramp, monitor->null.ramp.size);
-    memcpy(ramp->red,   monitor->null.ramp.red,   sizeof(short) * ramp->size);
+    memcpy(ramp->red, monitor->null.ramp.red, sizeof(short) * ramp->size);
     memcpy(ramp->green, monitor->null.ramp.green, sizeof(short) * ramp->size);
-    memcpy(ramp->blue,  monitor->null.ramp.blue,  sizeof(short) * ramp->size);
+    memcpy(ramp->blue, monitor->null.ramp.blue, sizeof(short) * ramp->size);
     return GLFW_TRUE;
 }
 
@@ -149,13 +161,11 @@ void _glfwSetGammaRampNull(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 {
     if (monitor->null.ramp.size != ramp->size)
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Null: Gamma ramp size must match current ramp size");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "Null: Gamma ramp size must match current ramp size");
         return;
     }
 
-    memcpy(monitor->null.ramp.red,   ramp->red,   sizeof(short) * ramp->size);
+    memcpy(monitor->null.ramp.red, ramp->red, sizeof(short) * ramp->size);
     memcpy(monitor->null.ramp.green, ramp->green, sizeof(short) * ramp->size);
-    memcpy(monitor->null.ramp.blue,  ramp->blue,  sizeof(short) * ramp->size);
+    memcpy(monitor->null.ramp.blue, ramp->blue, sizeof(short) * ramp->size);
 }
-

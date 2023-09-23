@@ -42,29 +42,21 @@
 static const struct
 {
     float x, y;
-} vertices[4] =
-{
-    { -0.25f, -1.f },
-    {  0.25f, -1.f },
-    {  0.25f,  1.f },
-    { -0.25f,  1.f }
-};
+} vertices[4] = { { -0.25f, -1.f }, { 0.25f, -1.f }, { 0.25f, 1.f }, { -0.25f, 1.f } };
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec2 vPos;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"}\n";
+static const char* vertex_shader_text = "#version 110\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 110\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(1.0);\n"
+                                          "}\n";
 
 static int swap_tear;
 static int swap_interval;
@@ -74,10 +66,8 @@ static void update_window_title(GLFWwindow* window)
 {
     char title[256];
 
-    snprintf(title, sizeof(title), "Tearing detector (interval %i%s, %0.1f Hz)",
-             swap_interval,
-             (swap_tear && swap_interval < 0) ? " (swap tear)" : "",
-             frame_rate);
+    snprintf(title, sizeof(title), "Tearing detector (interval %i%s, %0.1f Hz)", swap_interval,
+             (swap_tear && swap_interval < 0) ? " (swap tear)" : "", frame_rate);
 
     glfwSetWindowTitle(window, title);
 }
@@ -97,14 +87,18 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
         case GLFW_KEY_UP:
         {
             if (swap_interval + 1 > swap_interval)
+            {
                 set_swap_interval(window, swap_interval + 1);
+            }
             break;
         }
 
@@ -113,12 +107,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             if (swap_tear)
             {
                 if (swap_interval - 1 < swap_interval)
+                {
                     set_swap_interval(window, swap_interval - 1);
+                }
             }
             else
             {
                 if (swap_interval - 1 >= 0)
+                {
                     set_swap_interval(window, swap_interval - 1);
+                }
             }
             break;
         }
@@ -133,19 +131,21 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             static int x, y, width, height;
 
             if (mods != GLFW_MOD_ALT)
+            {
                 return;
+            }
 
             if (glfwGetWindowMonitor(window))
+            {
                 glfwSetWindowMonitor(window, NULL, x, y, width, height, 0);
+            }
             else
             {
                 GLFWmonitor* monitor = glfwGetPrimaryMonitor();
                 const GLFWvidmode* mode = glfwGetVideoMode(monitor);
                 glfwGetWindowPos(window, &x, &y);
                 glfwGetWindowSize(window, &width, &height);
-                glfwSetWindowMonitor(window, monitor,
-                                     0, 0, mode->width, mode->height,
-                                     mode->refreshRate);
+                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
             }
 
             break;
@@ -164,7 +164,9 @@ int main(int argc, char** argv)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -182,8 +184,8 @@ int main(int argc, char** argv)
 
     last_time = glfwGetTime();
     frame_rate = 0.0;
-    swap_tear = (glfwExtensionSupported("WGL_EXT_swap_control_tear") ||
-                 glfwExtensionSupported("GLX_EXT_swap_control_tear"));
+    swap_tear =
+        (glfwExtensionSupported("WGL_EXT_swap_control_tear") || glfwExtensionSupported("GLX_EXT_swap_control_tear"));
 
     glfwSetKeyCallback(window, key_callback);
 
@@ -208,14 +210,13 @@ int main(int argc, char** argv)
     vpos_location = glGetAttribLocation(program, "vPos");
 
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
 
     while (!glfwWindowShouldClose(window))
     {
         int width, height;
         mat4x4 m, p, mvp;
-        float position = cosf((float) glfwGetTime() * 4.f) * 0.75f;
+        float position = cosf((float)glfwGetTime() * 4.f) * 0.75f;
 
         glfwGetFramebufferSize(window, &width, &height);
 
@@ -227,7 +228,7 @@ int main(int argc, char** argv)
         mat4x4_mul(mvp, p, m);
 
         glUseProgram(program);
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         glfwSwapBuffers(window);
@@ -248,4 +249,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

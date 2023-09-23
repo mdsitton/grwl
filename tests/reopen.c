@@ -44,29 +44,21 @@
 
 #include "linmath.h"
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec2 vPos;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"}\n";
+static const char* vertex_shader_text = "#version 110\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 110\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(1.0);\n"
+                                          "}\n";
 
-static const vec2 vertices[4] =
-{
-    { -0.5f, -0.5f },
-    {  0.5f, -0.5f },
-    {  0.5f,  0.5f },
-    { -0.5f,  0.5f }
-};
+static const vec2 vertices[4] = { { -0.5f, -0.5f }, { 0.5f, -0.5f }, { 0.5f, 0.5f }, { -0.5f, 0.5f } };
 
 static void error_callback(int error, const char* description)
 {
@@ -81,7 +73,9 @@ static void window_close_callback(GLFWwindow* window)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -105,12 +99,14 @@ int main(int argc, char** argv)
     double base;
     GLFWwindow* window;
 
-    srand((unsigned int) time(NULL));
+    srand((unsigned int)time(NULL));
 
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -152,14 +148,12 @@ int main(int argc, char** argv)
 
         if (monitor)
         {
-            printf("Opening full screen window on monitor %s took %0.3f seconds\n",
-                   glfwGetMonitorName(monitor),
+            printf("Opening full screen window on monitor %s took %0.3f seconds\n", glfwGetMonitorName(monitor),
                    glfwGetTime() - base);
         }
         else
         {
-            printf("Opening regular window took %0.3f seconds\n",
-                   glfwGetTime() - base);
+            printf("Opening regular window took %0.3f seconds\n", glfwGetTime() - base);
         }
 
         glfwSetWindowCloseCallback(window, window_close_callback);
@@ -190,8 +184,7 @@ int main(int argc, char** argv)
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(vpos_location);
-        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                              sizeof(vertices[0]), (void*) 0);
+        glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
 
         glfwSetTime(0.0);
 
@@ -202,7 +195,7 @@ int main(int argc, char** argv)
             mat4x4 m, p, mvp;
 
             glfwGetFramebufferSize(window, &width, &height);
-            ratio = width / (float) height;
+            ratio = width / (float)height;
 
             glViewport(0, 0, width, height);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -210,11 +203,11 @@ int main(int argc, char** argv)
             mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 0.f, 1.f);
 
             mat4x4_identity(m);
-            mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+            mat4x4_rotate_Z(m, m, (float)glfwGetTime());
             mat4x4_mul(mvp, p, m);
 
             glUseProgram(program);
-            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+            glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
             glfwSwapBuffers(window);
@@ -238,4 +231,3 @@ int main(int argc, char** argv)
 
     glfwTerminate();
 }
-

@@ -35,8 +35,8 @@
 #include <GLFW/glfw3.h>
 
 #if defined(_MSC_VER)
- // Make MS math.h define M_PI
- #define _USE_MATH_DEFINES
+    // Make MS math.h define M_PI
+    #define _USE_MATH_DEFINES
 #endif
 
 #include "linmath.h"
@@ -46,29 +46,21 @@
 
 #include "getopt.h"
 
-static const vec2 vertices[4] =
-{
-    { -0.6f, -0.6f },
-    {  0.6f, -0.6f },
-    {  0.6f,  0.6f },
-    { -0.6f,  0.6f }
-};
+static const vec2 vertices[4] = { { -0.6f, -0.6f }, { 0.6f, -0.6f }, { 0.6f, 0.6f }, { -0.6f, 0.6f } };
 
-static const char* vertex_shader_text =
-"#version 110\n"
-"uniform mat4 MVP;\n"
-"attribute vec2 vPos;\n"
-"void main()\n"
-"{\n"
-"    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
-"}\n";
+static const char* vertex_shader_text = "#version 110\n"
+                                        "uniform mat4 MVP;\n"
+                                        "attribute vec2 vPos;\n"
+                                        "void main()\n"
+                                        "{\n"
+                                        "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+                                        "}\n";
 
-static const char* fragment_shader_text =
-"#version 110\n"
-"void main()\n"
-"{\n"
-"    gl_FragColor = vec4(1.0);\n"
-"}\n";
+static const char* fragment_shader_text = "#version 110\n"
+                                          "void main()\n"
+                                          "{\n"
+                                          "    gl_FragColor = vec4(1.0);\n"
+                                          "}\n";
 
 static void error_callback(int error, const char* description)
 {
@@ -78,7 +70,9 @@ static void error_callback(int error, const char* description)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -122,12 +116,18 @@ int main(int argc, char** argv)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     if (samples)
+    {
         printf("Requesting MSAA with %i samples\n", samples);
+    }
     else
+    {
         printf("Requesting that MSAA not be available\n");
+    }
 
     glfwWindowHint(GLFW_SAMPLES, samples);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -148,9 +148,13 @@ int main(int argc, char** argv)
 
     glGetIntegerv(GL_SAMPLES, &samples);
     if (samples)
+    {
         printf("Context reports MSAA is available with %i samples\n", samples);
+    }
     else
+    {
         printf("Context reports MSAA is unavailable\n");
+    }
 
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -173,8 +177,7 @@ int main(int argc, char** argv)
     vpos_location = glGetAttribLocation(program, "vPos");
 
     glEnableVertexAttribArray(vpos_location);
-    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(vertices[0]), (void*) 0);
+    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), (void*)0);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -184,7 +187,7 @@ int main(int argc, char** argv)
         const double angle = glfwGetTime() * M_PI / 180.0;
 
         glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float) height;
+        ratio = width / (float)height;
 
         glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -194,18 +197,18 @@ int main(int argc, char** argv)
         mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 0.f, 1.f);
 
         mat4x4_translate(m, -1.f, 0.f, 0.f);
-        mat4x4_rotate_Z(m, m, (float) angle);
+        mat4x4_rotate_Z(m, m, (float)angle);
         mat4x4_mul(mvp, p, m);
 
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
         glDisable(GL_MULTISAMPLE);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         mat4x4_translate(m, 1.f, 0.f, 0.f);
-        mat4x4_rotate_Z(m, m, (float) angle);
+        mat4x4_rotate_Z(m, m, (float)angle);
         mat4x4_mul(mvp, p, m);
 
-        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*) mvp);
+        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
         glEnable(GL_MULTISAMPLE);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
@@ -218,4 +221,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

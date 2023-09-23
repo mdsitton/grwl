@@ -51,7 +51,7 @@
 #include <stdlib.h>
 
 #ifdef _MSC_VER
-#define strdup(x) _strdup(x)
+    #define strdup(x) _strdup(x)
 #endif
 
 static GLFWwindow* window;
@@ -66,38 +66,48 @@ static void error_callback(int error, const char* description)
 static void joystick_callback(int jid, int event)
 {
     if (event == GLFW_CONNECTED)
+    {
         joysticks[joystick_count++] = jid;
+    }
     else if (event == GLFW_DISCONNECTED)
     {
         int i;
 
-        for (i = 0;  i < joystick_count;  i++)
+        for (i = 0; i < joystick_count; i++)
         {
             if (joysticks[i] == jid)
+            {
                 break;
+            }
         }
 
-        for (i = i + 1;  i < joystick_count;  i++)
+        for (i = i + 1; i < joystick_count; i++)
+        {
             joysticks[i - 1] = joysticks[i];
+        }
 
         joystick_count--;
     }
 
     if (!glfwGetWindowAttrib(window, GLFW_FOCUSED))
+    {
         glfwRequestWindowAttention(window);
+    }
 }
 
 static void drop_callback(GLFWwindow* window, int count, const char* paths[])
 {
     int i;
 
-    for (i = 0;  i < count;  i++)
+    for (i = 0; i < count; i++)
     {
         long size;
         char* text;
         FILE* stream = fopen(paths[i], "rb");
         if (!stream)
+        {
             continue;
+        }
 
         fseek(stream, 0, SEEK_END);
         size = ftell(stream);
@@ -106,7 +116,9 @@ static void drop_callback(GLFWwindow* window, int count, const char* paths[])
         text = malloc(size + 1);
         text[size] = '\0';
         if (fread(text, 1, size, stream) == size)
+        {
             glfwUpdateGamepadMappings(text);
+        }
 
         free(text);
         fclose(stream);
@@ -127,45 +139,33 @@ static void hat_widget(struct nk_context* nk, unsigned char state)
     struct nk_vec2 center;
 
     if (nk_widget(&area, nk) == NK_WIDGET_INVALID)
+    {
         return;
+    }
 
     center = nk_vec2(area.x + area.w / 2.f, area.y + area.h / 2.f);
     radius = NK_MIN(area.w, area.h) / 2.f;
 
     nk_stroke_circle(nk_window_get_canvas(nk),
-                     nk_rect(center.x - radius,
-                             center.y - radius,
-                             radius * 2.f,
-                             radius * 2.f),
-                     1.f,
+                     nk_rect(center.x - radius, center.y - radius, radius * 2.f, radius * 2.f), 1.f,
                      nk_rgb(175, 175, 175));
 
     if (state)
     {
-        const float angles[] =
-        {
-            0.f,           0.f,
-            NK_PI * 1.5f,  NK_PI * 1.75f,
-            NK_PI,         0.f,
-            NK_PI * 1.25f, 0.f,
-            NK_PI * 0.5f,  NK_PI * 0.25f,
-            0.f,           0.f,
-            NK_PI * 0.75f, 0.f,
+        const float angles[] = {
+            0.f, 0.f,          NK_PI * 1.5f,  NK_PI * 1.75f, NK_PI, 0.f,           NK_PI * 1.25f,
+            0.f, NK_PI * 0.5f, NK_PI * 0.25f, 0.f,           0.f,   NK_PI * 0.75f, 0.f,
         };
         const float cosa = nk_cos(angles[state]);
         const float sina = nk_sin(angles[state]);
         const struct nk_vec2 p0 = nk_vec2(0.f, -radius);
-        const struct nk_vec2 p1 = nk_vec2( radius / 2.f, -radius / 3.f);
+        const struct nk_vec2 p1 = nk_vec2(radius / 2.f, -radius / 3.f);
         const struct nk_vec2 p2 = nk_vec2(-radius / 2.f, -radius / 3.f);
 
-        nk_fill_triangle(nk_window_get_canvas(nk),
-                         center.x + cosa * p0.x + sina * p0.y,
-                         center.y + cosa * p0.y - sina * p0.x,
-                         center.x + cosa * p1.x + sina * p1.y,
-                         center.y + cosa * p1.y - sina * p1.x,
-                         center.x + cosa * p2.x + sina * p2.y,
-                         center.y + cosa * p2.y - sina * p2.x,
-                         nk_rgb(175, 175, 175));
+        nk_fill_triangle(nk_window_get_canvas(nk), center.x + cosa * p0.x + sina * p0.y,
+                         center.y + cosa * p0.y - sina * p0.x, center.x + cosa * p1.x + sina * p1.y,
+                         center.y + cosa * p1.y - sina * p1.x, center.x + cosa * p2.x + sina * p2.y,
+                         center.y + cosa * p2.y - sina * p2.x, nk_rgb(175, 175, 175));
     }
 }
 
@@ -180,7 +180,9 @@ int main(void)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
     glfwWindowHint(GLFW_WIN32_KEYBOARD_MENU, GLFW_TRUE);
@@ -200,10 +202,12 @@ int main(void)
     nk_glfw3_font_stash_begin(&atlas);
     nk_glfw3_font_stash_end();
 
-    for (jid = GLFW_JOYSTICK_1;  jid <= GLFW_JOYSTICK_LAST;  jid++)
+    for (jid = GLFW_JOYSTICK_1; jid <= GLFW_JOYSTICK_LAST; jid++)
     {
         if (glfwJoystickPresent(jid))
+        {
             joysticks[joystick_count++] = jid;
+        }
     }
 
     glfwSetJoystickCallback(joystick_callback);
@@ -218,11 +222,8 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         nk_glfw3_new_frame();
 
-        if (nk_begin(nk,
-                     "Joysticks",
-                     nk_rect(width - 200.f, 0.f, 200.f, (float) height),
-                     NK_WINDOW_MINIMIZABLE |
-                     NK_WINDOW_TITLE))
+        if (nk_begin(nk, "Joysticks", nk_rect(width - 200.f, 0.f, 200.f, (float)height),
+                     NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE))
         {
             nk_layout_row_dynamic(nk, 30, 1);
 
@@ -230,28 +231,27 @@ int main(void)
 
             if (joystick_count)
             {
-                for (i = 0;  i < joystick_count;  i++)
+                for (i = 0; i < joystick_count; i++)
                 {
                     if (nk_button_label(nk, joystick_label(joysticks[i])))
+                    {
                         nk_window_set_focus(nk, joystick_label(joysticks[i]));
+                    }
                 }
             }
             else
+            {
                 nk_label(nk, "No joysticks connected", NK_TEXT_LEFT);
+            }
         }
 
         nk_end(nk);
 
-        for (i = 0;  i < joystick_count;  i++)
+        for (i = 0; i < joystick_count; i++)
         {
-            if (nk_begin(nk,
-                         joystick_label(joysticks[i]),
-                         nk_rect(i * 20.f, i * 20.f, 550.f, 570.f),
-                         NK_WINDOW_BORDER |
-                         NK_WINDOW_MOVABLE |
-                         NK_WINDOW_SCALABLE |
-                         NK_WINDOW_MINIMIZABLE |
-                         NK_WINDOW_TITLE))
+            if (nk_begin(nk, joystick_label(joysticks[i]), nk_rect(i * 20.f, i * 20.f, 550.f, 570.f),
+                         NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE |
+                             NK_WINDOW_TITLE))
             {
                 int j, axis_count, button_count, hat_count;
                 const float* axes;
@@ -260,8 +260,7 @@ int main(void)
                 GLFWgamepadstate state;
 
                 nk_layout_row_dynamic(nk, 30, 1);
-                nk_labelf(nk, NK_TEXT_LEFT, "Hardware GUID %s",
-                          glfwGetJoystickGUID(joysticks[i]));
+                nk_labelf(nk, NK_TEXT_LEFT, "Hardware GUID %s", glfwGetJoystickGUID(joysticks[i]));
                 nk_label(nk, "Joystick state", NK_TEXT_LEFT);
 
                 axes = glfwGetJoystickAxes(joysticks[i], &axis_count);
@@ -269,14 +268,18 @@ int main(void)
                 hats = glfwGetJoystickHats(joysticks[i], &hat_count);
 
                 if (!hat_buttons)
+                {
                     button_count -= hat_count * 4;
+                }
 
-                for (j = 0;  j < axis_count;  j++)
+                for (j = 0; j < axis_count; j++)
+                {
                     nk_slide_float(nk, -1.f, axes[j], 1.f, 0.1f);
+                }
 
                 nk_layout_row_dynamic(nk, 30, 12);
 
-                for (j = 0;  j < button_count;  j++)
+                for (j = 0; j < button_count; j++)
                 {
                     char name[16];
                     snprintf(name, sizeof(name), "%i", j + 1);
@@ -285,50 +288,60 @@ int main(void)
 
                 nk_layout_row_dynamic(nk, 30, 8);
 
-                for (j = 0;  j < hat_count;  j++)
+                for (j = 0; j < hat_count; j++)
+                {
                     hat_widget(nk, hats[j]);
+                }
 
                 nk_layout_row_dynamic(nk, 30, 1);
 
                 if (glfwGetGamepadState(joysticks[i], &state))
                 {
                     int hat = 0;
-                    const char* names[GLFW_GAMEPAD_BUTTON_LAST + 1 - 4] =
-                    {
-                        "A", "B", "X", "Y",
-                        "LB", "RB",
-                        "Back", "Start", "Guide",
-                        "LT", "RT",
+                    const char* names[GLFW_GAMEPAD_BUTTON_LAST + 1 - 4] = {
+                        "A", "B", "X", "Y", "LB", "RB", "Back", "Start", "Guide", "LT", "RT",
                     };
 
-                    nk_labelf(nk, NK_TEXT_LEFT,
-                              "Gamepad state: %s",
-                              glfwGetGamepadName(joysticks[i]));
+                    nk_labelf(nk, NK_TEXT_LEFT, "Gamepad state: %s", glfwGetGamepadName(joysticks[i]));
 
                     nk_layout_row_dynamic(nk, 30, 2);
 
-                    for (j = 0;  j <= GLFW_GAMEPAD_AXIS_LAST;  j++)
+                    for (j = 0; j <= GLFW_GAMEPAD_AXIS_LAST; j++)
+                    {
                         nk_slide_float(nk, -1.f, state.axes[j], 1.f, 0.1f);
+                    }
 
                     nk_layout_row_dynamic(nk, 30, GLFW_GAMEPAD_BUTTON_LAST + 1 - 4);
 
-                    for (j = 0;  j <= GLFW_GAMEPAD_BUTTON_LAST - 4;  j++)
+                    for (j = 0; j <= GLFW_GAMEPAD_BUTTON_LAST - 4; j++)
+                    {
                         nk_select_label(nk, names[j], NK_TEXT_CENTERED, state.buttons[j]);
+                    }
 
                     if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_UP])
+                    {
                         hat |= GLFW_HAT_UP;
+                    }
                     if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
+                    {
                         hat |= GLFW_HAT_RIGHT;
+                    }
                     if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_DOWN])
+                    {
                         hat |= GLFW_HAT_DOWN;
+                    }
                     if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
+                    {
                         hat |= GLFW_HAT_LEFT;
+                    }
 
                     nk_layout_row_dynamic(nk, 30, 8);
                     hat_widget(nk, hat);
                 }
                 else
+                {
                     nk_label(nk, "Joystick has no gamepad mapping", NK_TEXT_LEFT);
+                }
             }
 
             nk_end(nk);
@@ -343,4 +356,3 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

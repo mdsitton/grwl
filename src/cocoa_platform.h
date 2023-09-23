@@ -25,127 +25,128 @@
 //========================================================================
 
 #if defined(_GLFW_COCOA)
-#include <stdint.h>
+    #include <stdint.h>
 
-#include <Carbon/Carbon.h>
-#include <IOKit/hid/IOHIDLib.h>
+    #include <Carbon/Carbon.h>
+    #include <IOKit/hid/IOHIDLib.h>
 
-// NOTE: All of NSGL was deprecated in the 10.14 SDK
-//       This disables the pointless warnings for every symbol we use
-#ifndef GL_SILENCE_DEPRECATION
-#define GL_SILENCE_DEPRECATION
-#endif
+    // NOTE: All of NSGL was deprecated in the 10.14 SDK
+    //       This disables the pointless warnings for every symbol we use
+    #ifndef GL_SILENCE_DEPRECATION
+        #define GL_SILENCE_DEPRECATION
+    #endif
 
-#if defined(__OBJC__)
-#import <Cocoa/Cocoa.h>
-#else
+    #if defined(__OBJC__)
+        #import <Cocoa/Cocoa.h>
+    #else
 typedef void* id;
-#endif
+    #endif
 
 // NOTE: Many Cocoa enum values have been renamed and we need to build across
 //       SDK versions where one is unavailable or deprecated.
 //       We use the newer names in code and replace them with the older names if
 //       the base SDK does not provide the newer names.
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101400
- #define NSOpenGLContextParameterSwapInterval NSOpenGLCPSwapInterval
- #define NSOpenGLContextParameterSurfaceOpacity NSOpenGLCPSurfaceOpacity
-#endif
+    #if MAC_OS_X_VERSION_MAX_ALLOWED < 101400
+        #define NSOpenGLContextParameterSwapInterval NSOpenGLCPSwapInterval
+        #define NSOpenGLContextParameterSurfaceOpacity NSOpenGLCPSurfaceOpacity
+    #endif
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
- #define NSBitmapFormatAlphaNonpremultiplied NSAlphaNonpremultipliedBitmapFormat
- #define NSEventMaskAny NSAnyEventMask
- #define NSEventMaskKeyUp NSKeyUpMask
- #define NSEventModifierFlagCapsLock NSAlphaShiftKeyMask
- #define NSEventModifierFlagCommand NSCommandKeyMask
- #define NSEventModifierFlagControl NSControlKeyMask
- #define NSEventModifierFlagDeviceIndependentFlagsMask NSDeviceIndependentModifierFlagsMask
- #define NSEventModifierFlagOption NSAlternateKeyMask
- #define NSEventModifierFlagShift NSShiftKeyMask
- #define NSEventTypeApplicationDefined NSApplicationDefined
- #define NSWindowStyleMaskBorderless NSBorderlessWindowMask
- #define NSWindowStyleMaskClosable NSClosableWindowMask
- #define NSWindowStyleMaskMiniaturizable NSMiniaturizableWindowMask
- #define NSWindowStyleMaskResizable NSResizableWindowMask
- #define NSWindowStyleMaskTitled NSTitledWindowMask
-#endif
+    #if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
+        #define NSBitmapFormatAlphaNonpremultiplied NSAlphaNonpremultipliedBitmapFormat
+        #define NSEventMaskAny NSAnyEventMask
+        #define NSEventMaskKeyUp NSKeyUpMask
+        #define NSEventModifierFlagCapsLock NSAlphaShiftKeyMask
+        #define NSEventModifierFlagCommand NSCommandKeyMask
+        #define NSEventModifierFlagControl NSControlKeyMask
+        #define NSEventModifierFlagDeviceIndependentFlagsMask NSDeviceIndependentModifierFlagsMask
+        #define NSEventModifierFlagOption NSAlternateKeyMask
+        #define NSEventModifierFlagShift NSShiftKeyMask
+        #define NSEventTypeApplicationDefined NSApplicationDefined
+        #define NSWindowStyleMaskBorderless NSBorderlessWindowMask
+        #define NSWindowStyleMaskClosable NSClosableWindowMask
+        #define NSWindowStyleMaskMiniaturizable NSMiniaturizableWindowMask
+        #define NSWindowStyleMaskResizable NSResizableWindowMask
+        #define NSWindowStyleMaskTitled NSTitledWindowMask
+    #endif
 
 // NOTE: Many Cocoa dynamically linked constants have been renamed and we need
 //       to build across SDK versions where one is unavailable or deprecated.
 //       We use the newer names in code and replace them with the older names if
 //       the deployment target is older than the newer names.
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
- #define NSPasteboardTypeURL NSURLPboardType
-#endif
+    #if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
+        #define NSPasteboardTypeURL NSURLPboardType
+    #endif
 
 typedef VkFlags VkMacOSSurfaceCreateFlagsMVK;
 typedef VkFlags VkMetalSurfaceCreateFlagsEXT;
 
 typedef struct VkMacOSSurfaceCreateInfoMVK
 {
-    VkStructureType                 sType;
-    const void*                     pNext;
-    VkMacOSSurfaceCreateFlagsMVK    flags;
-    const void*                     pView;
+    VkStructureType sType;
+    const void* pNext;
+    VkMacOSSurfaceCreateFlagsMVK flags;
+    const void* pView;
 } VkMacOSSurfaceCreateInfoMVK;
 
 typedef struct VkMetalSurfaceCreateInfoEXT
 {
-    VkStructureType                 sType;
-    const void*                     pNext;
-    VkMetalSurfaceCreateFlagsEXT    flags;
-    const void*                     pLayer;
+    VkStructureType sType;
+    const void* pNext;
+    VkMetalSurfaceCreateFlagsEXT flags;
+    const void* pLayer;
 } VkMetalSurfaceCreateInfoEXT;
 
-typedef VkResult (APIENTRY *PFN_vkCreateMacOSSurfaceMVK)(VkInstance,const VkMacOSSurfaceCreateInfoMVK*,const VkAllocationCallbacks*,VkSurfaceKHR*);
-typedef VkResult (APIENTRY *PFN_vkCreateMetalSurfaceEXT)(VkInstance,const VkMetalSurfaceCreateInfoEXT*,const VkAllocationCallbacks*,VkSurfaceKHR*);
+typedef VkResult(APIENTRY* PFN_vkCreateMacOSSurfaceMVK)(VkInstance, const VkMacOSSurfaceCreateInfoMVK*,
+                                                        const VkAllocationCallbacks*, VkSurfaceKHR*);
+typedef VkResult(APIENTRY* PFN_vkCreateMetalSurfaceEXT)(VkInstance, const VkMetalSurfaceCreateInfoEXT*,
+                                                        const VkAllocationCallbacks*, VkSurfaceKHR*);
 
-#define GLFW_COCOA_WINDOW_STATE         _GLFWwindowNS  ns;
-#define GLFW_COCOA_LIBRARY_WINDOW_STATE _GLFWlibraryNS ns;
-#define GLFW_COCOA_MONITOR_STATE        _GLFWmonitorNS ns;
-#define GLFW_COCOA_CURSOR_STATE         _GLFWcursorNS  ns;
+    #define GLFW_COCOA_WINDOW_STATE _GLFWwindowNS ns;
+    #define GLFW_COCOA_LIBRARY_WINDOW_STATE _GLFWlibraryNS ns;
+    #define GLFW_COCOA_MONITOR_STATE _GLFWmonitorNS ns;
+    #define GLFW_COCOA_CURSOR_STATE _GLFWcursorNS ns;
 
-#define GLFW_NSGL_CONTEXT_STATE         _GLFWcontextNSGL nsgl;
-#define GLFW_NSGL_LIBRARY_CONTEXT_STATE _GLFWlibraryNSGL nsgl;
-#define GLFW_NSGL_USER_CONTEXT_STATE    _GLFWusercontextNSGL nsgl;
+    #define GLFW_NSGL_CONTEXT_STATE _GLFWcontextNSGL nsgl;
+    #define GLFW_NSGL_LIBRARY_CONTEXT_STATE _GLFWlibraryNSGL nsgl;
+    #define GLFW_NSGL_USER_CONTEXT_STATE _GLFWusercontextNSGL nsgl;
 
-// HIToolbox.framework pointer typedefs
-#define kTISCategoryKeyboardInputSource _glfw.ns.tis.kCategoryKeyboardInputSource
-#define kTISPropertyInputSourceCategory _glfw.ns.tis.kPropertyInputSourceCategory
-#define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
-#define kTISPropertyInputSourceIsSelectCapable _glfw.ns.tis.kPropertyInputSourceIsSelectCapable
-#define kTISPropertyInputSourceType _glfw.ns.tis.kPropertyInputSourceType
-#define kTISPropertyUnicodeKeyLayoutData _glfw.ns.tis.kPropertyUnicodeKeyLayoutData
-#define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
-#define kTISPropertyLocalizedName _glfw.ns.tis.kPropertyLocalizedName
-#define kTISTypeKeyboardInputMethodModeEnabled _glfw.ns.tis.kTypeKeyboardInputMethodModeEnabled
+    // HIToolbox.framework pointer typedefs
+    #define kTISCategoryKeyboardInputSource _glfw.ns.tis.kCategoryKeyboardInputSource
+    #define kTISPropertyInputSourceCategory _glfw.ns.tis.kPropertyInputSourceCategory
+    #define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
+    #define kTISPropertyInputSourceIsSelectCapable _glfw.ns.tis.kPropertyInputSourceIsSelectCapable
+    #define kTISPropertyInputSourceType _glfw.ns.tis.kPropertyInputSourceType
+    #define kTISPropertyUnicodeKeyLayoutData _glfw.ns.tis.kPropertyUnicodeKeyLayoutData
+    #define kTISPropertyInputSourceID _glfw.ns.tis.kPropertyInputSourceID
+    #define kTISPropertyLocalizedName _glfw.ns.tis.kPropertyLocalizedName
+    #define kTISTypeKeyboardInputMethodModeEnabled _glfw.ns.tis.kTypeKeyboardInputMethodModeEnabled
 typedef TISInputSourceRef (*PFN_TISCopyCurrentASCIICapableKeyboardInputSource)(void);
-#define TISCopyCurrentASCIICapableKeyboardInputSource _glfw.ns.tis.CopyCurrentASCIICapableKeyboardInputSource
+    #define TISCopyCurrentASCIICapableKeyboardInputSource _glfw.ns.tis.CopyCurrentASCIICapableKeyboardInputSource
 typedef TISInputSourceRef (*PFN_TISCopyCurrentKeyboardInputSource)(void);
-#define TISCopyCurrentKeyboardInputSource _glfw.ns.tis.CopyCurrentKeyboardInputSource
+    #define TISCopyCurrentKeyboardInputSource _glfw.ns.tis.CopyCurrentKeyboardInputSource
 typedef TISInputSourceRef (*PFN_TISCopyCurrentKeyboardLayoutInputSource)(void);
-#define TISCopyCurrentKeyboardLayoutInputSource _glfw.ns.tis.CopyCurrentKeyboardLayoutInputSource
+    #define TISCopyCurrentKeyboardLayoutInputSource _glfw.ns.tis.CopyCurrentKeyboardLayoutInputSource
 typedef TISInputSourceRef (*PFN_TISCopyInputSourceForLanguage)(CFStringRef);
-#define TISCopyInputSourceForLanguage _glfw.ns.tis.CopyInputSourceForLanguage
+    #define TISCopyInputSourceForLanguage _glfw.ns.tis.CopyInputSourceForLanguage
 typedef CFArrayRef (*PFN_TISCreateASCIICapableInputSourceList)(void);
-#define TISCreateASCIICapableInputSourceList _glfw.ns.tis.CreateASCIICapableInputSourceList
-typedef CFArrayRef (*PEN_TISCreateInputSourceList)(CFDictionaryRef,Boolean);
-#define TISCreateInputSourceList _glfw.ns.tis.CreateInputSourceList
-typedef void* (*PFN_TISGetInputSourceProperty)(TISInputSourceRef,CFStringRef);
-#define TISGetInputSourceProperty _glfw.ns.tis.GetInputSourceProperty
+    #define TISCreateASCIICapableInputSourceList _glfw.ns.tis.CreateASCIICapableInputSourceList
+typedef CFArrayRef (*PEN_TISCreateInputSourceList)(CFDictionaryRef, Boolean);
+    #define TISCreateInputSourceList _glfw.ns.tis.CreateInputSourceList
+typedef void* (*PFN_TISGetInputSourceProperty)(TISInputSourceRef, CFStringRef);
+    #define TISGetInputSourceProperty _glfw.ns.tis.GetInputSourceProperty
 typedef OSStatus (*PFN_TISSelectInputSource)(TISInputSourceRef);
-#define TISSelectInputSource _glfw.ns.tis.SelectInputSource
+    #define TISSelectInputSource _glfw.ns.tis.SelectInputSource
 typedef UInt8 (*PFN_LMGetKbdType)(void);
-#define LMGetKbdType _glfw.ns.tis.GetKbdType
-
+    #define LMGetKbdType _glfw.ns.tis.GetKbdType
 
 // NSGL-specific per-context data
 //
 typedef struct _GLFWcontextNSGL
 {
-    id                pixelFormat;
-    id                object;
+    id pixelFormat;
+    id object;
 } _GLFWcontextNSGL;
 
 // NSGL-specific global data
@@ -153,14 +154,14 @@ typedef struct _GLFWcontextNSGL
 typedef struct _GLFWlibraryNSGL
 {
     // dlopen handle for OpenGL.framework (for glfwGetProcAddress)
-    CFBundleRef     framework;
+    CFBundleRef framework;
 } _GLFWlibraryNSGL;
 
 // NSGL-specific per usercontext data
 //
 typedef struct _GLFWusercontextNSGL
 {
-    id                object;
+    id object;
 
 } _GLFWusercontextNSGL;
 
@@ -168,26 +169,27 @@ typedef struct _GLFWusercontextNSGL
 //
 typedef struct _GLFWwindowNS
 {
-    id              object;
-    id              delegate;
-    id              view;
-    id              layer;
+    id object;
+    id delegate;
+    id view;
+    id layer;
 
-    GLFWbool        maximized;
-    GLFWbool        occluded;
-    GLFWbool        retina;
+    GLFWbool maximized;
+    GLFWbool occluded;
+    GLFWbool retina;
 
     // Cached window properties to filter out duplicate events
-    int             width, height;
-    int             fbWidth, fbHeight;
-    float           xscale, yscale;
+    int width, height;
+    int fbWidth, fbHeight;
+    float xscale, yscale;
 
     // The total sum of the distances the cursor has been warped
     // since the last cursor motion event was processed
     // This is kept to counteract Cocoa doing the same internally
-    double          cursorWarpDeltaX, cursorWarpDeltaY;
-    
-    struct {
+    double cursorWarpDeltaX, cursorWarpDeltaY;
+
+    struct
+    {
         int state;
         double value;
     } dockProgressIndicator;
@@ -197,30 +199,31 @@ typedef struct _GLFWwindowNS
 //
 typedef struct _GLFWlibraryNS
 {
-    CGEventSourceRef    eventSource;
-    id                  delegate;
-    GLFWbool            cursorHidden;
-    TISInputSourceRef   inputSource;
-    TISInputSourceRef   keyboardLayout;
-    IOHIDManagerRef     hidManager;
-    void*               unicodeData;
-    id                  helper;
-    id                  keyUpMonitor;
-    id                  nibObjects;
+    CGEventSourceRef eventSource;
+    id delegate;
+    GLFWbool cursorHidden;
+    TISInputSourceRef inputSource;
+    TISInputSourceRef keyboardLayout;
+    IOHIDManagerRef hidManager;
+    void* unicodeData;
+    id helper;
+    id keyUpMonitor;
+    id nibObjects;
 
-    char                keynames[GLFW_KEY_LAST + 1][17];
-    short int           keycodes[256];
-    short int           scancodes[GLFW_KEY_LAST + 1];
-    char*               clipboardString;
-    char*               keyboardLayoutName;
-    CGPoint             cascadePoint;
+    char keynames[GLFW_KEY_LAST + 1][17];
+    short int keycodes[256];
+    short int scancodes[GLFW_KEY_LAST + 1];
+    char* clipboardString;
+    char* keyboardLayoutName;
+    CGPoint cascadePoint;
     // Where to place the cursor when re-enabled
-    double              restoreCursorPosX, restoreCursorPosY;
+    double restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
-    _GLFWwindow*        disabledCursorWindow;
+    _GLFWwindow* disabledCursorWindow;
 
-    struct {
-        CFBundleRef     bundle;
+    struct
+    {
+        CFBundleRef bundle;
         PFN_TISCopyCurrentASCIICapableKeyboardInputSource CopyCurrentASCIICapableKeyboardInputSource;
         PFN_TISCopyCurrentKeyboardInputSource CopyCurrentKeyboardInputSource;
         PFN_TISCopyCurrentKeyboardLayoutInputSource CopyCurrentKeyboardLayoutInputSource;
@@ -230,18 +233,19 @@ typedef struct _GLFWlibraryNS
         PFN_TISGetInputSourceProperty GetInputSourceProperty;
         PFN_TISSelectInputSource SelectInputSource;
         PFN_LMGetKbdType GetKbdType;
-        CFStringRef     kCategoryKeyboardInputSource;
-        CFStringRef     kPropertyInputSourceCategory;
-        CFStringRef     kPropertyInputSourceID;
-        CFStringRef     kPropertyInputSourceIsSelectCapable;
-        CFStringRef     kPropertyInputSourceType;
-        CFStringRef     kPropertyUnicodeKeyLayoutData;
-        CFStringRef     kPropertyInputSourceID;
-        CFStringRef     kPropertyLocalizedName;
-        CFStringRef     kTypeKeyboardInputMethodModeEnabled;
+        CFStringRef kCategoryKeyboardInputSource;
+        CFStringRef kPropertyInputSourceCategory;
+        CFStringRef kPropertyInputSourceID;
+        CFStringRef kPropertyInputSourceIsSelectCapable;
+        CFStringRef kPropertyInputSourceType;
+        CFStringRef kPropertyUnicodeKeyLayoutData;
+        CFStringRef kPropertyInputSourceID;
+        CFStringRef kPropertyLocalizedName;
+        CFStringRef kTypeKeyboardInputMethodModeEnabled;
     } tis;
-    
-    struct {
+
+    struct
+    {
         id view;
         int windowCount;
         int indeterminateCount;
@@ -253,26 +257,26 @@ typedef struct _GLFWlibraryNS
 //
 typedef struct _GLFWmonitorNS
 {
-    CGDirectDisplayID   displayID;
-    CGDisplayModeRef    previousMode;
-    uint32_t            unitNumber;
-    id                  screen;
-    double              fallbackRefreshRate;
+    CGDirectDisplayID displayID;
+    CGDisplayModeRef previousMode;
+    uint32_t unitNumber;
+    id screen;
+    double fallbackRefreshRate;
 } _GLFWmonitorNS;
 
 // Cocoa-specific per-cursor data
 //
 typedef struct _GLFWcursorNS
 {
-    id              object;
+    id object;
 } _GLFWcursorNS;
-
 
 GLFWbool _glfwConnectCocoa(int platformID, _GLFWplatform* platform);
 int _glfwInitCocoa(void);
 void _glfwTerminateCocoa(void);
 
-GLFWbool _glfwCreateWindowCocoa(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
+GLFWbool _glfwCreateWindowCocoa(_GLFWwindow* window, const _GLFWwndconfig* wndconfig, const _GLFWctxconfig* ctxconfig,
+                                const _GLFWfbconfig* fbconfig);
 void _glfwDestroyWindowCocoa(_GLFWwindow* window);
 void _glfwSetWindowTitleCocoa(_GLFWwindow* window, const char* title);
 void _glfwSetWindowIconCocoa(_GLFWwindow* window, int count, const GLFWimage* images);
@@ -295,7 +299,8 @@ void _glfwShowWindowCocoa(_GLFWwindow* window);
 void _glfwHideWindowCocoa(_GLFWwindow* window);
 void _glfwRequestWindowAttentionCocoa(_GLFWwindow* window);
 void _glfwFocusWindowCocoa(_GLFWwindow* window);
-void _glfwSetWindowMonitorCocoa(_GLFWwindow* window, _GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
+void _glfwSetWindowMonitorCocoa(_GLFWwindow* window, _GLFWmonitor* monitor, int xpos, int ypos, int width, int height,
+                                int refreshRate);
 GLFWbool _glfwWindowFocusedCocoa(_GLFWwindow* window);
 GLFWbool _glfwWindowIconifiedCocoa(_GLFWwindow* window);
 GLFWbool _glfwWindowVisibleCocoa(_GLFWwindow* window);
@@ -309,7 +314,7 @@ float _glfwGetWindowOpacityCocoa(_GLFWwindow* window);
 void _glfwSetWindowOpacityCocoa(_GLFWwindow* window, float opacity);
 void _glfwSetWindowMousePassthroughCocoa(_GLFWwindow* window, GLFWbool enabled);
 
-void _glfwSetRawMouseMotionCocoa(_GLFWwindow *window, GLFWbool enabled);
+void _glfwSetRawMouseMotionCocoa(_GLFWwindow* window, GLFWbool enabled);
 GLFWbool _glfwRawMouseMotionSupportedCocoa(void);
 
 void _glfwPollEventsCocoa(void);
@@ -322,7 +327,7 @@ void _glfwSetCursorPosCocoa(_GLFWwindow* window, double xpos, double ypos);
 void _glfwSetCursorModeCocoa(_GLFWwindow* window, int mode);
 const char* _glfwGetScancodeNameCocoa(int scancode);
 int _glfwGetKeyScancodeCocoa(int key);
-const char *_glfwGetKeyboardLayoutNameCocoa(void);
+const char* _glfwGetKeyboardLayoutNameCocoa(void);
 GLFWbool _glfwCreateCursorCocoa(_GLFWcursor* cursor, const GLFWimage* image, int xhot, int yhot);
 GLFWbool _glfwCreateStandardCursorCocoa(_GLFWcursor* cursor, int shape);
 void _glfwDestroyCursorCocoa(_GLFWcursor* cursor);
@@ -340,8 +345,10 @@ EGLNativeDisplayType _glfwGetEGLNativeDisplayCocoa(void);
 EGLNativeWindowType _glfwGetEGLNativeWindowCocoa(_GLFWwindow* window);
 
 void _glfwGetRequiredInstanceExtensionsCocoa(char** extensions);
-GLFWbool _glfwGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device, uint32_t queuefamily);
-VkResult _glfwCreateWindowSurfaceCocoa(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface);
+GLFWbool _glfwGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device,
+                                                        uint32_t queuefamily);
+VkResult _glfwCreateWindowSurfaceCocoa(VkInstance instance, _GLFWwindow* window, const VkAllocationCallbacks* allocator,
+                                       VkSurfaceKHR* surface);
 
 void _glfwFreeMonitorCocoa(_GLFWmonitor* monitor);
 void _glfwGetMonitorPosCocoa(_GLFWmonitor* monitor, int* xpos, int* ypos);
@@ -362,9 +369,7 @@ void* _glfwLoadLocalVulkanLoaderCocoa(void);
 
 GLFWbool _glfwInitNSGL(void);
 void _glfwTerminateNSGL(void);
-GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
-                                const _GLFWctxconfig* ctxconfig,
-                                const _GLFWfbconfig* fbconfig);
+GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window, const _GLFWctxconfig* ctxconfig, const _GLFWfbconfig* fbconfig);
 void _glfwDestroyContextNSGL(_GLFWwindow* window);
 
 _GLFWusercontext* _glfwCreateUserContextCocoa(_GLFWwindow* window);

@@ -30,10 +30,10 @@
 
 #if defined(_GLFW_COCOA)
 
-#include <sys/param.h> // For MAXPATHLEN
+    #include <sys/param.h> // For MAXPATHLEN
 
-// Needed for _NSGetProgname
-#include <crt_externs.h>
+    // Needed for _NSGetProgname
+    #include <crt_externs.h>
 
 // Change to our application bundle's resources directory, if present
 //
@@ -43,7 +43,9 @@ static void changeToResourcesDirectory(void)
 
     CFBundleRef bundle = CFBundleGetMainBundle();
     if (!bundle)
+    {
         return;
+    }
 
     CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(bundle);
 
@@ -57,10 +59,7 @@ static void changeToResourcesDirectory(void)
 
     CFRelease(last);
 
-    if (!CFURLGetFileSystemRepresentation(resourcesURL,
-                                          true,
-                                          (UInt8*) resourcesPath,
-                                          MAXPATHLEN))
+    if (!CFURLGetFileSystemRepresentation(resourcesURL, true, (UInt8*)resourcesPath, MAXPATHLEN))
     {
         CFRelease(resourcesURL);
         return;
@@ -80,8 +79,7 @@ static void createMenuBar(void)
 {
     NSString* appName = nil;
     NSDictionary* bundleInfo = [[NSBundle mainBundle] infoDictionary];
-    NSString* nameKeys[] =
-    {
+    NSString* nameKeys[] = {
         @"CFBundleDisplayName",
         @"CFBundleName",
         @"CFBundleExecutable",
@@ -89,12 +87,10 @@ static void createMenuBar(void)
 
     // Try to figure out what the calling application is called
 
-    for (size_t i = 0;  i < sizeof(nameKeys) / sizeof(nameKeys[0]);  i++)
+    for (size_t i = 0; i < sizeof(nameKeys) / sizeof(nameKeys[0]); i++)
     {
         id name = bundleInfo[nameKeys[i]];
-        if (name &&
-            [name isKindOfClass:[NSString class]] &&
-            ![name isEqualToString:@""])
+        if (name && [name isKindOfClass:[NSString class]] && ![name isEqualToString:@""])
         {
             appName = name;
             break;
@@ -105,16 +101,19 @@ static void createMenuBar(void)
     {
         char** progname = _NSGetProgname();
         if (progname && *progname)
+        {
             appName = @(*progname);
+        }
         else
+        {
             appName = @"GLFW Application";
+        }
     }
 
     NSMenu* bar = [[NSMenu alloc] init];
     [NSApp setMainMenu:bar];
 
-    NSMenuItem* appMenuItem =
-        [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenuItem* appMenuItem = [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
     NSMenu* appMenu = [[NSMenu alloc] init];
     [appMenuItem setSubmenu:appMenu];
 
@@ -124,50 +123,35 @@ static void createMenuBar(void)
     [appMenu addItem:[NSMenuItem separatorItem]];
     NSMenu* servicesMenu = [[NSMenu alloc] init];
     [NSApp setServicesMenu:servicesMenu];
-    [[appMenu addItemWithTitle:@"Services"
-                       action:NULL
-                keyEquivalent:@""] setSubmenu:servicesMenu];
+    [[appMenu addItemWithTitle:@"Services" action:NULL keyEquivalent:@""] setSubmenu:servicesMenu];
     [servicesMenu release];
     [appMenu addItem:[NSMenuItem separatorItem]];
     [appMenu addItemWithTitle:[NSString stringWithFormat:@"Hide %@", appName]
                        action:@selector(hide:)
                 keyEquivalent:@"h"];
-    [[appMenu addItemWithTitle:@"Hide Others"
-                       action:@selector(hideOtherApplications:)
-                keyEquivalent:@"h"]
+    [[appMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"]
         setKeyEquivalentModifierMask:NSEventModifierFlagOption | NSEventModifierFlagCommand];
-    [appMenu addItemWithTitle:@"Show All"
-                       action:@selector(unhideAllApplications:)
-                keyEquivalent:@""];
+    [appMenu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""];
     [appMenu addItem:[NSMenuItem separatorItem]];
     [appMenu addItemWithTitle:[NSString stringWithFormat:@"Quit %@", appName]
                        action:@selector(terminate:)
                 keyEquivalent:@"q"];
 
-    NSMenuItem* windowMenuItem =
-        [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenuItem* windowMenuItem = [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
     [bar release];
     NSMenu* windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
     [NSApp setWindowsMenu:windowMenu];
     [windowMenuItem setSubmenu:windowMenu];
 
-    [windowMenu addItemWithTitle:@"Minimize"
-                          action:@selector(performMiniaturize:)
-                   keyEquivalent:@"m"];
-    [windowMenu addItemWithTitle:@"Zoom"
-                          action:@selector(performZoom:)
-                   keyEquivalent:@""];
+    [windowMenu addItemWithTitle:@"Minimize" action:@selector(performMiniaturize:) keyEquivalent:@"m"];
+    [windowMenu addItemWithTitle:@"Zoom" action:@selector(performZoom:) keyEquivalent:@""];
     [windowMenu addItem:[NSMenuItem separatorItem]];
-    [windowMenu addItemWithTitle:@"Bring All to Front"
-                          action:@selector(arrangeInFront:)
-                   keyEquivalent:@""];
+    [windowMenu addItemWithTitle:@"Bring All to Front" action:@selector(arrangeInFront:) keyEquivalent:@""];
 
     // TODO: Make this appear at the bottom of the menu (for consistency)
     [windowMenu addItem:[NSMenuItem separatorItem]];
-    [[windowMenu addItemWithTitle:@"Enter Full Screen"
-                           action:@selector(toggleFullScreen:)
-                    keyEquivalent:@"f"]
-     setKeyEquivalentModifierMask:NSEventModifierFlagControl | NSEventModifierFlagCommand];
+    [[windowMenu addItemWithTitle:@"Enter Full Screen" action:@selector(toggleFullScreen:) keyEquivalent:@"f"]
+        setKeyEquivalentModifierMask:NSEventModifierFlagControl | NSEventModifierFlagCommand];
 
     // Prior to Snow Leopard, we need to use this oddly-named semi-private API
     // to get the application menu working properly.
@@ -297,11 +281,13 @@ static void createKeyTables(void)
     _glfw.ns.keycodes[0x43] = GLFW_KEY_KP_MULTIPLY;
     _glfw.ns.keycodes[0x4E] = GLFW_KEY_KP_SUBTRACT;
 
-    for (int scancode = 0;  scancode < 256;  scancode++)
+    for (int scancode = 0; scancode < 256; scancode++)
     {
         // Store the reverse translation for faster key name lookup
         if (_glfw.ns.keycodes[scancode] >= 0)
+        {
             _glfw.ns.scancodes[_glfw.ns.keycodes[scancode]] = scancode;
+        }
     }
 }
 
@@ -310,150 +296,105 @@ static void createKeyTables(void)
 static GLFWbool initializeTIS(void)
 {
     // This works only because Cocoa has already loaded it properly
-    _glfw.ns.tis.bundle =
-        CFBundleGetBundleWithIdentifier(CFSTR("com.apple.HIToolbox"));
+    _glfw.ns.tis.bundle = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.HIToolbox"));
     if (!_glfw.ns.tis.bundle)
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Cocoa: Failed to load HIToolbox.framework");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "Cocoa: Failed to load HIToolbox.framework");
         return GLFW_FALSE;
     }
 
     CFStringRef* kCategoryKeyboardInputSource =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISCategoryKeyboardInputSource"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISCategoryKeyboardInputSource"));
     CFStringRef* kPropertyInputSourceCategory =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyInputSourceCategory"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyInputSourceCategory"));
     CFStringRef* kPropertyInputSourceID =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyInputSourceID"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyInputSourceID"));
     CFStringRef* kPropertyInputSourceIsSelectCapable =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyInputSourceIsSelectCapable"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyInputSourceIsSelectCapable"));
     CFStringRef* kPropertyInputSourceType =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyInputSourceType"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyInputSourceType"));
     CFStringRef* kPropertyUnicodeKeyLayoutData =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyUnicodeKeyLayoutData"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyUnicodeKeyLayoutData"));
     CFStringRef* kPropertyInputSourceID =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyInputSourceID"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyInputSourceID"));
     CFStringRef* kPropertyLocalizedName =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISPropertyLocalizedName"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISPropertyLocalizedName"));
     CFStringRef* kTypeKeyboardInputMethodModeEnabled =
-        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle,
-                                      CFSTR("kTISTypeKeyboardInputMethodModeEnabled"));
+        CFBundleGetDataPointerForName(_glfw.ns.tis.bundle, CFSTR("kTISTypeKeyboardInputMethodModeEnabled"));
     _glfw.ns.tis.CopyCurrentASCIICapableKeyboardInputSource =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCopyCurrentASCIICapableKeyboardInputSource"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCopyCurrentASCIICapableKeyboardInputSource"));
     _glfw.ns.tis.CopyCurrentKeyboardInputSource =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCopyCurrentKeyboardInputSource"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCopyCurrentKeyboardInputSource"));
     _glfw.ns.tis.CopyCurrentKeyboardLayoutInputSource =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCopyCurrentKeyboardLayoutInputSource"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCopyCurrentKeyboardLayoutInputSource"));
     _glfw.ns.tis.CopyInputSourceForLanguage =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCopyInputSourceForLanguage"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCopyInputSourceForLanguage"));
     _glfw.ns.tis.CreateASCIICapableInputSourceList =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCreateASCIICapableInputSourceList"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCreateASCIICapableInputSourceList"));
     _glfw.ns.tis.CreateInputSourceList =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISCreateInputSourceList"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISCreateInputSourceList"));
     _glfw.ns.tis.GetInputSourceProperty =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISGetInputSourceProperty"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISGetInputSourceProperty"));
     _glfw.ns.tis.SelectInputSource =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("TISSelectInputSource"));
-    _glfw.ns.tis.GetKbdType =
-        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle,
-                                          CFSTR("LMGetKbdType"));
+        CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("TISSelectInputSource"));
+    _glfw.ns.tis.GetKbdType = CFBundleGetFunctionPointerForName(_glfw.ns.tis.bundle, CFSTR("LMGetKbdType"));
 
-    if (!kCategoryKeyboardInputSource||
-        !kPropertyInputSourceCategory ||
-        !kPropertyInputSourceID ||
-        !kPropertyLocalizedName ||
-        !kPropertyInputSourceIsSelectCapable||
-        !kPropertyInputSourceType||
-        !kPropertyUnicodeKeyLayoutData ||
-        !kTypeKeyboardInputMethodModeEnabled ||
-        !TISCopyCurrentASCIICapableKeyboardInputSource ||
-        !TISCopyCurrentKeyboardInputSource ||
-        !TISCopyCurrentKeyboardLayoutInputSource ||
-        !TISCopyInputSourceForLanguage ||
-        !TISCreateASCIICapableInputSourceList ||
-        !TISCreateInputSourceList ||
-        !TISGetInputSourceProperty ||
-        !TISSelectInputSource ||
-        !LMGetKbdType)
+    if (!kCategoryKeyboardInputSource || !kPropertyInputSourceCategory || !kPropertyInputSourceID ||
+        !kPropertyLocalizedName || !kPropertyInputSourceIsSelectCapable || !kPropertyInputSourceType ||
+        !kPropertyUnicodeKeyLayoutData || !kTypeKeyboardInputMethodModeEnabled ||
+        !TISCopyCurrentASCIICapableKeyboardInputSource || !TISCopyCurrentKeyboardInputSource ||
+        !TISCopyCurrentKeyboardLayoutInputSource || !TISCopyInputSourceForLanguage ||
+        !TISCreateASCIICapableInputSourceList || !TISCreateInputSourceList || !TISGetInputSourceProperty ||
+        !TISSelectInputSource || !LMGetKbdType)
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Cocoa: Failed to load TIS API symbols");
+        _glfwInputError(GLFW_PLATFORM_ERROR, "Cocoa: Failed to load TIS API symbols");
         return GLFW_FALSE;
     }
 
-    _glfw.ns.tis.kCategoryKeyboardInputSource =
-        *kCategoryKeyboardInputSource;
-    _glfw.ns.tis.kPropertyInputSourceCategory =
-        *kPropertyInputSourceCategory;
-    _glfw.ns.tis.kPropertyInputSourceID =
-        *kPropertyInputSourceID;
-    _glfw.ns.tis.kPropertyInputSourceIsSelectCapable =
-        *kPropertyInputSourceIsSelectCapable;
-    _glfw.ns.tis.kPropertyInputSourceType =
-        *kPropertyInputSourceType;
-    _glfw.ns.tis.kPropertyUnicodeKeyLayoutData =
-        *kPropertyUnicodeKeyLayoutData;
-    _glfw.ns.tis.kPropertyInputSourceID =
-        *kPropertyInputSourceID;
-    _glfw.ns.tis.kPropertyLocalizedName =
-        *kPropertyLocalizedName;
-    _glfw.ns.tis.kTypeKeyboardInputMethodModeEnabled =
-        *kTypeKeyboardInputMethodModeEnabled;
+    _glfw.ns.tis.kCategoryKeyboardInputSource = *kCategoryKeyboardInputSource;
+    _glfw.ns.tis.kPropertyInputSourceCategory = *kPropertyInputSourceCategory;
+    _glfw.ns.tis.kPropertyInputSourceID = *kPropertyInputSourceID;
+    _glfw.ns.tis.kPropertyInputSourceIsSelectCapable = *kPropertyInputSourceIsSelectCapable;
+    _glfw.ns.tis.kPropertyInputSourceType = *kPropertyInputSourceType;
+    _glfw.ns.tis.kPropertyUnicodeKeyLayoutData = *kPropertyUnicodeKeyLayoutData;
+    _glfw.ns.tis.kPropertyInputSourceID = *kPropertyInputSourceID;
+    _glfw.ns.tis.kPropertyLocalizedName = *kPropertyLocalizedName;
+    _glfw.ns.tis.kTypeKeyboardInputMethodModeEnabled = *kTypeKeyboardInputMethodModeEnabled;
 
     _glfw.ns.inputSource = TISCopyCurrentKeyboardInputSource();
     _glfw.ns.keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-    _glfw.ns.unicodeData =
-        TISGetInputSourceProperty(_glfw.ns.keyboardLayout,
-                                  kTISPropertyUnicodeKeyLayoutData);
+    _glfw.ns.unicodeData = TISGetInputSourceProperty(_glfw.ns.keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
 
     return GLFW_TRUE;
 }
 
-@interface GLFWHelper : NSObject
+@interface GLFWHelper: NSObject
 @end
 
 @implementation GLFWHelper
 
-- (void)selectedKeyboardInputSourceChanged:(NSObject* )object
+- (void)selectedKeyboardInputSourceChanged:(NSObject*)object
 {
     // The keyboard layout is needed for Unicode data which is the source of
     // GLFW key names on Cocoa (the generic input source may not have this)
     CFRelease(_glfw.ns.keyboardLayout);
     _glfw.ns.keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
-    _glfw.ns.unicodeData =
-        TISGetInputSourceProperty(_glfw.ns.keyboardLayout,
-                                    kTISPropertyUnicodeKeyLayoutData);
+    _glfw.ns.unicodeData = TISGetInputSourceProperty(_glfw.ns.keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
 
     // The generic input source may be something higher level than a keyboard
     // layout and if so will provide a better layout name than the layout source
     const TISInputSourceRef source = TISCopyCurrentKeyboardInputSource();
-    const CFStringRef newID =
-        TISGetInputSourceProperty(source, kTISPropertyInputSourceID);
-    const CFStringRef oldID =
-        TISGetInputSourceProperty(_glfw.ns.inputSource, kTISPropertyInputSourceID);
+    const CFStringRef newID = TISGetInputSourceProperty(source, kTISPropertyInputSourceID);
+    const CFStringRef oldID = TISGetInputSourceProperty(_glfw.ns.inputSource, kTISPropertyInputSourceID);
     const CFComparisonResult result = CFStringCompare(oldID, newID, 0);
     CFRelease(_glfw.ns.inputSource);
     _glfw.ns.inputSource = source;
 
     // Filter events as we may receive more than one per input source switch
     if (result != kCFCompareEqualTo)
+    {
         _glfwInputKeyboardLayout();
+    }
 }
 
 - (void)doNothing:(id)object
@@ -462,31 +403,35 @@ static GLFWbool initializeTIS(void)
 
 @end // GLFWHelper
 
-@interface GLFWApplicationDelegate : NSObject <NSApplicationDelegate>
+@interface GLFWApplicationDelegate: NSObject <NSApplicationDelegate>
 @end
 
 @implementation GLFWApplicationDelegate
 
-- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication*)sender
 {
-    for (_GLFWwindow* window = _glfw.windowListHead;  window;  window = window->next)
+    for (_GLFWwindow* window = _glfw.windowListHead; window; window = window->next)
+    {
         _glfwInputWindowCloseRequest(window);
+    }
 
     return NSTerminateCancel;
 }
 
-- (void)applicationDidChangeScreenParameters:(NSNotification *) notification
+- (void)applicationDidChangeScreenParameters:(NSNotification*)notification
 {
-    for (_GLFWwindow* window = _glfw.windowListHead;  window;  window = window->next)
+    for (_GLFWwindow* window = _glfw.windowListHead; window; window = window->next)
     {
         if (window->context.client != GLFW_NO_API)
+        {
             [window->context.nsgl.object update];
+        }
     }
 
     _glfwPollMonitorsCocoa();
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification *)notification
+- (void)applicationWillFinishLaunching:(NSNotification*)notification
 {
     if (_glfw.hints.init.ns.menubar)
     {
@@ -495,29 +440,30 @@ static GLFWbool initializeTIS(void)
 
         if ([[NSBundle mainBundle] pathForResource:@"MainMenu" ofType:@"nib"])
         {
-            [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
-                                          owner:NSApp
-                                topLevelObjects:&_glfw.ns.nibObjects];
+            [[NSBundle mainBundle] loadNibNamed:@"MainMenu" owner:NSApp topLevelObjects:&_glfw.ns.nibObjects];
         }
         else
+        {
             createMenuBar();
+        }
     }
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
     _glfwPostEmptyEventCocoa();
     [NSApp stop:nil];
 }
 
-- (void)applicationDidHide:(NSNotification *)notification
+- (void)applicationDidHide:(NSNotification*)notification
 {
-    for (int i = 0;  i < _glfw.monitorCount;  i++)
+    for (int i = 0; i < _glfw.monitorCount; i++)
+    {
         _glfwRestoreVideoModeCocoa(_glfw.monitors[i]);
+    }
 }
 
 @end // GLFWApplicationDelegate
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
@@ -527,14 +473,18 @@ void* _glfwLoadLocalVulkanLoaderCocoa(void)
 {
     CFBundleRef bundle = CFBundleGetMainBundle();
     if (!bundle)
+    {
         return NULL;
+    }
 
     CFURLRef frameworksUrl = CFBundleCopyPrivateFrameworksURL(bundle);
     if (!frameworksUrl)
+    {
         return NULL;
+    }
 
-    CFURLRef loaderUrl = CFURLCreateCopyAppendingPathComponent(
-        kCFAllocatorDefault, frameworksUrl, CFSTR("libvulkan.1.dylib"), false);
+    CFURLRef loaderUrl =
+        CFURLCreateCopyAppendingPathComponent(kCFAllocatorDefault, frameworksUrl, CFSTR("libvulkan.1.dylib"), false);
     if (!loaderUrl)
     {
         CFRelease(frameworksUrl);
@@ -544,14 +494,15 @@ void* _glfwLoadLocalVulkanLoaderCocoa(void)
     char path[PATH_MAX];
     void* handle = NULL;
 
-    if (CFURLGetFileSystemRepresentation(loaderUrl, true, (UInt8*) path, sizeof(path) - 1))
+    if (CFURLGetFileSystemRepresentation(loaderUrl, true, (UInt8*)path, sizeof(path) - 1))
+    {
         handle = _glfwPlatformLoadModule(path);
+    }
 
     CFRelease(loaderUrl);
     CFRelease(frameworksUrl);
     return handle;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW platform API                      //////
@@ -559,8 +510,7 @@ void* _glfwLoadLocalVulkanLoaderCocoa(void)
 
 GLFWbool _glfwConnectCocoa(int platformID, _GLFWplatform* platform)
 {
-    const _GLFWplatform cocoa =
-    {
+    const _GLFWplatform cocoa = {
         GLFW_PLATFORM_COCOA,
         _glfwInitCocoa,
         _glfwTerminateCocoa,
@@ -650,136 +600,143 @@ GLFWbool _glfwConnectCocoa(int platformID, _GLFWplatform* platform)
 
 int _glfwInitCocoa(void)
 {
-    @autoreleasepool {
-
-    _glfw.ns.helper = [[GLFWHelper alloc] init];
-
-    [NSThread detachNewThreadSelector:@selector(doNothing:)
-                             toTarget:_glfw.ns.helper
-                           withObject:nil];
-
-    [NSApplication sharedApplication];
-
-    _glfw.ns.delegate = [[GLFWApplicationDelegate alloc] init];
-    if (_glfw.ns.delegate == nil)
+    @autoreleasepool
     {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Cocoa: Failed to create application delegate");
-        return GLFW_FALSE;
-    }
 
-    [NSApp setDelegate:_glfw.ns.delegate];
+        _glfw.ns.helper = [[GLFWHelper alloc] init];
 
-    NSEvent* (^block)(NSEvent*) = ^ NSEvent* (NSEvent* event)
-    {
-        if ([event modifierFlags] & NSEventModifierFlagCommand)
-            [[NSApp keyWindow] sendEvent:event];
+        [NSThread detachNewThreadSelector:@selector(doNothing:) toTarget:_glfw.ns.helper withObject:nil];
 
-        return event;
-    };
+        [NSApplication sharedApplication];
 
-    _glfw.ns.keyUpMonitor =
-        [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyUp
-                                              handler:block];
+        _glfw.ns.delegate = [[GLFWApplicationDelegate alloc] init];
+        if (_glfw.ns.delegate == nil)
+        {
+            _glfwInputError(GLFW_PLATFORM_ERROR, "Cocoa: Failed to create application delegate");
+            return GLFW_FALSE;
+        }
 
-    if (_glfw.hints.init.ns.chdir)
-        changeToResourcesDirectory();
+        [NSApp setDelegate:_glfw.ns.delegate];
 
-    // Press and Hold prevents some keys from emitting repeated characters
-    NSDictionary* defaults = @{@"ApplePressAndHoldEnabled":@NO};
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+        NSEvent* (^block)(NSEvent*) = ^NSEvent*(NSEvent* event) {
+          if ([event modifierFlags] & NSEventModifierFlagCommand)
+          {
+              [[NSApp keyWindow] sendEvent:event];
+          }
 
-    [[NSNotificationCenter defaultCenter]
-        addObserver:_glfw.ns.helper
-           selector:@selector(selectedKeyboardInputSourceChanged:)
-               name:NSTextInputContextKeyboardSelectionDidChangeNotification
-             object:nil];
+          return event;
+        };
 
-    createKeyTables();
+        _glfw.ns.keyUpMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyUp handler:block];
 
-    _glfw.ns.eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
-    if (!_glfw.ns.eventSource)
-        return GLFW_FALSE;
+        if (_glfw.hints.init.ns.chdir)
+        {
+            changeToResourcesDirectory();
+        }
 
-    CGEventSourceSetLocalEventsSuppressionInterval(_glfw.ns.eventSource, 0.0);
+        // Press and Hold prevents some keys from emitting repeated characters
+        NSDictionary* defaults = @{@"ApplePressAndHoldEnabled" : @NO};
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
-    if (!initializeTIS())
-        return GLFW_FALSE;
+        [[NSNotificationCenter defaultCenter] addObserver:_glfw.ns.helper
+                                                 selector:@selector(selectedKeyboardInputSourceChanged:)
+                                                     name:NSTextInputContextKeyboardSelectionDidChangeNotification
+                                                   object:nil];
 
-    _glfwPollMonitorsCocoa();
+        createKeyTables();
 
-    if (![[NSRunningApplication currentApplication] isFinishedLaunching])
-        [NSApp run];
+        _glfw.ns.eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
+        if (!_glfw.ns.eventSource)
+        {
+            return GLFW_FALSE;
+        }
 
-    // In case we are unbundled, make us a proper UI application
-    if (_glfw.hints.init.ns.menubar)
-        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+        CGEventSourceSetLocalEventsSuppressionInterval(_glfw.ns.eventSource, 0.0);
 
-    return GLFW_TRUE;
+        if (!initializeTIS())
+        {
+            return GLFW_FALSE;
+        }
+
+        _glfwPollMonitorsCocoa();
+
+        if (![[NSRunningApplication currentApplication] isFinishedLaunching])
+        {
+            [NSApp run];
+        }
+
+        // In case we are unbundled, make us a proper UI application
+        if (_glfw.hints.init.ns.menubar)
+        {
+            [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+        }
+
+        return GLFW_TRUE;
 
     } // autoreleasepool
 }
 
 void _glfwTerminateCocoa(void)
 {
-    @autoreleasepool {
-        
-    if (_glfw.ns.dockProgressIndicator.view != nil)
+    @autoreleasepool
     {
-        [_glfw.ns.dockProgressIndicator.view removeFromSuperview];
-        [_glfw.ns.dockProgressIndicator.view release];
-    }
 
-    if (_glfw.ns.keyboardLayout)
-    {
-        CFRelease(_glfw.ns.keyboardLayout);
-        _glfw.ns.keyboardLayout = NULL;
-        _glfw.ns.unicodeData = NULL;
-    }
+        if (_glfw.ns.dockProgressIndicator.view != nil)
+        {
+            [_glfw.ns.dockProgressIndicator.view removeFromSuperview];
+            [_glfw.ns.dockProgressIndicator.view release];
+        }
 
-    if (_glfw.ns.inputSource)
-    {
-        CFRelease(_glfw.ns.inputSource);
-        _glfw.ns.inputSource = NULL;
-    }
+        if (_glfw.ns.keyboardLayout)
+        {
+            CFRelease(_glfw.ns.keyboardLayout);
+            _glfw.ns.keyboardLayout = NULL;
+            _glfw.ns.unicodeData = NULL;
+        }
 
-    if (_glfw.ns.eventSource)
-    {
-        CFRelease(_glfw.ns.eventSource);
-        _glfw.ns.eventSource = NULL;
-    }
+        if (_glfw.ns.inputSource)
+        {
+            CFRelease(_glfw.ns.inputSource);
+            _glfw.ns.inputSource = NULL;
+        }
 
-    if (_glfw.ns.delegate)
-    {
-        [NSApp setDelegate:nil];
-        [_glfw.ns.delegate release];
-        _glfw.ns.delegate = nil;
-    }
+        if (_glfw.ns.eventSource)
+        {
+            CFRelease(_glfw.ns.eventSource);
+            _glfw.ns.eventSource = NULL;
+        }
 
-    if (_glfw.ns.helper)
-    {
-        [[NSNotificationCenter defaultCenter]
-            removeObserver:_glfw.ns.helper
-                      name:NSTextInputContextKeyboardSelectionDidChangeNotification
-                    object:nil];
-        [[NSNotificationCenter defaultCenter]
-            removeObserver:_glfw.ns.helper];
-        [_glfw.ns.helper release];
-        _glfw.ns.helper = nil;
-    }
+        if (_glfw.ns.delegate)
+        {
+            [NSApp setDelegate:nil];
+            [_glfw.ns.delegate release];
+            _glfw.ns.delegate = nil;
+        }
 
-    if (_glfw.ns.keyUpMonitor)
-        [NSEvent removeMonitor:_glfw.ns.keyUpMonitor];
+        if (_glfw.ns.helper)
+        {
+            [[NSNotificationCenter defaultCenter]
+                removeObserver:_glfw.ns.helper
+                          name:NSTextInputContextKeyboardSelectionDidChangeNotification
+                        object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:_glfw.ns.helper];
+            [_glfw.ns.helper release];
+            _glfw.ns.helper = nil;
+        }
 
-    _glfw_free(_glfw.ns.clipboardString);
-    _glfw_free(_glfw.ns.keyboardLayoutName);
+        if (_glfw.ns.keyUpMonitor)
+        {
+            [NSEvent removeMonitor:_glfw.ns.keyUpMonitor];
+        }
 
-    _glfwTerminateNSGL();
-    _glfwTerminateEGL();
-    _glfwTerminateOSMesa();
+        _glfw_free(_glfw.ns.clipboardString);
+        _glfw_free(_glfw.ns.keyboardLayoutName);
+
+        _glfwTerminateNSGL();
+        _glfwTerminateEGL();
+        _glfwTerminateOSMesa();
 
     } // autoreleasepool
 }
 
 #endif // _GLFW_COCOA
-

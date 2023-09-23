@@ -60,17 +60,23 @@ void usage(void)
 }
 
 struct nk_vec2 cursor_new, cursor_pos, cursor_vel;
-enum { cursor_sync_query, cursor_input_message } cursor_method = cursor_sync_query;
+
+enum
+{
+    cursor_sync_query,
+    cursor_input_message
+} cursor_method = cursor_sync_query;
 
 void sample_input(GLFWwindow* window)
 {
     float a = .25; // exponential smoothing factor
 
-    if (cursor_method == cursor_sync_query) {
+    if (cursor_method == cursor_sync_query)
+    {
         double x, y;
         glfwGetCursorPos(window, &x, &y);
-        cursor_new.x = (float) x;
-        cursor_new.y = (float) y;
+        cursor_new.x = (float)x;
+        cursor_new.y = (float)y;
     }
 
     cursor_vel.x = (cursor_new.x - cursor_pos.x) * a + cursor_vel.x * (1 - a);
@@ -80,8 +86,8 @@ void sample_input(GLFWwindow* window)
 
 void cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    cursor_new.x = (float) xpos;
-    cursor_new.y = (float) ypos;
+    cursor_new.x = (float)xpos;
+    cursor_new.y = (float)ypos;
 }
 
 int enable_vsync = nk_true;
@@ -102,15 +108,22 @@ void swap_buffers(GLFWwindow* window)
     glfwSwapBuffers(window);
 
     if (swap_clear)
+    {
         glClear(GL_COLOR_BUFFER_BIT);
+    }
 
     if (swap_finish)
+    {
         glFinish();
+    }
 
-    if (swap_occlusion_query) {
+    if (swap_occlusion_query)
+    {
         GLint occlusion_result;
         if (!occlusion_query)
+        {
             glGenQueries(1, &occlusion_query);
+        }
         glBeginQuery(GL_SAMPLES_PASSED, occlusion_query);
         glBegin(GL_POINTS);
         glVertex2f(0, 0);
@@ -119,7 +132,8 @@ void swap_buffers(GLFWwindow* window)
         glGetQueryObjectiv(occlusion_query, GL_QUERY_RESULT, &occlusion_result);
     }
 
-    if (swap_read_pixels) {
+    if (swap_read_pixels)
+    {
         unsigned char rgba[4];
         glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
     }
@@ -133,7 +147,9 @@ void error_callback(int error, const char* description)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (action != GLFW_PRESS)
+    {
         return;
+    }
 
     switch (key)
     {
@@ -145,7 +161,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void draw_marker(struct nk_command_buffer* canvas, int lead, struct nk_vec2 pos)
 {
-    struct nk_color colors[4] = { nk_rgb(255,0,0), nk_rgb(255,255,0), nk_rgb(0,255,0), nk_rgb(0,96,255) };
+    struct nk_color colors[4] = { nk_rgb(255, 0, 0), nk_rgb(255, 255, 0), nk_rgb(0, 255, 0), nk_rgb(0, 96, 255) };
     struct nk_rect rect = { -5 + pos.x, -5 + pos.y, 10, 10 };
     nk_fill_circle(canvas, rect, colors[lead]);
 }
@@ -181,7 +197,9 @@ int main(int argc, char** argv)
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     if (fullscreen)
     {
@@ -234,33 +252,40 @@ int main(int argc, char** argv)
         sample_input(window);
 
         glfwGetWindowSize(window, &width, &height);
-        area = nk_rect(0.f, 0.f, (float) width, (float) height);
+        area = nk_rect(0.f, 0.f, (float)width, (float)height);
 
         glClear(GL_COLOR_BUFFER_BIT);
         nk_glfw3_new_frame();
         if (nk_begin(nk, "", area, 0))
         {
             nk_flags align_left = NK_TEXT_ALIGN_LEFT | NK_TEXT_ALIGN_MIDDLE;
-            struct nk_command_buffer *canvas = nk_window_get_canvas(nk);
+            struct nk_command_buffer* canvas = nk_window_get_canvas(nk);
             int lead;
 
             for (lead = show_forecasts ? 3 : 0; lead >= 0; lead--)
-                draw_marker(canvas, lead, nk_vec2(cursor_pos.x + cursor_vel.x * lead,
-                                                  cursor_pos.y + cursor_vel.y * lead));
+            {
+                draw_marker(canvas, lead,
+                            nk_vec2(cursor_pos.x + cursor_vel.x * lead, cursor_pos.y + cursor_vel.y * lead));
+            }
 
             // print instructions
             nk_layout_row_dynamic(nk, 20, 1);
             nk_label(nk, "Move mouse uniformly and check marker under cursor:", align_left);
-            for (lead = 0; lead <= 3; lead++) {
+            for (lead = 0; lead <= 3; lead++)
+            {
                 nk_layout_row_begin(nk, NK_STATIC, 12, 2);
                 nk_layout_row_push(nk, 25);
                 draw_marker(canvas, lead, nk_layout_space_to_screen(nk, nk_vec2(20, 5)));
                 nk_label(nk, "", 0);
                 nk_layout_row_push(nk, 500);
                 if (lead == 0)
+                {
                     nk_label(nk, "- current cursor position (no input lag)", align_left);
+                }
                 else
+                {
                     nk_labelf(nk, align_left, "- %d-frame forecast (input lag is %d frame)", lead, lead);
+                }
                 nk_layout_row_end(nk);
             }
 
@@ -269,15 +294,22 @@ int main(int argc, char** argv)
             nk_checkbox_label(nk, "Show forecasts", &show_forecasts);
             nk_label(nk, "Input method:", align_left);
             if (nk_option_label(nk, "glfwGetCursorPos (sync query)", cursor_method == cursor_sync_query))
+            {
                 cursor_method = cursor_sync_query;
-            if (nk_option_label(nk, "glfwSetCursorPosCallback (latest input message)", cursor_method == cursor_input_message))
+            }
+            if (nk_option_label(nk, "glfwSetCursorPosCallback (latest input message)",
+                                cursor_method == cursor_input_message))
+            {
                 cursor_method = cursor_input_message;
+            }
 
             nk_label(nk, "", 0); // separator
 
-            nk_value_float(nk, "FPS", (float) frame_rate);
+            nk_value_float(nk, "FPS", (float)frame_rate);
             if (nk_checkbox_label(nk, "Enable vsync", &enable_vsync))
+            {
                 update_vsync();
+            }
 
             nk_label(nk, "", 0); // separator
 
@@ -307,4 +339,3 @@ int main(int argc, char** argv)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-

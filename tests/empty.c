@@ -64,12 +64,14 @@ static int thread_main(void* data)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
 }
 
 static float nrand(void)
 {
-    return (float) rand() / (float) RAND_MAX;
+    return (float)rand() / (float)RAND_MAX;
 }
 
 int main(void)
@@ -78,12 +80,14 @@ int main(void)
     thrd_t thread;
     GLFWwindow* window;
 
-    srand((unsigned int) time(NULL));
+    srand((unsigned int)time(NULL));
 
     glfwSetErrorCallback(error_callback);
 
     if (!glfwInit())
+    {
         exit(EXIT_FAILURE);
+    }
 
     window = glfwCreateWindow(640, 480, "Empty Event Test", NULL, NULL);
     if (!window)
@@ -108,7 +112,7 @@ int main(void)
     {
         int width, height;
         float r = nrand(), g = nrand(), b = nrand();
-        float l = (float) sqrt(r * r + g * g + b * b);
+        float l = (float)sqrt(r * r + g * g + b * b);
 
         glfwGetFramebufferSize(window, &width, &height);
 
@@ -120,7 +124,9 @@ int main(void)
         glfwWaitEvents();
 
         if (glfwWindowShouldClose(window))
+        {
             running = GLFW_FALSE;
+        }
     }
 
     glfwHideWindow(window);
@@ -130,4 +136,3 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
-
