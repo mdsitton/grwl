@@ -37,7 +37,6 @@ There will be a shared library version of the API but it will be a C only API wr
   - This will result in overall less code duplication between wayland/x11
   - Should allow support for touch screens which x11 is very much lacking
   - An alternative could be to use libinput
-
 - Touch support
   - Should be possible with evdev on linux for both x11 and wayland otherwise x11 is.. not easy
 - Wayland needs this implemented properly: https://github.com/glfw/glfw/pull/1273
@@ -48,6 +47,10 @@ There will be a shared library version of the API but it will be a C only API wr
   - Linux Wayland: wp_presentation: https://wayland.app/protocols/presentation-time
   - Linux X11: Can be done with xcb api's typically used under the hood for compositors X11 via DRI3 + Present extension exposed through some XCB functions
 - ICC Profile handing - https://github.com/glfw/glfw/issues/1893 
+- Native emscripten support would be nice
+  - emscripten already has an implementation of sdl/glfw internally but does expose all of the apis required for a proper library implementation
+  - webgpu could even be supported as well as webgl would be a awesome feature tbh
+
 
 
 
