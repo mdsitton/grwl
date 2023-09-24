@@ -367,8 +367,8 @@ on the command-line.  The GRWL CMake files set these as private compile
 definitions on the GRWL target but if you compile the GRWL sources manually you
 will need to define them yourself.
 
-The window system is used to create windows, handle input, monitors, gamma ramps and
-clipboard.  The options are:
+The window system is used to create windows, handle input, monitors and clipboard.
+The options are:
 
  - @b _GRWL_COCOA to use the Cocoa frameworks
  - @b _GRWL_WIN32 to use the Win32 API

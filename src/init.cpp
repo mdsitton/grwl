@@ -83,10 +83,6 @@ static void terminate()
     for (int i = 0; i < _grwl.monitorCount; i++)
     {
         _GRWLmonitor* monitor = _grwl.monitors[i];
-        if (monitor->originalRamp.size)
-        {
-            _grwl.platform.setGammaRamp(monitor, &monitor->originalRamp);
-        }
         _grwlFreeMonitor(monitor);
     }
 

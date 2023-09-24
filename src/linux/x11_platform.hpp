@@ -14,7 +14,7 @@
     #include <X11/Xresource.h>
     #include <X11/Xcursor/Xcursor.h>
 
-    // The XRandR extension provides mode setting and gamma control
+    // The XRandR extension provides mode setting
     #include <X11/extensions/Xrandr.h>
 
     // The Xkb extension provides improved keyboard support
@@ -294,13 +294,9 @@ typedef void (*PFN_Xutf8SetWMProperties)(Display*, Window, const char*, const ch
     #define Xutf8LookupString _grwl.x11.xlib.utf8LookupString
     #define Xutf8SetWMProperties _grwl.x11.xlib.utf8SetWMProperties
 
-typedef XRRCrtcGamma* (*PFN_XRRAllocGamma)(int);
 typedef void (*PFN_XRRFreeCrtcInfo)(XRRCrtcInfo*);
-typedef void (*PFN_XRRFreeGamma)(XRRCrtcGamma*);
 typedef void (*PFN_XRRFreeOutputInfo)(XRROutputInfo*);
 typedef void (*PFN_XRRFreeScreenResources)(XRRScreenResources*);
-typedef XRRCrtcGamma* (*PFN_XRRGetCrtcGamma)(Display*, RRCrtc);
-typedef int (*PFN_XRRGetCrtcGammaSize)(Display*, RRCrtc);
 typedef XRRCrtcInfo* (*PFN_XRRGetCrtcInfo)(Display*, XRRScreenResources*, RRCrtc);
 typedef XRROutputInfo* (*PFN_XRRGetOutputInfo)(Display*, XRRScreenResources*, RROutput);
 typedef RROutput (*PFN_XRRGetOutputPrimary)(Display*, Window);
@@ -310,15 +306,10 @@ typedef Status (*PFN_XRRQueryVersion)(Display*, int*, int*);
 typedef void (*PFN_XRRSelectInput)(Display*, Window, int);
 typedef Status (*PFN_XRRSetCrtcConfig)(Display*, XRRScreenResources*, RRCrtc, Time, int, int, RRMode, Rotation,
                                        RROutput*, int);
-typedef void (*PFN_XRRSetCrtcGamma)(Display*, RRCrtc, XRRCrtcGamma*);
 typedef int (*PFN_XRRUpdateConfiguration)(XEvent*);
-    #define XRRAllocGamma _grwl.x11.randr.AllocGamma
     #define XRRFreeCrtcInfo _grwl.x11.randr.FreeCrtcInfo
-    #define XRRFreeGamma _grwl.x11.randr.FreeGamma
     #define XRRFreeOutputInfo _grwl.x11.randr.FreeOutputInfo
     #define XRRFreeScreenResources _grwl.x11.randr.FreeScreenResources
-    #define XRRGetCrtcGamma _grwl.x11.randr.GetCrtcGamma
-    #define XRRGetCrtcGammaSize _grwl.x11.randr.GetCrtcGammaSize
     #define XRRGetCrtcInfo _grwl.x11.randr.GetCrtcInfo
     #define XRRGetOutputInfo _grwl.x11.randr.GetOutputInfo
     #define XRRGetOutputPrimary _grwl.x11.randr.GetOutputPrimary
@@ -327,7 +318,6 @@ typedef int (*PFN_XRRUpdateConfiguration)(XEvent*);
     #define XRRQueryVersion _grwl.x11.randr.QueryVersion
     #define XRRSelectInput _grwl.x11.randr.SelectInput
     #define XRRSetCrtcConfig _grwl.x11.randr.SetCrtcConfig
-    #define XRRSetCrtcGamma _grwl.x11.randr.SetCrtcGamma
     #define XRRUpdateConfiguration _grwl.x11.randr.UpdateConfiguration
 
 typedef XcursorImage* (*PFN_XcursorImageCreate)(int, int);
@@ -357,13 +347,7 @@ typedef xcb_connection_t* (*PFN_XGetXCBConnection)(Display*);
     #define XGetXCBConnection _grwl.x11.x11xcb.GetXCBConnection
 
 typedef Bool (*PFN_XF86VidModeQueryExtension)(Display*, int*, int*);
-typedef Bool (*PFN_XF86VidModeGetGammaRamp)(Display*, int, int, unsigned short*, unsigned short*, unsigned short*);
-typedef Bool (*PFN_XF86VidModeSetGammaRamp)(Display*, int, int, unsigned short*, unsigned short*, unsigned short*);
-typedef Bool (*PFN_XF86VidModeGetGammaRampSize)(Display*, int, int*);
     #define XF86VidModeQueryExtension _grwl.x11.vidmode.QueryExtension
-    #define XF86VidModeGetGammaRamp _grwl.x11.vidmode.GetGammaRamp
-    #define XF86VidModeSetGammaRamp _grwl.x11.vidmode.SetGammaRamp
-    #define XF86VidModeGetGammaRampSize _grwl.x11.vidmode.GetGammaRampSize
 
 typedef Status (*PFN_XIQueryVersion)(Display*, int*, int*);
 typedef int (*PFN_XISelectEvents)(Display*, Window, XIEventMask*, int);
@@ -776,15 +760,10 @@ typedef struct _GRWLlibraryX11
         int errorBase;
         int major;
         int minor;
-        bool gammaBroken;
         bool monitorBroken;
-        PFN_XRRAllocGamma AllocGamma;
         PFN_XRRFreeCrtcInfo FreeCrtcInfo;
-        PFN_XRRFreeGamma FreeGamma;
         PFN_XRRFreeOutputInfo FreeOutputInfo;
         PFN_XRRFreeScreenResources FreeScreenResources;
-        PFN_XRRGetCrtcGamma GetCrtcGamma;
-        PFN_XRRGetCrtcGammaSize GetCrtcGammaSize;
         PFN_XRRGetCrtcInfo GetCrtcInfo;
         PFN_XRRGetOutputInfo GetOutputInfo;
         PFN_XRRGetOutputPrimary GetOutputPrimary;
@@ -793,7 +772,6 @@ typedef struct _GRWLlibraryX11
         PFN_XRRQueryVersion QueryVersion;
         PFN_XRRSelectInput SelectInput;
         PFN_XRRSetCrtcConfig SetCrtcConfig;
-        PFN_XRRSetCrtcGamma SetCrtcGamma;
         PFN_XRRUpdateConfiguration UpdateConfiguration;
     } randr;
 
@@ -870,9 +848,6 @@ typedef struct _GRWLlibraryX11
         int eventBase;
         int errorBase;
         PFN_XF86VidModeQueryExtension QueryExtension;
-        PFN_XF86VidModeGetGammaRamp GetGammaRamp;
-        PFN_XF86VidModeSetGammaRamp SetGammaRamp;
-        PFN_XF86VidModeGetGammaRampSize GetGammaRampSize;
     } vidmode;
 
     struct
@@ -1020,8 +995,6 @@ void _grwlGetMonitorContentScaleX11(_GRWLmonitor* monitor, float* xscale, float*
 void _grwlGetMonitorWorkareaX11(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesX11(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode);
-bool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
-void _grwlSetGammaRampX11(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
 void _grwlPollMonitorsX11();
 void _grwlSetVideoModeX11(_GRWLmonitor* monitor, const GRWLvidmode* desired);

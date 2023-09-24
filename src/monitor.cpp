@@ -173,32 +173,8 @@ void _grwlFreeMonitor(_GRWLmonitor* monitor)
 
     _grwl.platform.freeMonitor(monitor);
 
-    _grwlFreeGammaArrays(&monitor->originalRamp);
-    _grwlFreeGammaArrays(&monitor->currentRamp);
-
     _grwl_free(monitor->modes);
     _grwl_free(monitor);
-}
-
-// Allocates red, green and blue value arrays of the specified size
-//
-void _grwlAllocGammaArrays(GRWLgammaramp* ramp, unsigned int size)
-{
-    ramp->red = (unsigned short*)_grwl_calloc(size, sizeof(unsigned short));
-    ramp->green = (unsigned short*)_grwl_calloc(size, sizeof(unsigned short));
-    ramp->blue = (unsigned short*)_grwl_calloc(size, sizeof(unsigned short));
-    ramp->size = size;
-}
-
-// Frees the red, green and blue value arrays and clears the struct
-//
-void _grwlFreeGammaArrays(GRWLgammaramp* ramp)
-{
-    _grwl_free(ramp->red);
-    _grwl_free(ramp->green);
-    _grwl_free(ramp->blue);
-
-    memset(ramp, 0, sizeof(GRWLgammaramp));
 }
 
 // Chooses the video mode most closely matching the desired one
@@ -474,91 +450,4 @@ GRWLAPI const GRWLvidmode* grwlGetVideoMode(GRWLmonitor* handle)
 
     _grwl.platform.getVideoMode(monitor, &monitor->currentMode);
     return &monitor->currentMode;
-}
-
-GRWLAPI void grwlSetGamma(GRWLmonitor* handle, float gamma)
-{
-    assert(handle != nullptr);
-    assert(gamma > 0.f);
-    assert(gamma <= FLT_MAX);
-
-    _GRWL_REQUIRE_INIT();
-
-    if (gamma != gamma || gamma <= 0.f || gamma > FLT_MAX)
-    {
-        _grwlInputError(GRWL_INVALID_VALUE, "Invalid gamma value %f", gamma);
-        return;
-    }
-
-    const GRWLgammaramp* original = grwlGetGammaRamp(handle);
-    if (!original)
-    {
-        return;
-    }
-
-    uint16_t* values = (unsigned short*)_grwl_calloc(original->size, sizeof(unsigned short));
-
-    for (uint32_t i = 0; i < original->size; i++)
-    {
-        float value;
-
-        // Calculate intensity
-        value = i / (float)(original->size - 1);
-        // Apply gamma curve
-        value = powf(value, 1.f / gamma) * 65535.f + 0.5f;
-        // Clamp to value range
-        value = _grwl_fminf(value, 65535.f);
-
-        values[i] = (unsigned short)value;
-    }
-
-    GRWLgammaramp ramp { values, values, values, original->size };
-
-    grwlSetGammaRamp(handle, &ramp);
-    _grwl_free(values);
-}
-
-GRWLAPI const GRWLgammaramp* grwlGetGammaRamp(GRWLmonitor* handle)
-{
-    _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != nullptr);
-
-    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
-
-    _grwlFreeGammaArrays(&monitor->currentRamp);
-    if (!_grwl.platform.getGammaRamp(monitor, &monitor->currentRamp))
-    {
-        return nullptr;
-    }
-
-    return &monitor->currentRamp;
-}
-
-GRWLAPI void grwlSetGammaRamp(GRWLmonitor* handle, const GRWLgammaramp* ramp)
-{
-    _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != nullptr);
-    assert(ramp != nullptr);
-    assert(ramp->size > 0);
-    assert(ramp->red != nullptr);
-    assert(ramp->green != nullptr);
-    assert(ramp->blue != nullptr);
-
-    _GRWL_REQUIRE_INIT();
-
-    if (ramp->size <= 0)
-    {
-        _grwlInputError(GRWL_INVALID_VALUE, "Invalid gamma ramp size %i", ramp->size);
-        return;
-    }
-
-    if (!monitor->originalRamp.size)
-    {
-        if (!_grwl.platform.getGammaRamp(monitor, &monitor->originalRamp))
-        {
-            return;
-        }
-    }
-
-    _grwl.platform.setGammaRamp(monitor, ramp);
 }

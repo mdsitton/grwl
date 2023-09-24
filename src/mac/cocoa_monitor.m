@@ -560,53 +560,6 @@ void _grwlGetVideoModeCocoa(_GRWLmonitor* monitor, GRWLvidmode* mode)
     } // autoreleasepool
 }
 
-bool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
-{
-    @autoreleasepool
-    {
-
-        uint32_t size = CGDisplayGammaTableCapacity(monitor->ns.displayID);
-        CGGammaValue* values = _grwl_calloc(size * 3, sizeof(CGGammaValue));
-
-        CGGetDisplayTransferByTable(monitor->ns.displayID, size, values, values + size, values + size * 2, &size);
-
-        _grwlAllocGammaArrays(ramp, size);
-
-        for (uint32_t i = 0; i < size; i++)
-        {
-            ramp->red[i] = (unsigned short)(values[i] * 65535);
-            ramp->green[i] = (unsigned short)(values[i + size] * 65535);
-            ramp->blue[i] = (unsigned short)(values[i + size * 2] * 65535);
-        }
-
-        _grwl_free(values);
-        return true;
-
-    } // autoreleasepool
-}
-
-void _grwlSetGammaRampCocoa(_GRWLmonitor* monitor, const GRWLgammaramp* ramp)
-{
-    @autoreleasepool
-    {
-
-        CGGammaValue* values = _grwl_calloc(ramp->size * 3, sizeof(CGGammaValue));
-
-        for (unsigned int i = 0; i < ramp->size; i++)
-        {
-            values[i] = ramp->red[i] / 65535.f;
-            values[i + ramp->size] = ramp->green[i] / 65535.f;
-            values[i + ramp->size * 2] = ramp->blue[i] / 65535.f;
-        }
-
-        CGSetDisplayTransferByTable(monitor->ns.displayID, ramp->size, values, values + ramp->size,
-                                    values + ramp->size * 2);
-
-        _grwl_free(values);
-
-    } // autoreleasepool
-}
-
 //////////////////////////////////////////////////////////////////////////
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////

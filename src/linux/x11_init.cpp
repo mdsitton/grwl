@@ -714,12 +714,6 @@ static bool initExtensions()
     {
         _grwl.x11.vidmode.QueryExtension = (PFN_XF86VidModeQueryExtension)_grwlPlatformGetModuleSymbol(
             _grwl.x11.vidmode.handle, "XF86VidModeQueryExtension");
-        _grwl.x11.vidmode.GetGammaRamp = (PFN_XF86VidModeGetGammaRamp)_grwlPlatformGetModuleSymbol(
-            _grwl.x11.vidmode.handle, "XF86VidModeGetGammaRamp");
-        _grwl.x11.vidmode.SetGammaRamp = (PFN_XF86VidModeSetGammaRamp)_grwlPlatformGetModuleSymbol(
-            _grwl.x11.vidmode.handle, "XF86VidModeSetGammaRamp");
-        _grwl.x11.vidmode.GetGammaRampSize = (PFN_XF86VidModeGetGammaRampSize)_grwlPlatformGetModuleSymbol(
-            _grwl.x11.vidmode.handle, "XF86VidModeGetGammaRampSize");
 
         _grwl.x11.vidmode.available =
             XF86VidModeQueryExtension(_grwl.x11.display, &_grwl.x11.vidmode.eventBase, &_grwl.x11.vidmode.errorBase);
@@ -761,22 +755,10 @@ static bool initExtensions()
     #endif
     if (_grwl.x11.randr.handle)
     {
-        _grwl.x11.randr.AllocGamma =
-            (PFN_XRRAllocGamma)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRAllocGamma");
-        _grwl.x11.randr.FreeGamma =
-            (PFN_XRRFreeGamma)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRFreeGamma");
-        _grwl.x11.randr.FreeCrtcInfo =
-            (PFN_XRRFreeCrtcInfo)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRFreeCrtcInfo");
-        _grwl.x11.randr.FreeGamma =
-            (PFN_XRRFreeGamma)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRFreeGamma");
         _grwl.x11.randr.FreeOutputInfo =
             (PFN_XRRFreeOutputInfo)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRFreeOutputInfo");
         _grwl.x11.randr.FreeScreenResources =
             (PFN_XRRFreeScreenResources)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRFreeScreenResources");
-        _grwl.x11.randr.GetCrtcGamma =
-            (PFN_XRRGetCrtcGamma)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRGetCrtcGamma");
-        _grwl.x11.randr.GetCrtcGammaSize =
-            (PFN_XRRGetCrtcGammaSize)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRGetCrtcGammaSize");
         _grwl.x11.randr.GetCrtcInfo =
             (PFN_XRRGetCrtcInfo)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRGetCrtcInfo");
         _grwl.x11.randr.GetOutputInfo =
@@ -793,8 +775,6 @@ static bool initExtensions()
             (PFN_XRRSelectInput)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRSelectInput");
         _grwl.x11.randr.SetCrtcConfig =
             (PFN_XRRSetCrtcConfig)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRSetCrtcConfig");
-        _grwl.x11.randr.SetCrtcGamma =
-            (PFN_XRRSetCrtcGamma)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRSetCrtcGamma");
         _grwl.x11.randr.UpdateConfiguration =
             (PFN_XRRUpdateConfiguration)_grwlPlatformGetModuleSymbol(_grwl.x11.randr.handle, "XRRUpdateConfiguration");
 
@@ -818,13 +798,6 @@ static bool initExtensions()
     if (_grwl.x11.randr.available)
     {
         XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_grwl.x11.display, _grwl.x11.root);
-
-        if (!sr->ncrtc || !XRRGetCrtcGammaSize(_grwl.x11.display, sr->crtcs[0]))
-        {
-            // This is likely an older Nvidia driver with broken gamma support
-            // Flag it as useless and fall back to xf86vm gamma, if available
-            _grwl.x11.randr.gammaBroken = true;
-        }
 
         if (!sr->ncrtc)
         {
@@ -1263,8 +1236,6 @@ bool _grwlConnectX11(int platformID, _GRWLplatform* platform)
         _grwlGetMonitorWorkareaX11,
         _grwlGetVideoModesX11,
         _grwlGetVideoModeX11,
-        _grwlGetGammaRampX11,
-        _grwlSetGammaRampX11,
         _grwlCreateWindowX11,
         _grwlDestroyWindowX11,
         _grwlSetWindowTitleX11,

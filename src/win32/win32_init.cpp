@@ -681,8 +681,6 @@ bool _grwlConnectWin32(int platformID, _GRWLplatform* platform)
         _grwlGetMonitorWorkareaWin32,
         _grwlGetVideoModesWin32,
         _grwlGetVideoModeWin32,
-        _grwlGetGammaRampWin32,
-        _grwlSetGammaRampWin32,
         _grwlCreateWindowWin32,
         _grwlDestroyWindowWin32,
         _grwlSetWindowTitleWin32,

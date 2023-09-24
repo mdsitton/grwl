@@ -515,69 +515,6 @@ void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode)
     }
 }
 
-bool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
-{
-    if (_grwl.x11.randr.available && !_grwl.x11.randr.gammaBroken)
-    {
-        const size_t size = XRRGetCrtcGammaSize(_grwl.x11.display, monitor->x11.crtc);
-        XRRCrtcGamma* gamma = XRRGetCrtcGamma(_grwl.x11.display, monitor->x11.crtc);
-
-        _grwlAllocGammaArrays(ramp, size);
-
-        memcpy(ramp->red, gamma->red, size * sizeof(unsigned short));
-        memcpy(ramp->green, gamma->green, size * sizeof(unsigned short));
-        memcpy(ramp->blue, gamma->blue, size * sizeof(unsigned short));
-
-        XRRFreeGamma(gamma);
-        return true;
-    }
-    else if (_grwl.x11.vidmode.available)
-    {
-        int size;
-        XF86VidModeGetGammaRampSize(_grwl.x11.display, _grwl.x11.screen, &size);
-
-        _grwlAllocGammaArrays(ramp, size);
-
-        XF86VidModeGetGammaRamp(_grwl.x11.display, _grwl.x11.screen, ramp->size, ramp->red, ramp->green, ramp->blue);
-        return true;
-    }
-    else
-    {
-        _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Gamma ramp access not supported by server");
-        return false;
-    }
-}
-
-void _grwlSetGammaRampX11(_GRWLmonitor* monitor, const GRWLgammaramp* ramp)
-{
-    if (_grwl.x11.randr.available && !_grwl.x11.randr.gammaBroken)
-    {
-        if (XRRGetCrtcGammaSize(_grwl.x11.display, monitor->x11.crtc) != ramp->size)
-        {
-            _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Gamma ramp size must match current ramp size");
-            return;
-        }
-
-        XRRCrtcGamma* gamma = XRRAllocGamma(ramp->size);
-
-        memcpy(gamma->red, ramp->red, ramp->size * sizeof(unsigned short));
-        memcpy(gamma->green, ramp->green, ramp->size * sizeof(unsigned short));
-        memcpy(gamma->blue, ramp->blue, ramp->size * sizeof(unsigned short));
-
-        XRRSetCrtcGamma(_grwl.x11.display, monitor->x11.crtc, gamma);
-        XRRFreeGamma(gamma);
-    }
-    else if (_grwl.x11.vidmode.available)
-    {
-        XF86VidModeSetGammaRamp(_grwl.x11.display, _grwl.x11.screen, ramp->size, (unsigned short*)ramp->red,
-                                (unsigned short*)ramp->green, (unsigned short*)ramp->blue);
-    }
-    else
-    {
-        _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Gamma ramp access not supported by server");
-    }
-}
-
 //////////////////////////////////////////////////////////////////////////
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////

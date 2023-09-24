@@ -668,44 +668,6 @@ void _grwlGetVideoModeWin32(_GRWLmonitor* monitor, GRWLvidmode* mode)
     _grwlSplitBPP(dm.dmBitsPerPel, &mode->redBits, &mode->greenBits, &mode->blueBits);
 }
 
-bool _grwlGetGammaRampWin32(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
-{
-    HDC dc;
-    WORD values[3][256];
-
-    dc = CreateDCW(L"DISPLAY", monitor->win32.adapterName, nullptr, nullptr);
-    GetDeviceGammaRamp(dc, values);
-    DeleteDC(dc);
-
-    _grwlAllocGammaArrays(ramp, 256);
-
-    memcpy(ramp->red, values[0], sizeof(values[0]));
-    memcpy(ramp->green, values[1], sizeof(values[1]));
-    memcpy(ramp->blue, values[2], sizeof(values[2]));
-
-    return true;
-}
-
-void _grwlSetGammaRampWin32(_GRWLmonitor* monitor, const GRWLgammaramp* ramp)
-{
-    HDC dc;
-    WORD values[3][256];
-
-    if (ramp->size != 256)
-    {
-        _grwlInputError(GRWL_PLATFORM_ERROR, "Win32: Gamma ramp size must be 256");
-        return;
-    }
-
-    memcpy(values[0], ramp->red, sizeof(values[0]));
-    memcpy(values[1], ramp->green, sizeof(values[1]));
-    memcpy(values[2], ramp->blue, sizeof(values[2]));
-
-    dc = CreateDCW(L"DISPLAY", monitor->win32.adapterName, nullptr, nullptr);
-    SetDeviceGammaRamp(dc, values);
-    DeleteDC(dc);
-}
-
 //////////////////////////////////////////////////////////////////////////
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////

@@ -138,7 +138,7 @@ callbacks are removed so no further events will be delivered for the window.
 All windows remaining when @ref glfwTerminate is called are destroyed as well.
 
 When a full screen window is destroyed, the original video mode of its monitor
-is restored, but the gamma ramp is left untouched.
+is restored.
 
 
 @subsection window_hints Window creation hints

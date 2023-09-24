@@ -295,9 +295,8 @@ been initialized.  This is done with @ref glfwTerminate.
 glfwTerminate();
 @endcode
 
-This will destroy any remaining window, monitor and cursor objects, restore any
-modified gamma ramps, re-enable the screensaver if it had been disabled and free
-any other resources allocated by GRWL.
+This will destroy any remaining window, monitor and cursor objects, re-enable the screensaver
+if it had been disabled and free any other resources allocated by GRWL.
 
 Once the library is terminated, it is as if it had never been initialized, therefore
 you will need to initialize it again before being able to use GRWL.  If the

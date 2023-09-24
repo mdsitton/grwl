@@ -1022,8 +1022,6 @@ void _grwlGetMonitorContentScaleWin32(_GRWLmonitor* monitor, float* xscale, floa
 void _grwlGetMonitorWorkareaWin32(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesWin32(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeWin32(_GRWLmonitor* monitor, GRWLvidmode* mode);
-bool _grwlGetGammaRampWin32(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
-void _grwlSetGammaRampWin32(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
 bool _grwlInitJoysticksWin32();
 void _grwlTerminateJoysticksWin32();

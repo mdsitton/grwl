@@ -335,8 +335,6 @@ void _grwlGetMonitorContentScaleCocoa(_GRWLmonitor* monitor, float* xscale, floa
 void _grwlGetMonitorWorkareaCocoa(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesCocoa(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeCocoa(_GRWLmonitor* monitor, GRWLvidmode* mode);
-bool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
-void _grwlSetGammaRampCocoa(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
 void _grwlPollMonitorsCocoa();
 void _grwlSetVideoModeCocoa(_GRWLmonitor* monitor, const GRWLvidmode* desired);

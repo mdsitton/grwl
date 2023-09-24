@@ -520,8 +520,6 @@ bool _grwlConnectCocoa(int platformID, _GRWLplatform* platform)
         _grwlGetMonitorWorkareaCocoa,
         _grwlGetVideoModesCocoa,
         _grwlGetVideoModeCocoa,
-        _grwlGetGammaRampCocoa,
-        _grwlSetGammaRampCocoa,
         _grwlCreateWindowCocoa,
         _grwlDestroyWindowCocoa,
         _grwlSetWindowTitleCocoa,

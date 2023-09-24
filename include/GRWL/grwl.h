@@ -2160,32 +2160,6 @@ extern "C"
         int refreshRate;
     } GRWLvidmode;
 
-    /*! @brief Gamma ramp.
-     *
-     *  This describes the gamma ramp for a monitor.
-     *
-     *  @sa @ref monitor_gamma
-     *  @sa @ref grwlGetGammaRamp
-     *  @sa @ref grwlSetGammaRamp
-     *
-     *  @ingroup monitor
-     */
-    typedef struct GRWLgammaramp
-    {
-        /*! An array of value describing the response of the red channel.
-         */
-        unsigned short* red;
-        /*! An array of value describing the response of the green channel.
-         */
-        unsigned short* green;
-        /*! An array of value describing the response of the blue channel.
-         */
-        unsigned short* blue;
-        /*! The number of elements in each array.
-         */
-        unsigned int size;
-    } GRWLgammaramp;
-
     /*! @brief Image data.
      *
      *  This describes a single 2D image.  See the documentation for each related
@@ -2303,10 +2277,9 @@ extern "C"
 
     /*! @brief Terminates the GRWL library.
      *
-     *  This function destroys all remaining windows and cursors, restores any
-     *  modified gamma ramps and frees any other allocated resources.  Once this
-     *  function is called, you must again call @ref grwlInit successfully before
-     *  you will be able to use most GRWL functions.
+     *  This function destroys all remaining windows and cursors and frees any other
+     *  allocated resources.  Once this function is called, you must again call
+     *  @ref grwlInit successfully before you will be able to use most GRWL functions.
      *
      *  If GRWL has been successfully initialized, this function should be called
      *  before the application exits.  If initialization fails, there is no need to
@@ -2937,104 +2910,6 @@ extern "C"
      *  @ingroup monitor
      */
     GRWLAPI const GRWLvidmode* grwlGetVideoMode(GRWLmonitor* monitor);
-
-    /*! @brief Generates a gamma ramp and sets it for the specified monitor.
-     *
-     *  This function generates an appropriately sized gamma ramp from the specified
-     *  exponent and then calls @ref grwlSetGammaRamp with it.  The value must be
-     *  a finite number greater than zero.
-     *
-     *  The software controlled gamma ramp is applied _in addition_ to the hardware
-     *  gamma correction, which today is usually an approximation of sRGB gamma.
-     *  This means that setting a perfectly linear ramp, or gamma 1.0, will produce
-     *  the default (usually sRGB-like) behavior.
-     *
-     *  For gamma correct rendering with OpenGL or OpenGL ES, see the @ref
-     *  GRWL_SRGB_CAPABLE hint.
-     *
-     *  @param[in] monitor The monitor whose gamma ramp to set.
-     *  @param[in] gamma The desired exponent.
-     *
-     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref GRWL_INVALID_VALUE,
-     *  @ref GRWL_PLATFORM_ERROR and @ref GRWL_FEATURE_UNAVAILABLE (see remarks).
-     *
-     *  @remark @wayland Gamma handling is a privileged protocol, this function
-     *  will thus never be implemented and emits @ref GRWL_FEATURE_UNAVAILABLE.
-     *
-     *  @thread_safety This function must only be called from the main thread.
-     *
-     *  @sa @ref monitor_gamma
-     *
-     *  @ingroup monitor
-     */
-    GRWLAPI void grwlSetGamma(GRWLmonitor* monitor, float gamma);
-
-    /*! @brief Returns the current gamma ramp for the specified monitor.
-     *
-     *  This function returns the current gamma ramp of the specified monitor.
-     *
-     *  @param[in] monitor The monitor to query.
-     *  @return The current gamma ramp, or `nullptr` if an
-     *  [error](@ref error_handling) occurred.
-     *
-     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref GRWL_PLATFORM_ERROR
-     *  and @ref GRWL_FEATURE_UNAVAILABLE (see remarks).
-     *
-     *  @remark @wayland Gamma handling is a privileged protocol, this function
-     *  will thus never be implemented and emits @ref GRWL_FEATURE_UNAVAILABLE while
-     *  returning `nullptr`.
-     *
-     *  @pointer_lifetime The returned structure and its arrays are allocated and
-     *  freed by GRWL.  You should not free them yourself.  They are valid until the
-     *  specified monitor is disconnected, this function is called again for that
-     *  monitor or the library is terminated.
-     *
-     *  @thread_safety This function must only be called from the main thread.
-     *
-     *  @sa @ref monitor_gamma
-     *
-     *  @ingroup monitor
-     */
-    GRWLAPI const GRWLgammaramp* grwlGetGammaRamp(GRWLmonitor* monitor);
-
-    /*! @brief Sets the current gamma ramp for the specified monitor.
-     *
-     *  This function sets the current gamma ramp for the specified monitor.  The
-     *  original gamma ramp for that monitor is saved by GRWL the first time this
-     *  function is called and is restored by @ref grwlTerminate.
-     *
-     *  The software controlled gamma ramp is applied _in addition_ to the hardware
-     *  gamma correction, which today is usually an approximation of sRGB gamma.
-     *  This means that setting a perfectly linear ramp, or gamma 1.0, will produce
-     *  the default (usually sRGB-like) behavior.
-     *
-     *  For gamma correct rendering with OpenGL or OpenGL ES, see the @ref
-     *  GRWL_SRGB_CAPABLE hint.
-     *
-     *  @param[in] monitor The monitor whose gamma ramp to set.
-     *  @param[in] ramp The gamma ramp to use.
-     *
-     *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref GRWL_PLATFORM_ERROR
-     *  and @ref GRWL_FEATURE_UNAVAILABLE (see remarks).
-     *
-     *  @remark The size of the specified gamma ramp should match the size of the
-     *  current ramp for that monitor.
-     *
-     *  @remark @win32 The gamma ramp size must be 256.
-     *
-     *  @remark @wayland Gamma handling is a privileged protocol, this function
-     *  will thus never be implemented and emits @ref GRWL_FEATURE_UNAVAILABLE.
-     *
-     *  @pointer_lifetime The specified gamma ramp is copied before this function
-     *  returns.
-     *
-     *  @thread_safety This function must only be called from the main thread.
-     *
-     *  @sa @ref monitor_gamma
-     *
-     *  @ingroup monitor
-     */
-    GRWLAPI void grwlSetGammaRamp(GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
     /*! @brief Resets all window hints to their default values.
      *

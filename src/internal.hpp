@@ -619,9 +619,6 @@ struct _GRWLmonitor
     int modeCount;
     GRWLvidmode currentMode;
 
-    GRWLgammaramp originalRamp;
-    GRWLgammaramp currentRamp;
-
     // This is defined in platform.h
     GRWL_PLATFORM_MONITOR_STATE
 };
@@ -742,8 +739,6 @@ struct _GRWLplatform
     void (*getMonitorWorkarea)(_GRWLmonitor*, int*, int*, int*, int*);
     GRWLvidmode* (*getVideoModes)(_GRWLmonitor*, int*);
     void (*getVideoMode)(_GRWLmonitor*, GRWLvidmode*);
-    bool (*getGammaRamp)(_GRWLmonitor*, GRWLgammaramp*);
-    void (*setGammaRamp)(_GRWLmonitor*, const GRWLgammaramp*);
     // window
     bool (*createWindow)(_GRWLwindow*, const _GRWLwndconfig*, const _GRWLctxconfig*, const _GRWLfbconfig*);
     void (*destroyWindow)(_GRWLwindow*);
@@ -1001,8 +996,6 @@ const GRWLvidmode* _grwlChooseVideoMode(_GRWLmonitor* monitor, const GRWLvidmode
 int _grwlCompareVideoModes(const GRWLvidmode* first, const GRWLvidmode* second);
 _GRWLmonitor* _grwlAllocMonitor(const char* name, int widthMM, int heightMM);
 void _grwlFreeMonitor(_GRWLmonitor* monitor);
-void _grwlAllocGammaArrays(GRWLgammaramp* ramp, unsigned int size);
-void _grwlFreeGammaArrays(GRWLgammaramp* ramp);
 void _grwlSplitBPP(int bpp, int* red, int* green, int* blue);
 
 void _grwlInitGamepadMappings();

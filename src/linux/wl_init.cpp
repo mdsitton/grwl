@@ -391,8 +391,6 @@ bool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
         _grwlGetMonitorWorkareaWayland,
         _grwlGetVideoModesWayland,
         _grwlGetVideoModeWayland,
-        _grwlGetGammaRampWayland,
-        _grwlSetGammaRampWayland,
         _grwlCreateWindowWayland,
         _grwlDestroyWindowWayland,
         _grwlSetWindowTitleWayland,

@@ -715,8 +715,6 @@ void _grwlGetMonitorContentScaleWayland(_GRWLmonitor* monitor, float* xscale, fl
 void _grwlGetMonitorWorkareaWayland(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesWayland(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeWayland(_GRWLmonitor* monitor, GRWLvidmode* mode);
-bool _grwlGetGammaRampWayland(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
-void _grwlSetGammaRampWayland(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
 void _grwlAddOutputWayland(uint32_t name, uint32_t version);
 void _grwlUpdateContentScaleWayland(_GRWLwindow* window);
