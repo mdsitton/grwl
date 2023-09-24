@@ -45,7 +45,7 @@ static const XRRModeInfo* getModeInfo(const XRRScreenResources* sr, RRMode id)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Convert RandR mode info to GRWL video mode
@@ -83,8 +83,8 @@ void _grwlPollMonitorsX11()
     if (_grwl.x11.randr.available && !_grwl.x11.randr.monitorBroken)
     {
         int disconnectedCount, screenCount = 0;
-        _GRWLmonitor** disconnected = NULL;
-        XineramaScreenInfo* screens = NULL;
+        _GRWLmonitor** disconnected = nullptr;
+        XineramaScreenInfo* screens = nullptr;
         XRRScreenResources* sr = XRRGetScreenResourcesCurrent(_grwl.x11.display, _grwl.x11.root);
         RROutput primary = XRRGetOutputPrimary(_grwl.x11.display, _grwl.x11.root);
 
@@ -115,7 +115,7 @@ void _grwlPollMonitorsX11()
             {
                 if (disconnected[j] && disconnected[j]->x11.output == sr->outputs[i])
                 {
-                    disconnected[j] = NULL;
+                    disconnected[j] = nullptr;
                     break;
                 }
             }
@@ -361,8 +361,8 @@ void _grwlGetMonitorWorkareaX11(_GRWLmonitor* monitor, int* xpos, int* ypos, int
 
     if (_grwl.x11.NET_WORKAREA && _grwl.x11.NET_CURRENT_DESKTOP)
     {
-        Atom* extents = NULL;
-        Atom* desktop = NULL;
+        Atom* extents = nullptr;
+        Atom* desktop = nullptr;
         const unsigned long extentCount =
             _grwlGetWindowPropertyX11(_grwl.x11.root, _grwl.x11.NET_WORKAREA, XA_CARDINAL, (unsigned char**)&extents);
 
@@ -494,7 +494,7 @@ void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode)
         if (ci)
         {
             const XRRModeInfo* mi = getModeInfo(sr, ci->mode);
-            if (mi) // mi can be NULL if the monitor has been disconnected
+            if (mi) // mi can be nullptr if the monitor has been disconnected
             {
                 *mode = vidmodeFromModeInfo(mi, ci);
             }

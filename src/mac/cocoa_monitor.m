@@ -14,7 +14,7 @@
     #include <IOKit/graphics/IOGraphicsLib.h>
     #include <ApplicationServices/ApplicationServices.h>
 
-// Get the name of the specified display, or NULL
+// Get the name of the specified display, or nullptr
 //
 static char* getMonitorName(CGDirectDisplayID displayID, NSScreen* screen)
 {
@@ -260,7 +260,7 @@ static double getFallbackRefreshRate(CGDirectDisplayID displayID)
 void _grwlPollMonitorsCocoa()
 {
     uint32_t displayCount;
-    CGGetOnlineDisplayList(0, NULL, &displayCount);
+    CGGetOnlineDisplayList(0, nullptr, &displayCount);
     CGDirectDisplayID* displays = _grwl_calloc(displayCount, sizeof(CGDirectDisplayID));
     CGGetOnlineDisplayList(displayCount, displays, &displayCount);
 
@@ -269,7 +269,7 @@ void _grwlPollMonitorsCocoa()
         _grwl.monitors[i]->ns.screen = nil;
     }
 
-    _GRWLmonitor** disconnected = NULL;
+    _GRWLmonitor** disconnected = nullptr;
     uint32_t disconnectedCount = _grwl.monitorCount;
     if (disconnectedCount)
     {
@@ -309,7 +309,7 @@ void _grwlPollMonitorsCocoa()
             if (disconnected[j] && disconnected[j]->ns.unitNumber == unitNumber)
             {
                 disconnected[j]->ns.screen = screen;
-                disconnected[j] = NULL;
+                disconnected[j] = nullptr;
                 break;
             }
         }
@@ -368,9 +368,9 @@ void _grwlSetVideoModeCocoa(_GRWLmonitor* monitor, const GRWLvidmode* desired)
         return;
     }
 
-    CFArrayRef modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, NULL);
+    CFArrayRef modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, nullptr);
     const CFIndex count = CFArrayGetCount(modes);
-    CGDisplayModeRef native = NULL;
+    CGDisplayModeRef native = nullptr;
 
     for (CFIndex i = 0; i < count; i++)
     {
@@ -390,13 +390,13 @@ void _grwlSetVideoModeCocoa(_GRWLmonitor* monitor, const GRWLvidmode* desired)
 
     if (native)
     {
-        if (monitor->ns.previousMode == NULL)
+        if (monitor->ns.previousMode == nullptr)
         {
             monitor->ns.previousMode = CGDisplayCopyDisplayMode(monitor->ns.displayID);
         }
 
         CGDisplayFadeReservationToken token = beginFadeReservation();
-        CGDisplaySetDisplayMode(monitor->ns.displayID, native, NULL);
+        CGDisplaySetDisplayMode(monitor->ns.displayID, native, nullptr);
         endFadeReservation(token);
     }
 
@@ -410,11 +410,11 @@ void _grwlRestoreVideoModeCocoa(_GRWLmonitor* monitor)
     if (monitor->ns.previousMode)
     {
         CGDisplayFadeReservationToken token = beginFadeReservation();
-        CGDisplaySetDisplayMode(monitor->ns.displayID, monitor->ns.previousMode, NULL);
+        CGDisplaySetDisplayMode(monitor->ns.displayID, monitor->ns.previousMode, nullptr);
         endFadeReservation(token);
 
         CGDisplayModeRelease(monitor->ns.previousMode);
-        monitor->ns.previousMode = NULL;
+        monitor->ns.previousMode = nullptr;
     }
 }
 
@@ -509,7 +509,7 @@ GRWLvidmode* _grwlGetVideoModesCocoa(_GRWLmonitor* monitor, int* count)
 
         *count = 0;
 
-        CFArrayRef modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, NULL);
+        CFArrayRef modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, nullptr);
         const CFIndex found = CFArrayGetCount(modes);
         GRWLvidmode* result = _grwl_calloc(found, sizeof(GRWLvidmode));
 

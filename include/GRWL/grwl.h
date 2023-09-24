@@ -1454,7 +1454,7 @@ extern "C"
      *  @endcode
      *
      *  This function must return either a memory block at least `size` bytes long,
-     *  or `NULL` if allocation failed.  Note that not all parts of GRWL handle allocation
+     *  or `nullptr` if allocation failed.  Note that not all parts of GRWL handle allocation
      *  failures gracefully yet.
      *
      *  This function may be called during @ref grwlInit but before the library is
@@ -1469,7 +1469,7 @@ extern "C"
      *
      *  @param[in] size The minimum size, in bytes, of the memory block.
      *  @param[in] user The user-defined pointer from the allocator.
-     *  @return The address of the newly allocated memory block, or `NULL` if an
+     *  @return The address of the newly allocated memory block, or `nullptr` if an
      *  error occurred.
      *
      *  @pointer_lifetime The returned memory block must be valid at least until it
@@ -1495,7 +1495,7 @@ extern "C"
      *  @endcode
      *
      *  This function must return a memory block at least `size` bytes long, or
-     *  `NULL` if allocation failed.  Note that not all parts of GRWL handle allocation
+     *  `nullptr` if allocation failed.  Note that not all parts of GRWL handle allocation
      *  failures gracefully yet.
      *
      *  This function may be called during @ref grwlInit but before the library is
@@ -1505,15 +1505,15 @@ extern "C"
      *  Any memory allocated by this function will be deallocated during library
      *  termination or earlier.
      *
-     *  The block address will never be `NULL` and the size will always be greater than zero.
+     *  The block address will never be `nullptr` and the size will always be greater than zero.
      *  Reallocations of a block to size zero are converted into deallocations.  Reallocations
-     *  of `NULL` to a non-zero size are converted into regular allocations.
+     *  of `nullptr` to a non-zero size are converted into regular allocations.
      *
      *  @param[in] block The address of the memory block to reallocate.
      *  @param[in] size The new minimum size, in bytes, of the memory block.
      *  @param[in] user The user-defined pointer from the allocator.
      *  @return The address of the newly allocated or resized memory block, or
-     *  `NULL` if an error occurred.
+     *  `nullptr` if an error occurred.
      *
      *  @pointer_lifetime The returned memory block must be valid at least until it
      *  is deallocated.
@@ -1544,7 +1544,7 @@ extern "C"
      *  flagged as initialized, as well as during @ref grwlTerminate after the
      *  library is no longer flagged as initialized.
      *
-     *  The block address will never be `NULL`.  Deallocations of `NULL` are filtered out
+     *  The block address will never be `nullptr`.  Deallocations of `nullptr` are filtered out
      *  before reaching the custom allocator.
      *
      *  @param[in] block The address of the memory block to deallocate.
@@ -2365,14 +2365,14 @@ extern "C"
 
     /*! @brief Sets the init allocator to the desired value.
      *
-     *  To use the default allocator, call this function with a `NULL` argument.
+     *  To use the default allocator, call this function with a `nullptr` argument.
      *
      *  If you specify an allocator struct, every member must be a valid function
-     *  pointer.  If any member is `NULL`, this function emits @ref
+     *  pointer.  If any member is `nullptr`, this function emits @ref
      *  GRWL_INVALID_VALUE and the init allocator is unchanged.
      *
      *  @param[in] allocator The allocator to use at the next initialization, or
-     *  `NULL` to use the default one.
+     *  `nullptr` to use the default one.
      *
      *  @errors Possible errors include @ref GRWL_INVALID_VALUE.
      *
@@ -2399,7 +2399,7 @@ extern "C"
      *  a location where GRWL cannot find it through dynamic loading, or if you are still
      *  using the static library version of the loader.
      *
-     *  If set to `NULL`, GRWL will try to load the Vulkan loader dynamically by its standard
+     *  If set to `nullptr`, GRWL will try to load the Vulkan loader dynamically by its standard
      *  name and get this function from there.  This is the default behavior.
      *
      *  The standard name of the loader is `vulkan-1.dll` on Windows, `libvulkan.so.1` on
@@ -2410,7 +2410,7 @@ extern "C"
      *  initialization.  Once GRWL has been initialized, any updates will be ignored until the
      *  library is terminated and initialized again.
      *
-     *  @param[in] loader The address of the function to use, or `NULL`.
+     *  @param[in] loader The address of the function to use, or `nullptr`.
      *
      *  @par Loader function signature
      *  @code
@@ -2440,11 +2440,11 @@ extern "C"
      *  library.  It is intended for when you are using GRWL as a shared library and
      *  want to ensure that you are using the minimum required version.
      *
-     *  Any or all of the version arguments may be `NULL`.
+     *  Any or all of the version arguments may be `nullptr`.
      *
-     *  @param[out] major Where to store the major version number, or `NULL`.
-     *  @param[out] minor Where to store the minor version number, or `NULL`.
-     *  @param[out] rev Where to store the revision number, or `NULL`.
+     *  @param[out] major Where to store the major version number, or `nullptr`.
+     *  @param[out] minor Where to store the minor version number, or `nullptr`.
+     *  @param[out] rev Where to store the revision number, or `nullptr`.
      *
      *  @errors None.
      *
@@ -2497,9 +2497,9 @@ extern "C"
      *  error that occurred on the calling thread, and optionally a UTF-8 encoded
      *  human-readable description of it.  If no error has occurred since the last
      *  call, it returns @ref GRWL_NO_ERROR (zero) and the description pointer is
-     *  set to `NULL`.
+     *  set to `nullptr`.
      *
-     *  @param[in] description Where to store the error description pointer, or `NULL`.
+     *  @param[in] description Where to store the error description pointer, or `nullptr`.
      *  @return The last error code for the calling thread, or @ref GRWL_NO_ERROR
      *  (zero).
      *
@@ -2554,9 +2554,9 @@ extern "C"
      *  Once set, the error callback remains set even after the library has been
      *  terminated.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set.
+     *  @return The previously set callback, or `nullptr` if no callback was set.
      *
      *  @callback_signature
      *  @code
@@ -2624,11 +2624,11 @@ extern "C"
      *
      *  This function returns an array of handles for all currently connected
      *  monitors.  The primary monitor is always first in the returned array.  If no
-     *  monitors were found, this function returns `NULL`.
+     *  monitors were found, this function returns `nullptr`.
      *
      *  @param[out] count Where to store the number of monitors in the returned
      *  array.  This is set to zero if an error occurred.
-     *  @return An array of monitor handles, or `NULL` if no monitors were found or
+     *  @return An array of monitor handles, or `nullptr` if no monitors were found or
      *  if an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -2652,7 +2652,7 @@ extern "C"
      *  This function returns the primary monitor.  This is usually the monitor
      *  where elements like the task bar or global menu bar are located.
      *
-     *  @return The primary monitor, or `NULL` if no monitors were found or if an
+     *  @return The primary monitor, or `nullptr` if no monitors were found or if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -2674,12 +2674,12 @@ extern "C"
      *  This function returns the position, in screen coordinates, of the upper-left
      *  corner of the specified monitor.
      *
-     *  Any or all of the position arguments may be `NULL`.  If an error occurs, all
+     *  Any or all of the position arguments may be `nullptr`.  If an error occurs, all
      *  non-`NULL` position arguments will be set to zero.
      *
      *  @param[in] monitor The monitor to query.
-     *  @param[out] xpos Where to store the monitor x-coordinate, or `NULL`.
-     *  @param[out] ypos Where to store the monitor y-coordinate, or `NULL`.
+     *  @param[out] xpos Where to store the monitor x-coordinate, or `nullptr`.
+     *  @param[out] ypos Where to store the monitor y-coordinate, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -2701,14 +2701,14 @@ extern "C"
      *  task bar exists then the work area is the monitor resolution in screen
      *  coordinates.
      *
-     *  Any or all of the position and size arguments may be `NULL`.  If an error
-     *  occurs, all non-`NULL` position and size arguments will be set to zero.
+     *  Any or all of the position and size arguments may be `nullptr`.  If an error
+     *  occurs, all non-`nullptr` position and size arguments will be set to zero.
      *
      *  @param[in] monitor The monitor to query.
-     *  @param[out] xpos Where to store the monitor x-coordinate, or `NULL`.
-     *  @param[out] ypos Where to store the monitor y-coordinate, or `NULL`.
-     *  @param[out] width Where to store the monitor width, or `NULL`.
-     *  @param[out] height Where to store the monitor height, or `NULL`.
+     *  @param[out] xpos Where to store the monitor x-coordinate, or `nullptr`.
+     *  @param[out] ypos Where to store the monitor y-coordinate, or `nullptr`.
+     *  @param[out] width Where to store the monitor width, or `nullptr`.
+     *  @param[out] height Where to store the monitor height, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -2731,14 +2731,14 @@ extern "C"
      *  [EDID](https://en.wikipedia.org/wiki/Extended_display_identification_data)
      *  data is incorrect or because the driver does not report it accurately.
      *
-     *  Any or all of the size arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` size arguments will be set to zero.
+     *  Any or all of the size arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` size arguments will be set to zero.
      *
      *  @param[in] monitor The monitor to query.
      *  @param[out] widthMM Where to store the width, in millimetres, of the
-     *  monitor's display area, or `NULL`.
+     *  monitor's display area, or `nullptr`.
      *  @param[out] heightMM Where to store the height, in millimetres, of the
-     *  monitor's display area, or `NULL`.
+     *  monitor's display area, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
@@ -2768,8 +2768,8 @@ extern "C"
      *  calculated from the physical size and current resolution.
      *
      *  @param[in] monitor The monitor to query.
-     *  @param[out] xscale Where to store the x-axis content scale, or `NULL`.
-     *  @param[out] yscale Where to store the y-axis content scale, or `NULL`.
+     *  @param[out] xscale Where to store the x-axis content scale, or `nullptr`.
+     *  @param[out] yscale Where to store the y-axis content scale, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -2790,7 +2790,7 @@ extern "C"
      *  monitor and is not guaranteed to be unique among the connected monitors.
      *
      *  @param[in] monitor The monitor to query.
-     *  @return The UTF-8 encoded name of the monitor, or `NULL` if an
+     *  @return The UTF-8 encoded name of the monitor, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -2811,7 +2811,7 @@ extern "C"
      *
      *  This function sets the user-defined pointer of the specified monitor.  The
      *  current value is retained until the monitor is disconnected.  The initial
-     *  value is `NULL`.
+     *  value is `nullptr`.
      *
      *  This function may be called from the monitor callback, even for a monitor
      *  that is being disconnected.
@@ -2834,7 +2834,7 @@ extern "C"
     /*! @brief Returns the user pointer of the specified monitor.
      *
      *  This function returns the current value of the user-defined pointer of the
-     *  specified monitor.  The initial value is `NULL`.
+     *  specified monitor.  The initial value is `nullptr`.
      *
      *  This function may be called from the monitor callback, even for a monitor
      *  that is being disconnected.
@@ -2859,9 +2859,9 @@ extern "C"
      *  currently set callback.  This is called when a monitor is connected to or
      *  disconnected from the system.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -2892,7 +2892,7 @@ extern "C"
      *  @param[in] monitor The monitor to query.
      *  @param[out] count Where to store the number of video modes in the returned
      *  array.  This is set to zero if an error occurred.
-     *  @return An array of video modes, or `NULL` if an
+     *  @return An array of video modes, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -2919,7 +2919,7 @@ extern "C"
      *  will depend on whether that window is iconified.
      *
      *  @param[in] monitor The monitor to query.
-     *  @return The current mode of the monitor, or `NULL` if an
+     *  @return The current mode of the monitor, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -2974,7 +2974,7 @@ extern "C"
      *  This function returns the current gamma ramp of the specified monitor.
      *
      *  @param[in] monitor The monitor to query.
-     *  @return The current gamma ramp, or `NULL` if an
+     *  @return The current gamma ramp, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref GRWL_PLATFORM_ERROR
@@ -2982,7 +2982,7 @@ extern "C"
      *
      *  @remark @wayland Gamma handling is a privileged protocol, this function
      *  will thus never be implemented and emits @ref GRWL_FEATURE_UNAVAILABLE while
-     *  returning `NULL`.
+     *  returning `nullptr`.
      *
      *  @pointer_lifetime The returned structure and its arrays are allocated and
      *  freed by GRWL.  You should not free them yourself.  They are valid until the
@@ -3178,11 +3178,11 @@ extern "C"
      *  @param[in] height The desired height, in screen coordinates, of the window.
      *  This must be greater than zero.
      *  @param[in] title The initial, UTF-8 encoded window title.
-     *  @param[in] monitor The monitor to use for full screen mode, or `NULL` for
+     *  @param[in] monitor The monitor to use for full screen mode, or `nullptr` for
      *  windowed mode.
-     *  @param[in] share The window whose context to share resources with, or `NULL`
+     *  @param[in] share The window whose context to share resources with, or `nullptr`
      *  to not share resources.
-     *  @return The handle of the created window, or `NULL` if an
+     *  @return The handle of the created window, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -3458,12 +3458,12 @@ extern "C"
      *  @remark @win32 On Windows Vista and earlier, this function will emit
      *  @ref GRWL_FEATURE_UNAVAILABLE.
      *
-     *  @remark @macos Only the Dock icon may contain a badge. Pass a `NULL`
+     *  @remark @macos Only the Dock icon may contain a badge. Pass a `nullptr`
      *  window handle to set it.  Emits @ref GRWL_FEATURE_UNAVAILABLE if a
      *  valid window handle is passed.
      *
      *  @remark @x11 @wayland @win32 Emits GRWL_FEATURE_UNAVAILABLE if a
-     *  `NULL` window handle is passed.
+     *  `nullptr` window handle is passed.
      *
      *  @thread_safety This function must only be called from the main thread.
      *
@@ -3480,12 +3480,12 @@ extern "C"
      *  is not overridden.
      *
      *  @param[in] window The window whose badge to set.
-     *  @param[in] string The text to set, or `NULL` to disable it.
+     *  @param[in] string The text to set, or `nullptr` to disable it.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
      *  GRWL_PLATFORM_ERROR, and @ref GRWL_FEATURE_UNAVAILABLE (see remarks).
      *
-     *  @remark @macos Only the Dock icon may contain a badge. Pass a `NULL`
+     *  @remark @macos Only the Dock icon may contain a badge. Pass a `nullptr`
      *  window handle to set it.  Emits @ref GRWL_FEATURE_UNAVAILABLE if a
      *  valid window handle is passed.
      *
@@ -3502,14 +3502,14 @@ extern "C"
      *  This function retrieves the position, in screen coordinates, of the
      *  upper-left corner of the content area of the specified window.
      *
-     *  Any or all of the position arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` position arguments will be set to zero.
+     *  Any or all of the position arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` position arguments will be set to zero.
      *
      *  @param[in] window The window to query.
      *  @param[out] xpos Where to store the x-coordinate of the upper-left corner of
-     *  the content area, or `NULL`.
+     *  the content area, or `nullptr`.
      *  @param[out] ypos Where to store the y-coordinate of the upper-left corner of
-     *  the content area, or `NULL`.
+     *  the content area, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
      *  GRWL_PLATFORM_ERROR and @ref GRWL_FEATURE_UNAVAILABLE (see remarks).
@@ -3565,14 +3565,14 @@ extern "C"
      *  of the specified window.  If you wish to retrieve the size of the
      *  framebuffer of the window in pixels, see @ref grwlGetFramebufferSize.
      *
-     *  Any or all of the size arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` size arguments will be set to zero.
+     *  Any or all of the size arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` size arguments will be set to zero.
      *
      *  @param[in] window The window whose size to retrieve.
      *  @param[out] width Where to store the width, in screen coordinates, of the
-     *  content area, or `NULL`.
+     *  content area, or `nullptr`.
      *  @param[out] height Where to store the height, in screen coordinates, of the
-     *  content area, or `NULL`.
+     *  content area, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -3712,14 +3712,14 @@ extern "C"
      *  specified window.  If you wish to retrieve the size of the window in screen
      *  coordinates, see @ref grwlGetWindowSize.
      *
-     *  Any or all of the size arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` size arguments will be set to zero.
+     *  Any or all of the size arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` size arguments will be set to zero.
      *
      *  @param[in] window The window whose framebuffer to query.
      *  @param[out] width Where to store the width, in pixels, of the framebuffer,
-     *  or `NULL`.
+     *  or `nullptr`.
      *  @param[out] height Where to store the height, in pixels, of the framebuffer,
-     *  or `NULL`.
+     *  or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -3744,18 +3744,18 @@ extern "C"
      *  the offset along a particular coordinate axis, the retrieved values will
      *  always be zero or positive.
      *
-     *  Any or all of the size arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` size arguments will be set to zero.
+     *  Any or all of the size arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` size arguments will be set to zero.
      *
      *  @param[in] window The window whose frame size to query.
      *  @param[out] left Where to store the size, in screen coordinates, of the left
-     *  edge of the window frame, or `NULL`.
+     *  edge of the window frame, or `nullptr`.
      *  @param[out] top Where to store the size, in screen coordinates, of the top
-     *  edge of the window frame, or `NULL`.
+     *  edge of the window frame, or `nullptr`.
      *  @param[out] right Where to store the size, in screen coordinates, of the
-     *  right edge of the window frame, or `NULL`.
+     *  right edge of the window frame, or `nullptr`.
      *  @param[out] bottom Where to store the size, in screen coordinates, of the
-     *  bottom edge of the window frame, or `NULL`.
+     *  bottom edge of the window frame, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -3783,8 +3783,8 @@ extern "C"
      *  to be on.
      *
      *  @param[in] window The window to query.
-     *  @param[out] xscale Where to store the x-axis content scale, or `NULL`.
-     *  @param[out] yscale Where to store the y-axis content scale, or `NULL`.
+     *  @param[out] xscale Where to store the x-axis content scale, or `nullptr`.
+     *  @param[out] yscale Where to store the y-axis content scale, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -4048,7 +4048,7 @@ extern "C"
      *  in full screen on.
      *
      *  @param[in] window The window to query.
-     *  @return The monitor, or `NULL` if the window is in windowed mode or an
+     *  @return The monitor, or `nullptr` if the window is in windowed mode or an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -4065,13 +4065,13 @@ extern "C"
     /*! @brief Sets the mode, monitor, video mode and placement of a window.
      *
      *  This function sets the monitor that the window uses for full screen mode or,
-     *  if the monitor is `NULL`, makes it windowed mode.
+     *  if the monitor is `nullptr`, makes it windowed mode.
      *
      *  When setting a monitor, this function updates the width, height and refresh
      *  rate of the desired video mode and switches to the video mode closest to it.
      *  The window position is ignored when setting a monitor.
      *
-     *  When the monitor is `NULL`, the position, width and height are used to
+     *  When the monitor is `nullptr`, the position, width and height are used to
      *  place the window content area.  The refresh rate is ignored when no monitor
      *  is specified.
      *
@@ -4083,7 +4083,7 @@ extern "C"
      *  floating, resizable, has size or aspect ratio limits, etc.
      *
      *  @param[in] window The window whose monitor, size or video mode to set.
-     *  @param[in] monitor The desired monitor, or `NULL` to set windowed mode.
+     *  @param[in] monitor The desired monitor, or `nullptr` to set windowed mode.
      *  @param[in] xpos The desired x-coordinate of the upper-left corner of the
      *  content area.
      *  @param[in] ypos The desired y-coordinate of the upper-left corner of the
@@ -4197,7 +4197,7 @@ extern "C"
      *
      *  This function sets the user-defined pointer of the specified window.  The
      *  current value is retained until the window is destroyed.  The initial value
-     *  is `NULL`.
+     *  is `nullptr`.
      *
      *  @param[in] window The window whose pointer to set.
      *  @param[in] pointer The new value.
@@ -4217,7 +4217,7 @@ extern "C"
     /*! @brief Returns the user pointer of the specified window.
      *
      *  This function returns the current value of the user-defined pointer of the
-     *  specified window.  The initial value is `NULL`.
+     *  specified window.  The initial value is `nullptr`.
      *
      *  @param[in] window The window whose pointer to return.
      *
@@ -4241,9 +4241,9 @@ extern "C"
      *  area of the window.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4273,9 +4273,9 @@ extern "C"
      *  in screen coordinates, of the content area of the window.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4307,9 +4307,9 @@ extern "C"
      *  The close callback is not triggered by @ref grwlDestroyWindow.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4343,9 +4343,9 @@ extern "C"
      *  very infrequently or never at all.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4376,9 +4376,9 @@ extern "C"
      *  and @ref grwlSetMouseButtonCallback.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4404,9 +4404,9 @@ extern "C"
      *  is called when the window is iconified or restored.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4432,9 +4432,9 @@ extern "C"
      *  is called when the window is maximized or restored.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4460,9 +4460,9 @@ extern "C"
      *  which is called when the framebuffer of the specified window is resized.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4488,9 +4488,9 @@ extern "C"
      *  which is called when the content scale of the specified window changes.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -4785,7 +4785,7 @@ extern "C"
      *  If the key is `GRWL_KEY_UNKNOWN`, the scancode is used to identify the key,
      *  otherwise the scancode is ignored.  If you specify a non-printable key, or
      *  `GRWL_KEY_UNKNOWN` and a scancode that maps to a non-printable key, this
-     *  function returns `NULL` but does not emit an error.
+     *  function returns `nullptr` but does not emit an error.
      *
      *  This behavior allows you to always pass in the arguments in the
      *  [key callback](@ref input_key) without modification.
@@ -4824,7 +4824,7 @@ extern "C"
      *
      *  @param[in] key The key to query, or `GRWL_KEY_UNKNOWN`.
      *  @param[in] scancode The scancode of the key to query.
-     *  @return The UTF-8 encoded, layout-specific name of the key, or `NULL`.
+     *  @return The UTF-8 encoded, layout-specific name of the key, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -4875,7 +4875,7 @@ extern "C"
      *  is provided by the operating system and may not be identical for a given
      *  layout across platforms.
      *
-     *  @return The UTF-8 encoded name of the current keyboard layout, or `NULL` if
+     *  @return The UTF-8 encoded name of the current keyboard layout, or `nullptr` if
      *  an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_PLATFORM_ERROR and @ref
@@ -4904,9 +4904,9 @@ extern "C"
      *  application's windows get input focus.  Layout changes may not be reported
      *  while other applications have input focus.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5002,14 +5002,14 @@ extern "C"
      *  `floor` function.  Casting directly to an integer type works for positive
      *  coordinates, but fails for negative ones.
      *
-     *  Any or all of the position arguments may be `NULL`.  If an error occurs, all
-     *  non-`NULL` position arguments will be set to zero.
+     *  Any or all of the position arguments may be `nullptr`.  If an error occurs, all
+     *  non-`nullptr` position arguments will be set to zero.
      *
      *  @param[in] window The desired window.
      *  @param[out] xpos Where to store the cursor x-coordinate, relative to the
-     *  left edge of the content area, or `NULL`.
+     *  left edge of the content area, or `nullptr`.
      *  @param[out] ypos Where to store the cursor y-coordinate, relative to the to
-     *  top edge of the content area, or `NULL`.
+     *  top edge of the content area, or `nullptr`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_PLATFORM_ERROR.
@@ -5078,7 +5078,7 @@ extern "C"
      *  @param[in] image The desired cursor image.
      *  @param[in] xhot The desired x-coordinate, in pixels, of the cursor hotspot.
      *  @param[in] yhot The desired y-coordinate, in pixels, of the cursor hotspot.
-     *  @return The handle of the created cursor, or `NULL` if an
+     *  @return The handle of the created cursor, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5124,10 +5124,10 @@ extern "C"
      *  2) This uses a newer standard that not all cursor themes support.
      *
      *  If the requested shape is not available, this function emits a @ref
-     *  GRWL_CURSOR_UNAVAILABLE error and returns `NULL`.
+     *  GRWL_CURSOR_UNAVAILABLE error and returns `nullptr`.
      *
      *  @param[in] shape One of the [standard shapes](@ref shapes).
-     *  @return A new cursor ready to use or `NULL` if an
+     *  @return A new cursor ready to use or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5179,7 +5179,7 @@ extern "C"
      *  has input focus.
      *
      *  @param[in] window The window to set the cursor for.
-     *  @param[in] cursor The cursor to set, or `NULL` to switch back to the default
+     *  @param[in] cursor The cursor to set, or `nullptr` to switch back to the default
      *  arrow cursor.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -5304,9 +5304,9 @@ extern "C"
      *  scancode may be zero.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new key callback, or `NULL` to remove the currently
+     *  @param[in] callback The new key callback, or `nullptr` to remove the currently
      *  set callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5344,9 +5344,9 @@ extern "C"
      *  on Windows.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5382,9 +5382,9 @@ extern "C"
      *  [key callback](@ref grwlSetKeyCallback) instead.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or an
+     *  @return The previously set callback, or `nullptr` if no callback was set or an
      *  [error](@ref error_handling) occurred.
      *
      *  @callback_signature
@@ -5416,9 +5416,9 @@ extern "C"
      *  with IME.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] cbfun The new callback, or `NULL` to remove the currently set
+     *  @param[in] cbfun The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or an
+     *  @return The previously set callback, or `nullptr` if no callback was set or an
      *  error occurred.
      *
      *  @callback_signature
@@ -5452,9 +5452,9 @@ extern "C"
      *  window, which is called when an IME is switched on and off.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] cbfun The new callback, or `NULL` to remove the currently set
+     *  @param[in] cbfun The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or an
+     *  @return The previously set callback, or `nullptr` if no callback was set or an
      *  error occurred.
      *
      *  @callback_signature
@@ -5489,9 +5489,9 @@ extern "C"
      *  and stop the IME from managing it.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] cbfun The new callback, or `NULL` to remove the currently set
+     *  @param[in] cbfun The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or an
+     *  @return The previously set callback, or `nullptr` if no callback was set or an
      *  error occurred.
      *
      *  @callback_signature
@@ -5530,9 +5530,9 @@ extern "C"
      *  [window focus callback](@ref grwlSetWindowFocusCallback) has been called.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5560,9 +5560,9 @@ extern "C"
      *  content area of the window.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5589,9 +5589,9 @@ extern "C"
      *  the window.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5621,9 +5621,9 @@ extern "C"
      *  wheel or a touchpad scrolling area.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new scroll callback, or `NULL` to remove the
+     *  @param[in] callback The new scroll callback, or `nullptr` to remove the
      *  currently set callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5654,9 +5654,9 @@ extern "C"
      *  make a deep copy.
      *
      *  @param[in] window The window whose callback to set.
-     *  @param[in] callback The new file drop callback, or `NULL` to remove the
+     *  @param[in] callback The new file drop callback, or `nullptr` to remove the
      *  currently set callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -5705,7 +5705,7 @@ extern "C"
      *  This function returns the values of all axes of the specified joystick.
      *  Each element in the array is a value between -1.0 and 1.0.
      *
-     *  If the specified joystick is not present this function will return `NULL`
+     *  If the specified joystick is not present this function will return `nullptr`
      *  but will not generate an error.  This can be used instead of first calling
      *  @ref grwlJoystickPresent.
      *
@@ -5713,7 +5713,7 @@ extern "C"
      *  @param[out] count Where to store the number of axis values in the returned
      *  array.  This is set to zero if the joystick is not present or an error
      *  occurred.
-     *  @return An array of axis values, or `NULL` if the joystick is not present or
+     *  @return An array of axis values, or `nullptr` if the joystick is not present or
      *  an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5743,7 +5743,7 @@ extern "C"
      *  _left_.  To disable these extra buttons, set the @ref
      *  GRWL_JOYSTICK_HAT_BUTTONS init hint before initialization.
      *
-     *  If the specified joystick is not present this function will return `NULL`
+     *  If the specified joystick is not present this function will return `nullptr`
      *  but will not generate an error.  This can be used instead of first calling
      *  @ref grwlJoystickPresent.
      *
@@ -5751,7 +5751,7 @@ extern "C"
      *  @param[out] count Where to store the number of button states in the returned
      *  array.  This is set to zero if the joystick is not present or an error
      *  occurred.
-     *  @return An array of button states, or `NULL` if the joystick is not present
+     *  @return An array of button states, or `nullptr` if the joystick is not present
      *  or an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5797,7 +5797,7 @@ extern "C"
      *  }
      *  @endcode
      *
-     *  If the specified joystick is not present this function will return `NULL`
+     *  If the specified joystick is not present this function will return `nullptr`
      *  but will not generate an error.  This can be used instead of first calling
      *  @ref grwlJoystickPresent.
      *
@@ -5805,7 +5805,7 @@ extern "C"
      *  @param[out] count Where to store the number of hat states in the returned
      *  array.  This is set to zero if the joystick is not present or an error
      *  occurred.
-     *  @return An array of hat states, or `NULL` if the joystick is not present
+     *  @return An array of hat states, or `nullptr` if the joystick is not present
      *  or an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5830,12 +5830,12 @@ extern "C"
      *  The returned string is allocated and freed by GRWL.  You should not free it
      *  yourself.
      *
-     *  If the specified joystick is not present this function will return `NULL`
+     *  If the specified joystick is not present this function will return `nullptr`
      *  but will not generate an error.  This can be used instead of first calling
      *  @ref grwlJoystickPresent.
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
-     *  @return The UTF-8 encoded name of the joystick, or `NULL` if the joystick
+     *  @return The UTF-8 encoded name of the joystick, or `nullptr` if the joystick
      *  is not present or an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5863,7 +5863,7 @@ extern "C"
      *  joystick will always have a GUID even if there is no gamepad mapping
      *  assigned to it.
      *
-     *  If the specified joystick is not present this function will return `NULL`
+     *  If the specified joystick is not present this function will return `nullptr`
      *  but will not generate an error.  This can be used instead of first calling
      *  @ref grwlJoystickPresent.
      *
@@ -5874,7 +5874,7 @@ extern "C"
      *  depending on what hardware information the platform specific APIs provide.
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
-     *  @return The UTF-8 encoded GUID of the joystick, or `NULL` if the joystick
+     *  @return The UTF-8 encoded GUID of the joystick, or `nullptr` if the joystick
      *  is not present or an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -5896,7 +5896,7 @@ extern "C"
      *
      *  This function sets the user-defined pointer of the specified joystick.  The
      *  current value is retained until the joystick is disconnected.  The initial
-     *  value is `NULL`.
+     *  value is `nullptr`.
      *
      *  This function may be called from the joystick callback, even for a joystick
      *  that is being disconnected.
@@ -5919,7 +5919,7 @@ extern "C"
     /*! @brief Returns the user pointer of the specified joystick.
      *
      *  This function returns the current value of the user-defined pointer of the
-     *  specified joystick.  The initial value is `NULL`.
+     *  specified joystick.  The initial value is `nullptr`.
      *
      *  This function may be called from the joystick callback, even for a joystick
      *  that is being disconnected.
@@ -5976,9 +5976,9 @@ extern "C"
      *  called by joystick functions.  The function will then return whatever it
      *  returns if the joystick is not present.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -6008,9 +6008,9 @@ extern "C"
      *  you need to call one of the [event processing](@ref events)
      *  functions.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -6039,9 +6039,9 @@ extern "C"
      *  you need to call one of the [event processing](@ref events)
      *  functions.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -6070,9 +6070,9 @@ extern "C"
      *  you need to call one of the [event processing](@ref events)
      *  functions.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -6101,9 +6101,9 @@ extern "C"
      *  you need to call one of the [event processing](@ref events)
      *  functions.
      *
-     *  @param[in] callback The new callback, or `NULL` to remove the currently set
+     *  @param[in] callback The new callback, or `nullptr` to remove the currently set
      *  callback.
-     *  @return The previously set callback, or `NULL` if no callback was set or the
+     *  @return The previously set callback, or `nullptr` if no callback was set or the
      *  library had not been [initialized](@ref intro_init).
      *
      *  @callback_signature
@@ -6161,12 +6161,12 @@ extern "C"
      *  gamepad mapping assigned to the specified joystick.
      *
      *  If the specified joystick is not present or does not have a gamepad mapping
-     *  this function will return `NULL` but will not generate an error.  Call
+     *  this function will return `nullptr` but will not generate an error.  Call
      *  @ref grwlJoystickPresent to check whether it is present regardless of
      *  whether it has a mapping.
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
-     *  @return The UTF-8 encoded name of the gamepad, or `NULL` if the
+     *  @return The UTF-8 encoded name of the gamepad, or `nullptr` if the
      *  joystick is not present, does not have a mapping or an
      *  [error](@ref error_handling) occurred.
      *
@@ -6226,7 +6226,7 @@ extern "C"
      *  This function sets the system clipboard to the specified, UTF-8 encoded
      *  string.
      *
-     *  @param[in] window Deprecated.  Any valid window or `NULL`.
+     *  @param[in] window Deprecated.  Any valid window or `nullptr`.
      *  @param[in] string A UTF-8 encoded string.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -6248,11 +6248,11 @@ extern "C"
      *
      *  This function returns the contents of the system clipboard, if it contains
      *  or is convertible to a UTF-8 encoded string.  If the clipboard is empty or
-     *  if its contents cannot be converted, `NULL` is returned and a @ref
+     *  if its contents cannot be converted, `nullptr` is returned and a @ref
      *  GRWL_FORMAT_UNAVAILABLE error is generated.
      *
-     *  @param[in] window Deprecated.  Any valid window or `NULL`.
-     *  @return The contents of the clipboard as a UTF-8 encoded string, or `NULL`
+     *  @param[in] window Deprecated.  Any valid window or `nullptr`.
+     *  @return The contents of the clipboard as a UTF-8 encoded string, or `nullptr`
      *  if an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -6390,7 +6390,7 @@ extern "C"
      *  a window without a context will generate a @ref GRWL_NO_WINDOW_CONTEXT
      *  error.
      *
-     *  @param[in] window The window whose context to make current, or `NULL` to
+     *  @param[in] window The window whose context to make current, or `nullptr` to
      *  detach the current context.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -6413,7 +6413,7 @@ extern "C"
      *  This function returns the window whose OpenGL or OpenGL ES context is
      *  current on the calling thread.
      *
-     *  @return The window whose context is current, or `NULL` if no window's
+     *  @return The window whose context is current, or `nullptr` if no window's
      *  context is current.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -6553,7 +6553,7 @@ extern "C"
      *  `vkGetDeviceProcAddr` instead.
      *
      *  @param[in] procname The ASCII encoded name of the function.
-     *  @return The address of the function, or `NULL` if an
+     *  @return The address of the function, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -6562,7 +6562,7 @@ extern "C"
      *  @remark The address of a given function is not guaranteed to be the same
      *  between contexts.
      *
-     *  @remark This function may return a non-`NULL` address despite the
+     *  @remark This function may return a non-`nullptr` address despite the
      *  associated version or extension not being available.  Always check the
      *  context version or extension string first.
      *
@@ -6595,13 +6595,13 @@ extern "C"
      *  user context created for that window.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED,
-     *  @ref GRWL_INVALID_VALUE the window parameter is `NULL`,
+     *  @ref GRWL_INVALID_VALUE the window parameter is `nullptr`,
      *  @ref GRWL_NO_WINDOW_CONTEXT if the window has no OpenGL or
      *  OpenGL US context, and @ref GRWL_PLATFORM_ERROR.
      *
      *  @param[in] window The Window for which the user context is to be
      *  created.
-     *  @return The handle of the user context created, or `NULL` if an
+     *  @return The handle of the user context created, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @thread_safety This function must only be called from the main thread.
@@ -6668,7 +6668,7 @@ extern "C"
      *  [GRWL_CONTEXT_RELEASE_BEHAVIOR](@ref GRWL_CONTEXT_RELEASE_BEHAVIOR_hint)
      *  hint.
      *
-     *  @param[in] context The user context to make current, or `NULL` to
+     *  @param[in] context The user context to make current, or `nullptr` to
      *  detach the current context.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED,
@@ -6692,7 +6692,7 @@ extern "C"
      *  This function returns the user context which is current
      *  on the calling thread.
      *
-     *  @return The user context current, or `NULL` if no user context
+     *  @return The user context current, or `nullptr` if no user context
      *  is current.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -6742,17 +6742,17 @@ extern "C"
      *  additional extensions you can pass this list directly to the
      *  `VkInstanceCreateInfo` struct.
      *
-     *  If Vulkan is not available on the machine, this function returns `NULL` and
+     *  If Vulkan is not available on the machine, this function returns `nullptr` and
      *  generates a @ref GRWL_API_UNAVAILABLE error.  Call @ref grwlVulkanSupported
      *  to check whether Vulkan is at least minimally available.
      *
      *  If Vulkan is available but no set of extensions allowing window surface
-     *  creation was found, this function returns `NULL`.  You may still use Vulkan
+     *  creation was found, this function returns `nullptr`.  You may still use Vulkan
      *  for off-screen rendering and compute work.
      *
      *  @param[out] count Where to store the number of extensions in the returned
      *  array.  This is set to zero if an error occurred.
-     *  @return An array of ASCII encoded extension names, or `NULL` if an
+     *  @return An array of ASCII encoded extension names, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -6781,7 +6781,7 @@ extern "C"
     /*! @brief Returns the address of the specified Vulkan instance function.
      *
      *  This function returns the address of the specified Vulkan core or extension
-     *  function for the specified instance.  If instance is set to `NULL` it can
+     *  function for the specified instance.  If instance is set to `nullptr` it can
      *  return any function exported from the Vulkan loader, including at least the
      *  following functions:
      *
@@ -6790,17 +6790,17 @@ extern "C"
      *  - `vkCreateInstance`
      *  - `vkGetInstanceProcAddr`
      *
-     *  If Vulkan is not available on the machine, this function returns `NULL` and
+     *  If Vulkan is not available on the machine, this function returns `nullptr` and
      *  generates a @ref GRWL_API_UNAVAILABLE error.  Call @ref grwlVulkanSupported
      *  to check whether Vulkan is at least minimally available.
      *
      *  This function is equivalent to calling `vkGetInstanceProcAddr` with
      *  a platform-specific query of the Vulkan loader as a fallback.
      *
-     *  @param[in] instance The Vulkan instance to query, or `NULL` to retrieve
+     *  @param[in] instance The Vulkan instance to query, or `nullptr` to retrieve
      *  functions related to instance creation.
      *  @param[in] procname The ASCII encoded name of the function.
-     *  @return The address of the function, or `NULL` if an
+     *  @return The address of the function, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -6881,7 +6881,7 @@ extern "C"
      *
      *  @param[in] instance The Vulkan instance to create the surface in.
      *  @param[in] window The window to create the surface for.
-     *  @param[in] allocator The allocator to use, or `NULL` to use the default
+     *  @param[in] allocator The allocator to use, or `nullptr` to use the default
      *  allocator.
      *  @param[out] surface Where to store the handle of the surface.  This is set
      *  to `VK_NULL_HANDLE` if an error occurred.
@@ -6930,7 +6930,7 @@ extern "C"
      *
      *  This function creates a WGPUSurface object for the specified window.
      *
-     *  If the surface cannot be created, this function returns `NULL`.
+     *  If the surface cannot be created, this function returns `nullptr`.
      *
      *  It is the responsibility of the caller to destroy the window surface. The
      *  window surface must be destroyed using `wgpuSurfaceDrop` (wgpu-native) or
@@ -6938,7 +6938,7 @@ extern "C"
      *
      *  @param[in] instance The WebGPU instance to create the surface in.
      *  @param[in] window The window to create the surface for.
-     *  @return The handle of the surface.  This is set to `NULL` if an error
+     *  @return The handle of the surface.  This is set to `nullptr` if an error
      *  occurred.
      *
      *  @ingroup webgpu

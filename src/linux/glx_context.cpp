@@ -131,7 +131,7 @@ static bool chooseGLXFBConfig(const _GRWLfbconfig* desired, GLXFBConfig* result)
     XFree(nativeConfigs);
     _grwl_free(usableConfigs);
 
-    return closest != NULL;
+    return closest != nullptr;
 }
 
 // Create the OpenGL context using legacy API
@@ -153,7 +153,7 @@ static void makeContextCurrentGLX(_GRWLwindow* window)
     }
     else
     {
-        if (!glXMakeCurrent(_grwl.x11.display, None, NULL))
+        if (!glXMakeCurrent(_grwl.x11.display, None, nullptr))
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "GLX: Failed to clear current context");
             return;
@@ -233,7 +233,7 @@ static void destroyContextGLX(_GRWLwindow* window)
     if (window->context.glx.handle)
     {
         glXDestroyContext(_grwl.x11.display, window->context.glx.handle);
-        window->context.glx.handle = NULL;
+        window->context.glx.handle = nullptr;
     }
 }
 
@@ -257,7 +257,7 @@ bool _grwlInitGLX()
         "libGL.so.1",
         "libGL.so",
     #endif
-        NULL
+        nullptr
     };
 
     if (_grwl.glx.handle)
@@ -429,7 +429,7 @@ void _grwlTerminateGLX()
     if (_grwl.glx.handle)
     {
         _grwlPlatformFreeModule(_grwl.glx.handle);
-        _grwl.glx.handle = NULL;
+        _grwl.glx.handle = nullptr;
     }
 }
 
@@ -445,7 +445,7 @@ void _grwlTerminateGLX()
 bool _grwlCreateContextForFBGLX(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, GLXContext* context)
 {
     int attribs[40];
-    GLXContext share = NULL;
+    GLXContext share = nullptr;
 
     if (ctxconfig->share)
     {
@@ -625,7 +625,7 @@ bool _grwlCreateContextGLX(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
     }
 
     window->context.glx.window =
-        glXCreateWindow(_grwl.x11.display, window->context.glx.fbconfig, window->x11.handle, NULL);
+        glXCreateWindow(_grwl.x11.display, window->context.glx.fbconfig, window->x11.handle, nullptr);
     if (!window->context.glx.window)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "GLX: Failed to create window");
@@ -677,7 +677,7 @@ static void _grwlMakeUserContextCurrentGLX(_GRWLusercontext* context)
     if (!glXMakeCurrent(_grwl.x11.display, context->window->context.glx.window, context->glx.handle))
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "GLX: Failed to make user context current");
-        _grwlPlatformSetTls(&_grwl.usercontextSlot, NULL);
+        _grwlPlatformSetTls(&_grwl.usercontextSlot, nullptr);
         return;
     }
     _grwlPlatformSetTls(&_grwl.usercontextSlot, context);
@@ -704,7 +704,7 @@ _GRWLusercontext* _grwlCreateUserContextGLX(_GRWLwindow* window)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "GLX: Failed to create user OpenGL context");
         free(context);
-        return NULL;
+        return nullptr;
     }
 
     context->makeCurrent = _grwlMakeUserContextCurrentGLX;
@@ -720,18 +720,18 @@ _GRWLusercontext* _grwlCreateUserContextGLX(_GRWLwindow* window)
 GRWLAPI GLXContext grwlGetGLXContext(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (_grwl.platform.platformID != GRWL_PLATFORM_X11)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "GLX: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     if (window->context.source != GRWL_NATIVE_CONTEXT_API)
     {
-        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
-        return NULL;
+        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
+        return nullptr;
     }
 
     return window->context.glx.handle;
@@ -750,7 +750,7 @@ GRWLAPI GLXWindow grwlGetGLXWindow(GRWLwindow* handle)
 
     if (window->context.source != GRWL_NATIVE_CONTEXT_API)
     {
-        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
+        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
         return None;
     }
 

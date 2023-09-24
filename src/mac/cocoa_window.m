@@ -80,7 +80,7 @@ static void updateCursorMode(_GRWLwindow* window)
     }
     else if (_grwl.ns.disabledCursorWindow == window)
     {
-        _grwl.ns.disabledCursorWindow = NULL;
+        _grwl.ns.disabledCursorWindow = nullptr;
         _grwlSetCursorPosCocoa(window, _grwl.ns.restoreCursorPosX, _grwl.ns.restoreCursorPosY);
         // NOTE: The matching CGAssociateMouseAndMouseCursorPosition call is
         //       made in _grwlSetCursorPosCocoa as part of a workaround
@@ -115,7 +115,7 @@ static void releaseMonitor(_GRWLwindow* window)
         return;
     }
 
-    _grwlInputMonitorWindow(window->monitor, NULL);
+    _grwlInputMonitorWindow(window->monitor, nullptr);
     _grwlRestoreVideoModeCocoa(window->monitor);
 }
 
@@ -781,7 +781,7 @@ static void setDockProgressIndicator(int progressState, double value)
     if (textBufferCount != preedit->textBufferCount)
     {
         unsigned int* preeditText = _grwl_realloc(preedit->text, sizeof(unsigned int) * textBufferCount);
-        if (preeditText == NULL)
+        if (preeditText == nullptr)
         {
             return;
         }
@@ -808,7 +808,7 @@ static void setDockProgressIndicator(int progressState, double value)
         {
             int blockBufferCount = (preedit->blockSizesBufferCount == 0) ? 1 : preedit->blockSizesBufferCount * 2;
             int* blocks = _grwl_realloc(preedit->blockSizes, sizeof(int) * blockBufferCount);
-            if (blocks == NULL)
+            if (blocks == nullptr)
             {
                 return;
             }
@@ -829,7 +829,7 @@ static void setDockProgressIndicator(int progressState, double value)
 
         if ([markedTextString getBytes:&codepoint
                              maxLength:sizeof(codepoint)
-                            usedLength:NULL
+                            usedLength:nullptr
                               encoding:NSUTF32StringEncoding
                                options:0
                                  range:range
@@ -917,7 +917,7 @@ static void setDockProgressIndicator(int progressState, double value)
 
         if ([characters getBytes:&codepoint
                        maxLength:sizeof(codepoint)
-                      usedLength:NULL
+                      usedLength:nullptr
                         encoding:NSUTF32StringEncoding
                          options:0
                            range:range
@@ -1227,7 +1227,7 @@ void _grwlDestroyWindowCocoa(_GRWLwindow* window)
 
         if (_grwl.ns.disabledCursorWindow == window)
         {
-            _grwl.ns.disabledCursorWindow = NULL;
+            _grwl.ns.disabledCursorWindow = nullptr;
         }
 
         [[NSNotificationCenter defaultCenter] removeObserver:window->ns.delegate];
@@ -1348,10 +1348,10 @@ void _grwlSetWindowProgressIndicatorCocoa(_GRWLwindow* window, int progressState
 
 void _grwlSetWindowBadgeCocoa(_GRWLwindow* window, int count)
 {
-    if (window != NULL)
+    if (window != nullptr)
     {
         _grwlInputError(GRWL_FEATURE_UNAVAILABLE,
-                        "Cocoa: Cannot set a badge for a window. Pass NULL to set the Dock badge.");
+                        "Cocoa: Cannot set a badge for a window. Pass nullptr to set the Dock badge.");
         return;
     }
 
@@ -1377,13 +1377,13 @@ void _grwlSetWindowBadgeCocoa(_GRWLwindow* window, int count)
 
 void _grwlSetWindowBadgeStringCocoa(_GRWLwindow* window, const char* string)
 {
-    if (window != NULL)
+    if (window != nullptr)
     {
         _grwlInputError(GRWL_FEATURE_UNAVAILABLE,
-                        "Cocoa: Cannot set a badge for a window. Pass NULL to set for the application.");
+                        "Cocoa: Cannot set a badge for a window. Pass nullptr to set for the application.");
     }
 
-    if (string == NULL)
+    if (string == nullptr)
     {
         [NSApp dockTile].badgeLabel = nil;
         return;
@@ -2111,13 +2111,13 @@ const char* _grwlGetScancodeNameCocoa(int scancode)
         if (scancode < 0 || scancode > 0xff || _grwl.ns.keycodes[scancode] == GRWL_KEY_UNKNOWN)
         {
             _grwlInputError(GRWL_INVALID_VALUE, "Invalid scancode %i", scancode);
-            return NULL;
+            return nullptr;
         }
 
         if (!_grwl.ns.unicodeData)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Keyboard Unicode data missing");
-            return NULL;
+            return nullptr;
         }
 
         const int key = _grwl.ns.keycodes[scancode];
@@ -2130,12 +2130,12 @@ const char* _grwlGetScancodeNameCocoa(int scancode)
                            kUCKeyTranslateNoDeadKeysBit, &deadKeyState, sizeof(characters) / sizeof(characters[0]),
                            &characterCount, characters) != noErr)
         {
-            return NULL;
+            return nullptr;
         }
 
         if (!characterCount)
         {
-            return NULL;
+            return nullptr;
         }
 
         CFStringRef string =
@@ -2161,7 +2161,7 @@ const char* _grwlGetKeyboardLayoutNameCocoa()
     {
         CFRelease(source);
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to retrieve keyboard layout name");
-        return NULL;
+        return nullptr;
     }
 
     free(_grwl.ns.keyboardLayoutName);
@@ -2179,7 +2179,7 @@ bool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int xho
         NSImage* native;
         NSBitmapImageRep* rep;
 
-        rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+        rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nullptr
                                                       pixelsWide:image->width
                                                       pixelsHigh:image->height
                                                    bitsPerSample:8
@@ -2221,7 +2221,7 @@ bool _grwlCreateStandardCursorCocoa(_GRWLcursor* cursor, int shape)
     @autoreleasepool
     {
 
-        SEL cursorSelector = NULL;
+        SEL cursorSelector = nullptr;
 
         // HACK: Try to use a private message
         switch (shape)
@@ -2334,14 +2334,14 @@ const char* _grwlGetClipboardStringCocoa()
         if (![[pasteboard types] containsObject:NSPasteboardTypeString])
         {
             _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "Cocoa: Failed to retrieve string from pasteboard");
-            return NULL;
+            return nullptr;
         }
 
         NSString* object = [pasteboard stringForType:NSPasteboardTypeString];
         if (!object)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to retrieve object from pasteboard");
-            return NULL;
+            return nullptr;
         }
 
         _grwl_free(_grwl.ns.clipboardString);
@@ -2629,7 +2629,7 @@ _GRWLusercontext* _grwlCreateUserContextCocoa(_GRWLwindow* window)
         return _grwlCreateUserContextEGL(window);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2644,7 +2644,7 @@ GRWLAPI id grwlGetCocoaWindow(GRWLwindow* handle)
     if (_grwl.platform.platformID != GRWL_PLATFORM_COCOA)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "Cocoa: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     return window->ns.object;

@@ -90,7 +90,7 @@ static void createMenuBar()
     NSMenu* bar = [[NSMenu alloc] init];
     [NSApp setMainMenu:bar];
 
-    NSMenuItem* appMenuItem = [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenuItem* appMenuItem = [bar addItemWithTitle:@"" action:nullptr keyEquivalent:@""];
     NSMenu* appMenu = [[NSMenu alloc] init];
     [appMenuItem setSubmenu:appMenu];
 
@@ -100,7 +100,7 @@ static void createMenuBar()
     [appMenu addItem:[NSMenuItem separatorItem]];
     NSMenu* servicesMenu = [[NSMenu alloc] init];
     [NSApp setServicesMenu:servicesMenu];
-    [[appMenu addItemWithTitle:@"Services" action:NULL keyEquivalent:@""] setSubmenu:servicesMenu];
+    [[appMenu addItemWithTitle:@"Services" action:nullptr keyEquivalent:@""] setSubmenu:servicesMenu];
     [servicesMenu release];
     [appMenu addItem:[NSMenuItem separatorItem]];
     [appMenu addItemWithTitle:[NSString stringWithFormat:@"Hide %@", appName]
@@ -114,7 +114,7 @@ static void createMenuBar()
                        action:@selector(terminate:)
                 keyEquivalent:@"q"];
 
-    NSMenuItem* windowMenuItem = [bar addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    NSMenuItem* windowMenuItem = [bar addItemWithTitle:@"" action:nullptr keyEquivalent:@""];
     [bar release];
     NSMenu* windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
     [NSApp setWindowsMenu:windowMenu];
@@ -451,13 +451,13 @@ void* _grwlLoadLocalVulkanLoaderCocoa()
     CFBundleRef bundle = CFBundleGetMainBundle();
     if (!bundle)
     {
-        return NULL;
+        return nullptr;
     }
 
     CFURLRef frameworksUrl = CFBundleCopyPrivateFrameworksURL(bundle);
     if (!frameworksUrl)
     {
-        return NULL;
+        return nullptr;
     }
 
     CFURLRef loaderUrl =
@@ -465,11 +465,11 @@ void* _grwlLoadLocalVulkanLoaderCocoa()
     if (!loaderUrl)
     {
         CFRelease(frameworksUrl);
-        return NULL;
+        return nullptr;
     }
 
     char path[PATH_MAX];
-    void* handle = NULL;
+    void* handle = nullptr;
 
     if (CFURLGetFileSystemRepresentation(loaderUrl, true, (UInt8*)path, sizeof(path) - 1))
     {
@@ -667,20 +667,20 @@ void _grwlTerminateCocoa()
         if (_grwl.ns.keyboardLayout)
         {
             CFRelease(_grwl.ns.keyboardLayout);
-            _grwl.ns.keyboardLayout = NULL;
-            _grwl.ns.unicodeData = NULL;
+            _grwl.ns.keyboardLayout = nullptr;
+            _grwl.ns.unicodeData = nullptr;
         }
 
         if (_grwl.ns.inputSource)
         {
             CFRelease(_grwl.ns.inputSource);
-            _grwl.ns.inputSource = NULL;
+            _grwl.ns.inputSource = nullptr;
         }
 
         if (_grwl.ns.eventSource)
         {
             CFRelease(_grwl.ns.eventSource);
-            _grwl.ns.eventSource = NULL;
+            _grwl.ns.eventSource = nullptr;
         }
 
         if (_grwl.ns.delegate)

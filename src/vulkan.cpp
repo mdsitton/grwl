@@ -21,7 +21,6 @@ bool _grwlInitVulkan(int mode)
     VkResult err;
     VkExtensionProperties* ep;
     PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
-    uint32_t i, count;
 
     if (_grwl.vk.available)
     {
@@ -71,7 +70,7 @@ bool _grwlInitVulkan(int mode)
     }
 
     vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(
-        NULL, "vkEnumerateInstanceExtensionProperties");
+        nullptr, "vkEnumerateInstanceExtensionProperties");
     if (!vkEnumerateInstanceExtensionProperties)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Failed to retrieve vkEnumerateInstanceExtensionProperties");
@@ -80,7 +79,8 @@ bool _grwlInitVulkan(int mode)
         return false;
     }
 
-    err = vkEnumerateInstanceExtensionProperties(NULL, &count, NULL);
+    uint32_t count;
+    err = vkEnumerateInstanceExtensionProperties(nullptr, &count, nullptr);
     if (err)
     {
         // NOTE: This happens on systems with a loader but without any Vulkan ICD
@@ -96,7 +96,7 @@ bool _grwlInitVulkan(int mode)
 
     ep = (VkExtensionProperties*)_grwl_calloc(count, sizeof(VkExtensionProperties));
 
-    err = vkEnumerateInstanceExtensionProperties(NULL, &count, ep);
+    err = vkEnumerateInstanceExtensionProperties(nullptr, &count, ep);
     if (err)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Failed to query instance extensions: %s",
@@ -107,7 +107,7 @@ bool _grwlInitVulkan(int mode)
         return false;
     }
 
-    for (i = 0; i < count; i++)
+    for (uint32_t i = 0; i < count; i++)
     {
         if (strcmp(ep[i].extensionName, "VK_KHR_surface") == 0)
         {
@@ -223,20 +223,20 @@ GRWLAPI int grwlVulkanSupported()
 
 GRWLAPI const char** grwlGetRequiredInstanceExtensions(uint32_t* count)
 {
-    assert(count != NULL);
+    assert(count != nullptr);
 
     *count = 0;
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (!_grwlInitVulkan(_GRWL_REQUIRE_LOADER))
     {
-        return NULL;
+        return nullptr;
     }
 
     if (!_grwl.vk.extensions[0])
     {
-        return NULL;
+        return nullptr;
     }
 
     *count = 2;
@@ -246,13 +246,13 @@ GRWLAPI const char** grwlGetRequiredInstanceExtensions(uint32_t* count)
 GRWLAPI GRWLvkproc grwlGetInstanceProcAddress(VkInstance instance, const char* procname)
 {
     GRWLvkproc proc;
-    assert(procname != NULL);
+    assert(procname != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (!_grwlInitVulkan(_GRWL_REQUIRE_LOADER))
     {
-        return NULL;
+        return nullptr;
     }
 
     // NOTE: Vulkan 1.0 and 1.1 vkGetInstanceProcAddr cannot return itself
@@ -299,8 +299,8 @@ GRWLAPI VkResult grwlCreateWindowSurface(VkInstance instance, GRWLwindow* handle
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
     assert(instance != VK_NULL_HANDLE);
-    assert(window != NULL);
-    assert(surface != NULL);
+    assert(window != nullptr);
+    assert(surface != nullptr);
 
     *surface = VK_NULL_HANDLE;
 

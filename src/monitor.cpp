@@ -80,7 +80,7 @@ static bool refreshVideoModes(_GRWLmonitor* monitor)
 //
 void _grwlInputMonitor(_GRWLmonitor* monitor, int action, int placement)
 {
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
     assert(action == GRWL_CONNECTED || action == GRWL_DISCONNECTED);
     assert(placement == _GRWL_INSERT_FIRST || placement == _GRWL_INSERT_LAST);
 
@@ -101,22 +101,19 @@ void _grwlInputMonitor(_GRWLmonitor* monitor, int action, int placement)
     }
     else if (action == GRWL_DISCONNECTED)
     {
-        int i;
-        _GRWLwindow* window;
-
-        for (window = _grwl.windowListHead; window; window = window->next)
+        for (_GRWLwindow* window = _grwl.windowListHead; window; window = window->next)
         {
             if (window->monitor == monitor)
             {
                 int width, height, xoff, yoff;
                 _grwl.platform.getWindowSize(window, &width, &height);
-                _grwl.platform.setWindowMonitor(window, NULL, 0, 0, width, height, 0);
-                _grwl.platform.getWindowFrameSize(window, &xoff, &yoff, NULL, NULL);
+                _grwl.platform.setWindowMonitor(window, nullptr, 0, 0, width, height, 0);
+                _grwl.platform.getWindowFrameSize(window, &xoff, &yoff, nullptr, nullptr);
                 _grwl.platform.setWindowPos(window, xoff, yoff);
             }
         }
 
-        for (i = 0; i < _grwl.monitorCount; i++)
+        for (int i = 0; i < _grwl.monitorCount; i++)
         {
             if (_grwl.monitors[i] == monitor)
             {
@@ -144,7 +141,7 @@ void _grwlInputMonitor(_GRWLmonitor* monitor, int action, int placement)
 //
 void _grwlInputMonitorWindow(_GRWLmonitor* monitor, _GRWLwindow* window)
 {
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
     monitor->window = window;
 }
 
@@ -169,7 +166,7 @@ _GRWLmonitor* _grwlAllocMonitor(const char* name, int widthMM, int heightMM)
 //
 void _grwlFreeMonitor(_GRWLmonitor* monitor)
 {
-    if (monitor == NULL)
+    if (monitor == nullptr)
     {
         return;
     }
@@ -208,19 +205,18 @@ void _grwlFreeGammaArrays(GRWLgammaramp* ramp)
 //
 const GRWLvidmode* _grwlChooseVideoMode(_GRWLmonitor* monitor, const GRWLvidmode* desired)
 {
-    int i;
     unsigned int sizeDiff, leastSizeDiff = UINT_MAX;
     unsigned int rateDiff, leastRateDiff = UINT_MAX;
     unsigned int colorDiff, leastColorDiff = UINT_MAX;
     const GRWLvidmode* current;
-    const GRWLvidmode* closest = NULL;
+    const GRWLvidmode* closest = nullptr;
 
     if (!refreshVideoModes(monitor))
     {
-        return NULL;
+        return nullptr;
     }
 
-    for (i = 0; i < monitor->modeCount; i++)
+    for (int i = 0; i < monitor->modeCount; i++)
     {
         current = monitor->modes + i;
 
@@ -304,11 +300,11 @@ void _grwlSplitBPP(int bpp, int* red, int* green, int* blue)
 
 GRWLAPI GRWLmonitor** grwlGetMonitors(int* count)
 {
-    assert(count != NULL);
+    assert(count != nullptr);
 
     *count = 0;
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     *count = _grwl.monitorCount;
     return (GRWLmonitor**)_grwl.monitors;
@@ -316,11 +312,11 @@ GRWLAPI GRWLmonitor** grwlGetMonitors(int* count)
 
 GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (!_grwl.monitorCount)
     {
-        return NULL;
+        return nullptr;
     }
 
     return (GRWLmonitor*)_grwl.monitors[0];
@@ -329,7 +325,7 @@ GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor()
 GRWLAPI void grwlGetMonitorPos(GRWLmonitor* handle, int* xpos, int* ypos)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
     if (xpos)
     {
@@ -348,7 +344,7 @@ GRWLAPI void grwlGetMonitorPos(GRWLmonitor* handle, int* xpos, int* ypos)
 GRWLAPI void grwlGetMonitorWorkarea(GRWLmonitor* handle, int* xpos, int* ypos, int* width, int* height)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
     if (xpos)
     {
@@ -375,7 +371,7 @@ GRWLAPI void grwlGetMonitorWorkarea(GRWLmonitor* handle, int* xpos, int* ypos, i
 GRWLAPI void grwlGetMonitorPhysicalSize(GRWLmonitor* handle, int* widthMM, int* heightMM)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
     if (widthMM)
     {
@@ -401,7 +397,7 @@ GRWLAPI void grwlGetMonitorPhysicalSize(GRWLmonitor* handle, int* widthMM, int* 
 GRWLAPI void grwlGetMonitorContentScale(GRWLmonitor* handle, float* xscale, float* yscale)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
     if (xscale)
     {
@@ -419,16 +415,16 @@ GRWLAPI void grwlGetMonitorContentScale(GRWLmonitor* handle, float* xscale, floa
 GRWLAPI const char* grwlGetMonitorName(GRWLmonitor* handle)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return monitor->name;
 }
 
 GRWLAPI void grwlSetMonitorUserPointer(GRWLmonitor* handle, void* pointer)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
     _GRWL_REQUIRE_INIT();
     monitor->userPointer = pointer;
@@ -437,15 +433,15 @@ GRWLAPI void grwlSetMonitorUserPointer(GRWLmonitor* handle, void* pointer)
 GRWLAPI void* grwlGetMonitorUserPointer(GRWLmonitor* handle)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return monitor->userPointer;
 }
 
 GRWLAPI GRWLmonitorfun grwlSetMonitorCallback(GRWLmonitorfun cbfun)
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLmonitorfun, _grwl.callbacks.monitor, cbfun);
     return cbfun;
 }
@@ -453,16 +449,16 @@ GRWLAPI GRWLmonitorfun grwlSetMonitorCallback(GRWLmonitorfun cbfun)
 GRWLAPI const GRWLvidmode* grwlGetVideoModes(GRWLmonitor* handle, int* count)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
-    assert(count != NULL);
+    assert(monitor != nullptr);
+    assert(count != nullptr);
 
     *count = 0;
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (!refreshVideoModes(monitor))
     {
-        return NULL;
+        return nullptr;
     }
 
     *count = monitor->modeCount;
@@ -472,9 +468,9 @@ GRWLAPI const GRWLvidmode* grwlGetVideoModes(GRWLmonitor* handle, int* count)
 GRWLAPI const GRWLvidmode* grwlGetVideoMode(GRWLmonitor* handle)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     _grwl.platform.getVideoMode(monitor, &monitor->currentMode);
     return &monitor->currentMode;
@@ -482,11 +478,7 @@ GRWLAPI const GRWLvidmode* grwlGetVideoMode(GRWLmonitor* handle)
 
 GRWLAPI void grwlSetGamma(GRWLmonitor* handle, float gamma)
 {
-    unsigned int i;
-    unsigned short* values;
-    GRWLgammaramp ramp;
-    const GRWLgammaramp* original;
-    assert(handle != NULL);
+    assert(handle != nullptr);
     assert(gamma > 0.f);
     assert(gamma <= FLT_MAX);
 
@@ -498,15 +490,15 @@ GRWLAPI void grwlSetGamma(GRWLmonitor* handle, float gamma)
         return;
     }
 
-    original = grwlGetGammaRamp(handle);
+    const GRWLgammaramp* original = grwlGetGammaRamp(handle);
     if (!original)
     {
         return;
     }
 
-    values = (unsigned short*)_grwl_calloc(original->size, sizeof(unsigned short));
+    uint16_t* values = (unsigned short*)_grwl_calloc(original->size, sizeof(unsigned short));
 
-    for (i = 0; i < original->size; i++)
+    for (uint32_t i = 0; i < original->size; i++)
     {
         float value;
 
@@ -520,10 +512,7 @@ GRWLAPI void grwlSetGamma(GRWLmonitor* handle, float gamma)
         values[i] = (unsigned short)value;
     }
 
-    ramp.red = values;
-    ramp.green = values;
-    ramp.blue = values;
-    ramp.size = original->size;
+    GRWLgammaramp ramp { values, values, values, original->size };
 
     grwlSetGammaRamp(handle, &ramp);
     _grwl_free(values);
@@ -532,14 +521,14 @@ GRWLAPI void grwlSetGamma(GRWLmonitor* handle, float gamma)
 GRWLAPI const GRWLgammaramp* grwlGetGammaRamp(GRWLmonitor* handle)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
+    assert(monitor != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     _grwlFreeGammaArrays(&monitor->currentRamp);
     if (!_grwl.platform.getGammaRamp(monitor, &monitor->currentRamp))
     {
-        return NULL;
+        return nullptr;
     }
 
     return &monitor->currentRamp;
@@ -548,12 +537,12 @@ GRWLAPI const GRWLgammaramp* grwlGetGammaRamp(GRWLmonitor* handle)
 GRWLAPI void grwlSetGammaRamp(GRWLmonitor* handle, const GRWLgammaramp* ramp)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    assert(monitor != NULL);
-    assert(ramp != NULL);
+    assert(monitor != nullptr);
+    assert(ramp != nullptr);
     assert(ramp->size > 0);
-    assert(ramp->red != NULL);
-    assert(ramp->green != NULL);
-    assert(ramp->blue != NULL);
+    assert(ramp->red != nullptr);
+    assert(ramp->green != nullptr);
+    assert(ramp->blue != nullptr);
 
     _GRWL_REQUIRE_INIT();
 

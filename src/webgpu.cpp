@@ -47,19 +47,19 @@ GRWLAPI WGPUSurface grwlCreateWindowWGPUSurface(WGPUInstance instance, GRWLwindo
 {
     #if WGPU_TARGET == WGPU_TARGET_MACOS
     {
-        id metal_layer = NULL;
+        id metal_layer = nullptr;
         NSWindow* ns_window = grwlGetCocoaWindow(window);
         [ns_window.contentView setWantsLayer:YES];
         metal_layer = [CAMetalLayer layer];
         [ns_window.contentView setLayer:metal_layer];
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
-                                             .label = NULL,
+                                             .label = nullptr,
                                              .nextInChain =
                                                  (const WGPUChainedStruct*)&(WGPUSurfaceDescriptorFromMetalLayer) {
                                                      .chain =
                                                          (WGPUChainedStruct) {
-                                                             .next = NULL,
+                                                             .next = nullptr,
                                                              .sType = WGPUSType_SurfaceDescriptorFromMetalLayer,
                                                          },
                                                      .layer = metal_layer,
@@ -72,12 +72,12 @@ GRWLAPI WGPUSurface grwlCreateWindowWGPUSurface(WGPUInstance instance, GRWLwindo
         Window x11_window = grwlGetX11Window(window);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
-                                             .label = NULL,
+                                             .label = nullptr,
                                              .nextInChain =
                                                  (const WGPUChainedStruct*)&(WGPUSurfaceDescriptorFromXlibWindow) {
                                                      .chain =
                                                          (WGPUChainedStruct) {
-                                                             .next = NULL,
+                                                             .next = nullptr,
                                                              .sType = WGPUSType_SurfaceDescriptorFromXlibWindow,
                                                          },
                                                      .display = x11_display,
@@ -91,12 +91,12 @@ GRWLAPI WGPUSurface grwlCreateWindowWGPUSurface(WGPUInstance instance, GRWLwindo
         struct wl_surface* wayland_surface = grwlGetWaylandWindow(window);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
-                                             .label = NULL,
+                                             .label = nullptr,
                                              .nextInChain =
                                                  (const WGPUChainedStruct*)&(WGPUSurfaceDescriptorFromWaylandSurface) {
                                                      .chain =
                                                          (WGPUChainedStruct) {
-                                                             .next = NULL,
+                                                             .next = nullptr,
                                                              .sType = WGPUSType_SurfaceDescriptorFromWaylandSurface,
                                                          },
                                                      .display = wayland_display,
@@ -107,15 +107,15 @@ GRWLAPI WGPUSurface grwlCreateWindowWGPUSurface(WGPUInstance instance, GRWLwindo
     #elif WGPU_TARGET == WGPU_TARGET_WINDOWS
     {
         HWND hwnd = grwlGetWin32Window(window);
-        HINSTANCE hinstance = GetModuleHandle(NULL);
+        HINSTANCE hinstance = GetModuleHandle(nullptr);
         return wgpuInstanceCreateSurface(instance,
                                          &(WGPUSurfaceDescriptor) {
-                                             .label = NULL,
+                                             .label = nullptr,
                                              .nextInChain =
                                                  (const WGPUChainedStruct*)&(WGPUSurfaceDescriptorFromWindowsHWND) {
                                                      .chain =
                                                          (WGPUChainedStruct) {
-                                                             .next = NULL,
+                                                             .next = nullptr,
                                                              .sType = WGPUSType_SurfaceDescriptorFromWindowsHWND,
                                                          },
                                                      .hinstance = hinstance,

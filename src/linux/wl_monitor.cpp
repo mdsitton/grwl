@@ -239,7 +239,7 @@ void _grwlSetGammaRampWayland(_GRWLmonitor* monitor, const GRWLgammaramp* ramp)
 GRWLAPI struct wl_output* grwlGetWaylandMonitor(GRWLmonitor* handle)
 {
     _GRWLmonitor* monitor = (_GRWLmonitor*)handle;
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return monitor->wl.output;
 }
 

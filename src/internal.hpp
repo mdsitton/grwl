@@ -283,17 +283,17 @@ typedef VkResult(APIENTRY* PFN_vkEnumerateInstanceExtensionProperties)(const cha
 #include "platform.hpp"
 
 // Checks for whether the library has been initialized
-#define _GRWL_REQUIRE_INIT()                         \
-    if (!_grwl.initialized)                          \
-    {                                                \
-        _grwlInputError(GRWL_NOT_INITIALIZED, NULL); \
-        return;                                      \
+#define _GRWL_REQUIRE_INIT()                            \
+    if (!_grwl.initialized)                             \
+    {                                                   \
+        _grwlInputError(GRWL_NOT_INITIALIZED, nullptr); \
+        return;                                         \
     }
-#define _GRWL_REQUIRE_INIT_OR_RETURN(x)              \
-    if (!_grwl.initialized)                          \
-    {                                                \
-        _grwlInputError(GRWL_NOT_INITIALIZED, NULL); \
-        return x;                                    \
+#define _GRWL_REQUIRE_INIT_OR_RETURN(x)                 \
+    if (!_grwl.initialized)                             \
+    {                                                   \
+        _grwlInputError(GRWL_NOT_INITIALIZED, nullptr); \
+        return x;                                       \
     }
 
 // Swaps the provided pointers

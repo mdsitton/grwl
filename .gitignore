@@ -10,7 +10,6 @@ _ReSharper*
 *.sln
 .vs
 CMakeSettings.json
-Win32
 x64
 Debug
 Release

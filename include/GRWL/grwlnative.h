@@ -164,7 +164,7 @@ extern "C"
     /*! @brief Returns the adapter device name of the specified monitor.
      *
      *  @return The UTF-8 encoded adapter device name (for example `\\.\DISPLAY1`)
-     *  of the specified monitor, or `NULL` if an [error](@ref error_handling)
+     *  of the specified monitor, or `nullptr` if an [error](@ref error_handling)
      *  occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -179,7 +179,7 @@ extern "C"
     /*! @brief Returns the display device name of the specified monitor.
      *
      *  @return The UTF-8 encoded display device name (for example
-     *  `\\.\DISPLAY1\Monitor0`) of the specified monitor, or `NULL` if an
+     *  `\\.\DISPLAY1\Monitor0`) of the specified monitor, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -193,7 +193,7 @@ extern "C"
 
     /*! @brief Returns the `HWND` of the specified window.
      *
-     *  @return The `HWND` of the specified window, or `NULL` if an
+     *  @return The `HWND` of the specified window, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -217,7 +217,7 @@ extern "C"
 #if defined(GRWL_EXPOSE_NATIVE_WGL)
     /*! @brief Returns the `HGLRC` of the specified window.
      *
-     *  @return The `HGLRC` of the specified window, or `NULL` if an
+     *  @return The `HGLRC` of the specified window, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
@@ -289,7 +289,7 @@ extern "C"
 #if defined(GRWL_EXPOSE_NATIVE_X11)
     /*! @brief Returns the `Display` used by GRWL.
      *
-     *  @return The `Display` used by GRWL, or `NULL` if an
+     *  @return The `Display` used by GRWL, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -365,10 +365,10 @@ extern "C"
 
     /*! @brief Returns the contents of the current primary selection as a string.
      *
-     *  If the selection is empty or if its contents cannot be converted, `NULL`
+     *  If the selection is empty or if its contents cannot be converted, `nullptr`
      *  is returned and a @ref GRWL_FORMAT_UNAVAILABLE error is generated.
      *
-     *  @return The contents of the selection as a UTF-8 encoded string, or `NULL`
+     *  @return The contents of the selection as a UTF-8 encoded string, or `nullptr`
      *  if an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -393,7 +393,7 @@ extern "C"
 #if defined(GRWL_EXPOSE_NATIVE_GLX)
     /*! @brief Returns the `GLXContext` of the specified window.
      *
-     *  @return The `GLXContext` of the specified window, or `NULL` if an
+     *  @return The `GLXContext` of the specified window, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
@@ -425,7 +425,7 @@ extern "C"
 #if defined(GRWL_EXPOSE_NATIVE_WAYLAND)
     /*! @brief Returns the `struct wl_display*` used by GRWL.
      *
-     *  @return The `struct wl_display*` used by GRWL, or `NULL` if an
+     *  @return The `struct wl_display*` used by GRWL, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -439,7 +439,7 @@ extern "C"
 
     /*! @brief Returns the `struct wl_output*` of the specified monitor.
      *
-     *  @return The `struct wl_output*` of the specified monitor, or `NULL` if an
+     *  @return The `struct wl_output*` of the specified monitor, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -453,7 +453,7 @@ extern "C"
 
     /*! @brief Returns the main `struct wl_surface*` of the specified window.
      *
-     *  @return The main `struct wl_surface*` of the specified window, or `NULL` if
+     *  @return The main `struct wl_surface*` of the specified window, or `nullptr` if
      *  an [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -534,12 +534,12 @@ extern "C"
     /*! @brief Retrieves the color buffer associated with the specified window.
      *
      *  @param[in] window The window whose color buffer to retrieve.
-     *  @param[out] width Where to store the width of the color buffer, or `NULL`.
-     *  @param[out] height Where to store the height of the color buffer, or `NULL`.
+     *  @param[out] width Where to store the width of the color buffer, or `nullptr`.
+     *  @param[out] height Where to store the height of the color buffer, or `nullptr`.
      *  @param[out] format Where to store the OSMesa pixel format of the color
-     *  buffer, or `NULL`.
+     *  buffer, or `nullptr`.
      *  @param[out] buffer Where to store the address of the color buffer, or
-     *  `NULL`.
+     *  `nullptr`.
      *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
@@ -556,12 +556,12 @@ extern "C"
     /*! @brief Retrieves the depth buffer associated with the specified window.
      *
      *  @param[in] window The window whose depth buffer to retrieve.
-     *  @param[out] width Where to store the width of the depth buffer, or `NULL`.
-     *  @param[out] height Where to store the height of the depth buffer, or `NULL`.
+     *  @param[out] width Where to store the width of the depth buffer, or `nullptr`.
+     *  @param[out] height Where to store the height of the depth buffer, or `nullptr`.
      *  @param[out] bytesPerValue Where to store the number of bytes per depth
-     *  buffer element, or `NULL`.
+     *  buffer element, or `nullptr`.
      *  @param[out] buffer Where to store the address of the depth buffer, or
-     *  `NULL`.
+     *  `nullptr`.
      *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
@@ -578,7 +578,7 @@ extern "C"
 
     /*! @brief Returns the `OSMesaContext` of the specified window.
      *
-     *  @return The `OSMesaContext` of the specified window, or `NULL` if an
+     *  @return The `OSMesaContext` of the specified window, or `nullptr` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref

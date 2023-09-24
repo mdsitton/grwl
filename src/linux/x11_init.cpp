@@ -544,9 +544,9 @@ static void createKeyTables()
 static bool hasUsableInputMethodStyle()
 {
     bool found = false;
-    XIMStyles* styles = NULL;
+    XIMStyles* styles = nullptr;
 
-    if (XGetIMValues(_grwl.x11.im, XNQueryInputStyle, &styles, NULL) != NULL)
+    if (XGetIMValues(_grwl.x11.im, XNQueryInputStyle, &styles, nullptr) != nullptr)
     {
         return false;
     }
@@ -575,7 +575,7 @@ static bool hasUsableInputMethodStyle()
 
 static void inputMethodDestroyCallback(XIM im, XPointer clientData, XPointer callData)
 {
-    _grwl.x11.im = NULL;
+    _grwl.x11.im = nullptr;
 }
 
 static void inputMethodInstantiateCallback(Display* display, XPointer clientData, XPointer callData)
@@ -585,13 +585,13 @@ static void inputMethodInstantiateCallback(Display* display, XPointer clientData
         return;
     }
 
-    _grwl.x11.im = XOpenIM(_grwl.x11.display, 0, NULL, NULL);
+    _grwl.x11.im = XOpenIM(_grwl.x11.display, 0, nullptr, nullptr);
     if (_grwl.x11.im)
     {
         if (!hasUsableInputMethodStyle())
         {
             XCloseIM(_grwl.x11.im);
-            _grwl.x11.im = NULL;
+            _grwl.x11.im = nullptr;
         }
     }
 
@@ -599,8 +599,8 @@ static void inputMethodInstantiateCallback(Display* display, XPointer clientData
     {
         XIMCallback callback;
         callback.callback = (XIMProc)inputMethodDestroyCallback;
-        callback.client_data = NULL;
-        XSetIMValues(_grwl.x11.im, XNDestroyCallback, &callback, NULL);
+        callback.client_data = nullptr;
+        XSetIMValues(_grwl.x11.im, XNDestroyCallback, &callback, nullptr);
 
         for (_GRWLwindow* window = _grwl.windowListHead; window; window = window->next)
         {
@@ -632,7 +632,7 @@ static void detectEWMH()
 {
     // First we read the _NET_SUPPORTING_WM_CHECK property on the root window
 
-    Window* windowFromRoot = NULL;
+    Window* windowFromRoot = nullptr;
     if (!_grwlGetWindowPropertyX11(_grwl.x11.root, _grwl.x11.NET_SUPPORTING_WM_CHECK, XA_WINDOW,
                                    (unsigned char**)&windowFromRoot))
     {
@@ -644,7 +644,7 @@ static void detectEWMH()
     // If it exists, it should be the XID of a top-level window
     // Then we look for the same property on that window
 
-    Window* windowFromChild = NULL;
+    Window* windowFromChild = nullptr;
     if (!_grwlGetWindowPropertyX11(*windowFromRoot, _grwl.x11.NET_SUPPORTING_WM_CHECK, XA_WINDOW,
                                    (unsigned char**)&windowFromChild))
     {
@@ -671,7 +671,7 @@ static void detectEWMH()
     // looking in the _NET_SUPPORTED property on the root window
     // It should contain a list of supported EWMH protocol and state atoms
 
-    Atom* supportedAtoms = NULL;
+    Atom* supportedAtoms = nullptr;
     const unsigned long atomCount =
         _grwlGetWindowPropertyX11(_grwl.x11.root, _grwl.x11.NET_SUPPORTED, XA_ATOM, (unsigned char**)&supportedAtoms);
 
@@ -1069,7 +1069,7 @@ static void getSystemContentScale(float* xscale, float* yscale)
         if (db)
         {
             XrmValue value;
-            char* type = NULL;
+            char* type = nullptr;
 
             if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value))
             {
@@ -1154,7 +1154,7 @@ static int errorHandler(Display* display, XErrorEvent* event)
 //
 void _grwlGrabErrorHandlerX11()
 {
-    assert(_grwl.x11.errorHandler == NULL);
+    assert(_grwl.x11.errorHandler == nullptr);
     _grwl.x11.errorCode = Success;
     _grwl.x11.errorHandler = XSetErrorHandler(errorHandler);
 }
@@ -1166,7 +1166,7 @@ void _grwlReleaseErrorHandlerX11()
     // Synchronize to make sure all commands are processed
     XSync(_grwl.x11.display, False);
     XSetErrorHandler(_grwl.x11.errorHandler);
-    _grwl.x11.errorHandler = NULL;
+    _grwl.x11.errorHandler = nullptr;
 }
 
 // Reports the specified error, appending information about the last X error
@@ -1191,7 +1191,7 @@ Cursor _grwlCreateNativeCursorX11(const GRWLimage* image, int xhot, int yhot)
     }
 
     XcursorImage* native = XcursorImageCreate(image->width, image->height);
-    if (native == NULL)
+    if (native == nullptr)
     {
         return None;
     }
@@ -1318,7 +1318,7 @@ bool _grwlConnectX11(int platformID, _GRWLplatform* platform)
     //       character text input and explicit UTF-8 input via XIM will break
     //       This sets the CTYPE part of the current locale from the environment
     //       in the hope that it is set to something more sane than "C"
-    if (strcmp(setlocale(LC_CTYPE, NULL), "C") == 0)
+    if (strcmp(setlocale(LC_CTYPE, nullptr), "C") == 0)
     {
         setlocale(LC_CTYPE, "");
     }
@@ -1357,7 +1357,7 @@ bool _grwlConnectX11(int platformID, _GRWLplatform* platform)
     XInitThreads();
     XrmInitialize();
 
-    Display* display = XOpenDisplay(NULL);
+    Display* display = XOpenDisplay(nullptr);
     if (!display)
     {
         if (platformID == GRWL_PLATFORM_X11)
@@ -1590,7 +1590,8 @@ int _grwlInitX11()
         XSetLocaleModifiers("");
 
         // If an IM is already present our callback will be called right away
-        XRegisterIMInstantiateCallback(_grwl.x11.display, NULL, NULL, NULL, inputMethodInstantiateCallback, NULL);
+        XRegisterIMInstantiateCallback(_grwl.x11.display, nullptr, nullptr, nullptr, inputMethodInstantiateCallback,
+                                       nullptr);
     }
 
     _grwlPollMonitorsX11();
@@ -1624,60 +1625,61 @@ void _grwlTerminateX11()
         XFree(_grwl.x11.keyboardLayoutName);
     }
 
-    XUnregisterIMInstantiateCallback(_grwl.x11.display, NULL, NULL, NULL, inputMethodInstantiateCallback, NULL);
+    XUnregisterIMInstantiateCallback(_grwl.x11.display, nullptr, nullptr, nullptr, inputMethodInstantiateCallback,
+                                     nullptr);
 
     if (_grwl.x11.im)
     {
         XCloseIM(_grwl.x11.im);
-        _grwl.x11.im = NULL;
+        _grwl.x11.im = nullptr;
     }
 
     if (_grwl.x11.display)
     {
         XCloseDisplay(_grwl.x11.display);
-        _grwl.x11.display = NULL;
+        _grwl.x11.display = nullptr;
     }
 
     if (_grwl.x11.x11xcb.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.x11xcb.handle);
-        _grwl.x11.x11xcb.handle = NULL;
+        _grwl.x11.x11xcb.handle = nullptr;
     }
 
     if (_grwl.x11.xcursor.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.xcursor.handle);
-        _grwl.x11.xcursor.handle = NULL;
+        _grwl.x11.xcursor.handle = nullptr;
     }
 
     if (_grwl.x11.randr.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.randr.handle);
-        _grwl.x11.randr.handle = NULL;
+        _grwl.x11.randr.handle = nullptr;
     }
 
     if (_grwl.x11.xinerama.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.xinerama.handle);
-        _grwl.x11.xinerama.handle = NULL;
+        _grwl.x11.xinerama.handle = nullptr;
     }
 
     if (_grwl.x11.xrender.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.xrender.handle);
-        _grwl.x11.xrender.handle = NULL;
+        _grwl.x11.xrender.handle = nullptr;
     }
 
     if (_grwl.x11.vidmode.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.vidmode.handle);
-        _grwl.x11.vidmode.handle = NULL;
+        _grwl.x11.vidmode.handle = nullptr;
     }
 
     if (_grwl.x11.xi.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.xi.handle);
-        _grwl.x11.xi.handle = NULL;
+        _grwl.x11.xi.handle = nullptr;
     }
 
     _grwlTerminateOSMesa();
@@ -1689,7 +1691,7 @@ void _grwlTerminateX11()
     if (_grwl.x11.xlib.handle)
     {
         _grwlPlatformFreeModule(_grwl.x11.xlib.handle);
-        _grwl.x11.xlib.handle = NULL;
+        _grwl.x11.xlib.handle = nullptr;
     }
 
     if (_grwl.x11.emptyEventPipe[0] || _grwl.x11.emptyEventPipe[1])

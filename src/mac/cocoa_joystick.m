@@ -119,9 +119,9 @@ static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDev
         }
     }
 
-    axes = CFArrayCreateMutable(NULL, 0, NULL);
-    buttons = CFArrayCreateMutable(NULL, 0, NULL);
-    hats = CFArrayCreateMutable(NULL, 0, NULL);
+    axes = CFArrayCreateMutable(nullptr, 0, nullptr);
+    buttons = CFArrayCreateMutable(nullptr, 0, nullptr);
+    hats = CFArrayCreateMutable(nullptr, 0, nullptr);
 
     property = IOHIDDeviceGetProperty(device, CFSTR(kIOHIDProductKey));
     if (property)
@@ -163,7 +163,7 @@ static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDev
                 name[4], name[5], name[6], name[7], name[8], name[9], name[10]);
     }
 
-    CFArrayRef elements = IOHIDDeviceCopyMatchingElements(device, NULL, kIOHIDOptionsTypeNone);
+    CFArrayRef elements = IOHIDDeviceCopyMatchingElements(device, nullptr, kIOHIDOptionsTypeNone);
 
     if (elements)
     {
@@ -182,7 +182,7 @@ static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDev
                 continue;
             }
 
-            CFMutableArrayRef target = NULL;
+            CFMutableArrayRef target = nullptr;
 
             const uint32_t usage = IOHIDElementGetUsage(native);
             const uint32_t page = IOHIDElementGetUsagePage(native);
@@ -248,9 +248,9 @@ static void matchCallback(void* context, IOReturn result, void* sender, IOHIDDev
         CFRelease(elements);
     }
 
-    CFArraySortValues(axes, CFRangeMake(0, CFArrayGetCount(axes)), compareElements, NULL);
-    CFArraySortValues(buttons, CFRangeMake(0, CFArrayGetCount(buttons)), compareElements, NULL);
-    CFArraySortValues(hats, CFRangeMake(0, CFArrayGetCount(hats)), compareElements, NULL);
+    CFArraySortValues(axes, CFRangeMake(0, CFArrayGetCount(axes)), compareElements, nullptr);
+    CFArraySortValues(buttons, CFRangeMake(0, CFArrayGetCount(buttons)), compareElements, nullptr);
+    CFArraySortValues(hats, CFRangeMake(0, CFArrayGetCount(hats)), compareElements, nullptr);
 
     js = _grwlAllocJoystick(name, guid, (int)CFArrayGetCount(axes), (int)CFArrayGetCount(buttons),
                             (int)CFArrayGetCount(hats));
@@ -330,8 +330,8 @@ bool _grwlInitJoysticksCocoa()
     IOHIDManagerSetDeviceMatchingMultiple(_grwl.ns.hidManager, matching);
     CFRelease(matching);
 
-    IOHIDManagerRegisterDeviceMatchingCallback(_grwl.ns.hidManager, &matchCallback, NULL);
-    IOHIDManagerRegisterDeviceRemovalCallback(_grwl.ns.hidManager, &removeCallback, NULL);
+    IOHIDManagerRegisterDeviceMatchingCallback(_grwl.ns.hidManager, &matchCallback, nullptr);
+    IOHIDManagerRegisterDeviceRemovalCallback(_grwl.ns.hidManager, &removeCallback, nullptr);
     IOHIDManagerScheduleWithRunLoop(_grwl.ns.hidManager, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
     IOHIDManagerOpen(_grwl.ns.hidManager, kIOHIDOptionsTypeNone);
 
@@ -354,7 +354,7 @@ void _grwlTerminateJoysticksCocoa()
     if (_grwl.ns.hidManager)
     {
         CFRelease(_grwl.ns.hidManager);
-        _grwl.ns.hidManager = NULL;
+        _grwl.ns.hidManager = nullptr;
     }
 }
 

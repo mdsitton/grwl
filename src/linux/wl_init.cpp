@@ -118,7 +118,7 @@ static void registryHandleGlobal(void* userData, struct wl_registry* registry, u
     else if (strcmp(interface, "xdg_wm_base") == 0)
     {
         _grwl.wl.wmBase = wl_registry_bind(registry, name, &xdg_wm_base_interface, 1);
-        xdg_wm_base_add_listener(_grwl.wl.wmBase, &wmBaseListener, NULL);
+        xdg_wm_base_add_listener(_grwl.wl.wmBase, &wmBaseListener, nullptr);
     }
     else if (strcmp(interface, "zxdg_decoration_manager_v1") == 0)
     {
@@ -320,7 +320,7 @@ static bool loadCursorTheme()
     if (sizeString)
     {
         errno = 0;
-        const long cursorSizeLong = strtol(sizeString, NULL, 10);
+        const long cursorSizeLong = strtol(sizeString, nullptr, 10);
         if (errno == 0 && cursorSizeLong > 0 && cursorSizeLong < INT_MAX)
         {
             cursorSize = (int)cursorSizeLong;
@@ -336,7 +336,7 @@ static bool loadCursorTheme()
         return false;
     }
 
-    // If this happens to be NULL, we just fallback to the scale=1 version.
+    // If this happens to be nullptr, we just fallback to the scale=1 version.
     _grwl.wl.cursorThemeHiDPI = wl_cursor_theme_load(themeName, cursorSize * 2, _grwl.wl.shm);
 
     _grwl.wl.cursorSurface = wl_compositor_create_surface(_grwl.wl.compositor);
@@ -466,7 +466,7 @@ bool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
         return false;
     }
 
-    struct wl_display* display = wl_display_connect(NULL);
+    struct wl_display* display = wl_display_connect(nullptr);
     if (!display)
     {
         if (platformID == GRWL_PLATFORM_WAYLAND)
@@ -722,7 +722,7 @@ int _grwlInitWayland()
     }
 
     _grwl.wl.registry = wl_display_get_registry(_grwl.wl.display);
-    wl_registry_add_listener(_grwl.wl.registry, &registryListener, NULL);
+    wl_registry_add_listener(_grwl.wl.registry, &registryListener, nullptr);
 
     createKeyTables();
 
@@ -796,13 +796,13 @@ void _grwlTerminateWayland()
     if (_grwl.wl.libdecor.handle)
     {
         _grwlPlatformFreeModule(_grwl.wl.libdecor.handle);
-        _grwl.wl.libdecor.handle = NULL;
+        _grwl.wl.libdecor.handle = nullptr;
     }
 
     if (_grwl.wl.egl.handle)
     {
         _grwlPlatformFreeModule(_grwl.wl.egl.handle);
-        _grwl.wl.egl.handle = NULL;
+        _grwl.wl.egl.handle = nullptr;
     }
 
     if (_grwl.wl.xkb.composeState)
@@ -824,7 +824,7 @@ void _grwlTerminateWayland()
     if (_grwl.wl.xkb.handle)
     {
         _grwlPlatformFreeModule(_grwl.wl.xkb.handle);
-        _grwl.wl.xkb.handle = NULL;
+        _grwl.wl.xkb.handle = nullptr;
     }
 
     if (_grwl.wl.cursorTheme)
@@ -838,7 +838,7 @@ void _grwlTerminateWayland()
     if (_grwl.wl.cursor.handle)
     {
         _grwlPlatformFreeModule(_grwl.wl.cursor.handle);
-        _grwl.wl.cursor.handle = NULL;
+        _grwl.wl.cursor.handle = nullptr;
     }
 
     for (unsigned int i = 0; i < _grwl.wl.offerCount; i++)

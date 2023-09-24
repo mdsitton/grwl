@@ -501,15 +501,14 @@ A sample code to get all candidate texts on the current page is as follows.
 void candidate_callback(GRWLwindow* window, int candidates_count,
                         int selected_index, int page_start, int page_size)
 {
-    int i, j;
-    for (i = 0; i < page_size; ++i)
+    for (int i = 0; i < page_size; ++i)
     {
         int index = i + page_start;
         int text_count;
         unsigned int* text = glfwGetPreeditCandidate(window, index, &text_count);
         if (index == selected_index)
             printf("> ");
-        for (j = 0; j < text_count; ++j)
+        for (int j = 0; j < text_count; ++j)
         {
             char encoded[5] = "";
             encode_utf8(encoded, text[j]); // Some kind of encoding process
@@ -1244,8 +1243,7 @@ The callback function receives an array of paths encoded as UTF-8.
 @code
 void drop_callback(GRWLwindow* window, int count, const char** paths)
 {
-    int i;
-    for (i = 0;  i < count;  i++)
+    int i = 0;  i < count;  i++)
         handle_dropped_file(paths[i]);
 }
 @endcode

@@ -29,7 +29,7 @@ static _GRWLinitconfig _grwlInitHints = {
     GRWL_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
     GRWL_ANY_PLATFORM,             // preferred platform
     false,                         // whether to manage preedit candidate
-    NULL,                          // vkGetInstanceProcAddr function
+    nullptr,                       // vkGetInstanceProcAddr function
     {
         true, // macOS menu bar
         true  // macOS bundle chdir
@@ -68,8 +68,6 @@ static void* defaultReallocate(void* block, size_t size, void* user)
 //
 static void terminate()
 {
-    int i;
-
     memset(&_grwl.callbacks, 0, sizeof(_grwl.callbacks));
 
     while (_grwl.windowListHead)
@@ -82,7 +80,7 @@ static void terminate()
         grwlDestroyCursor((GRWLcursor*)_grwl.cursorListHead);
     }
 
-    for (i = 0; i < _grwl.monitorCount; i++)
+    for (int i = 0; i < _grwl.monitorCount; i++)
     {
         _GRWLmonitor* monitor = _grwl.monitors[i];
         if (monitor->originalRamp.size)
@@ -93,11 +91,11 @@ static void terminate()
     }
 
     _grwl_free(_grwl.monitors);
-    _grwl.monitors = NULL;
+    _grwl.monitors = nullptr;
     _grwl.monitorCount = 0;
 
     _grwl_free(_grwl.mappings);
-    _grwl.mappings = NULL;
+    _grwl.mappings = nullptr;
     _grwl.mappingCount = 0;
 
     _grwlTerminateVulkan();
@@ -183,7 +181,7 @@ uint32_t _grwlDecodeUTF8(const char** s)
 char** _grwlParseUriList(char* text, int* count)
 {
     const char* prefix = "file://";
-    char** paths = NULL;
+    char** paths = nullptr;
     char* line;
 
     *count = 0;
@@ -192,7 +190,7 @@ char** _grwlParseUriList(char* text, int* count)
     {
         char* path;
 
-        text = NULL;
+        text = nullptr;
 
         if (line[0] == '#')
         {
@@ -220,7 +218,7 @@ char** _grwlParseUriList(char* text, int* count)
             if (line[0] == '%' && line[1] && line[2])
             {
                 const char digits[3] = { line[1], line[2], '\0' };
-                *path = (char)strtol(digits, NULL, 16);
+                *path = (char)strtol(digits, nullptr, 16);
                 line += 2;
             }
             else
@@ -303,7 +301,7 @@ void* _grwl_calloc(size_t count, size_t size)
         if (count > SIZE_MAX / size)
         {
             _grwlInputError(GRWL_INVALID_VALUE, "Allocation size overflow");
-            return NULL;
+            return nullptr;
         }
 
         block = _grwl.allocator.allocate(count * size, _grwl.allocator.user);
@@ -313,13 +311,13 @@ void* _grwl_calloc(size_t count, size_t size)
         }
         else
         {
-            _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
-            return NULL;
+            _grwlInputError(GRWL_OUT_OF_MEMORY, nullptr);
+            return nullptr;
         }
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -334,14 +332,14 @@ void* _grwl_realloc(void* block, size_t size)
         }
         else
         {
-            _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
-            return NULL;
+            _grwlInputError(GRWL_OUT_OF_MEMORY, nullptr);
+            return nullptr;
         }
     }
     else if (block)
     {
         _grwl_free(block);
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -594,15 +592,15 @@ GRWLAPI void grwlInitVulkanLoader(PFN_vkGetInstanceProcAddr loader)
 
 GRWLAPI void grwlGetVersion(int* major, int* minor, int* rev)
 {
-    if (major != NULL)
+    if (major != nullptr)
     {
         *major = GRWL_VERSION_MAJOR;
     }
-    if (minor != NULL)
+    if (minor != nullptr)
     {
         *minor = GRWL_VERSION_MINOR;
     }
-    if (rev != NULL)
+    if (rev != nullptr)
     {
         *rev = GRWL_VERSION_REVISION;
     }
@@ -615,7 +613,7 @@ GRWLAPI int grwlGetError(const char** description)
 
     if (description)
     {
-        *description = NULL;
+        *description = nullptr;
     }
 
     if (_grwl.initialized)

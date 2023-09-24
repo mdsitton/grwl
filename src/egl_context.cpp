@@ -67,7 +67,7 @@ static bool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig
     EGLConfig* nativeConfigs;
     _GRWLfbconfig* usableConfigs;
     const _GRWLfbconfig* closest;
-    int i, nativeCount, usableCount, apiBit;
+    int nativeCount, usableCount, apiBit;
     bool wrongApiAvailable = false;
 
     if (ctxconfig->client == GRWL_OPENGL_ES_API)
@@ -92,7 +92,7 @@ static bool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig
         return false;
     }
 
-    eglGetConfigs(_grwl.egl.display, NULL, 0, &nativeCount);
+    eglGetConfigs(_grwl.egl.display, nullptr, 0, &nativeCount);
     if (!nativeCount)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: No EGLConfigs returned");
@@ -105,7 +105,7 @@ static bool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig
     usableConfigs = (_GRWLfbconfig*)_grwl_calloc(nativeCount, sizeof(_GRWLfbconfig));
     usableCount = 0;
 
-    for (i = 0; i < nativeCount; i++)
+    for (int i = 0; i < nativeCount; i++)
     {
         const EGLConfig n = nativeConfigs[i];
         _GRWLfbconfig* u = usableConfigs + usableCount;
@@ -219,7 +219,7 @@ static bool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig
     _grwl_free(nativeConfigs);
     _grwl_free(usableConfigs);
 
-    return closest != NULL;
+    return closest != nullptr;
 }
 
 static void makeContextCurrentEGL(_GRWLwindow* window)
@@ -314,7 +314,7 @@ static void destroyContextEGL(_GRWLwindow* window)
         if (window->context.egl.client)
         {
             _grwlPlatformFreeModule(window->context.egl.client);
-            window->context.egl.client = NULL;
+            window->context.egl.client = nullptr;
         }
     }
 
@@ -339,8 +339,7 @@ static void destroyContextEGL(_GRWLwindow* window)
 //
 bool _grwlInitEGL()
 {
-    int i;
-    EGLint* attribs = NULL;
+    EGLint* attribs = nullptr;
     const char* extensions;
     const char* sonames[] = {
 #if defined(_GRWL_EGL_LIBRARY)
@@ -357,14 +356,15 @@ bool _grwlInitEGL()
 #else
         "libEGL.so.1",
 #endif
-        NULL
+        nullptr
     };
 
     if (_grwl.egl.handle)
     {
         return true;
     }
-
+    // todo - Yikes this should probably be handled nicer
+    int i;
     for (i = 0; sonames[i]; i++)
     {
         _grwl.egl.handle = _grwlPlatformLoadModule(sonames[i]);
@@ -499,7 +499,7 @@ void _grwlTerminateEGL()
     if (_grwl.egl.handle)
     {
         _grwlPlatformFreeModule(_grwl.egl.handle);
-        _grwl.egl.handle = NULL;
+        _grwl.egl.handle = nullptr;
     }
 }
 
@@ -516,7 +516,7 @@ bool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfig* c
 {
     EGLint attribs[40];
     int index = 0;
-    EGLContext share = NULL;
+    EGLContext share = nullptr;
 
     if (!_grwl.egl.display)
     {
@@ -709,7 +709,6 @@ bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
     // Load the appropriate client library
     if (!_grwl.egl.KHR_get_all_proc_addresses)
     {
-        int i;
         const char** sonames;
         const char* es1sonames[] = {
 #if defined(_GRWL_GLESV1_LIBRARY)
@@ -725,7 +724,7 @@ bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
             "libGLESv1_CM.so.1",
             "libGLES_CM.so.1",
 #endif
-            NULL
+            nullptr
         };
         const char* es2sonames[] = {
 #if defined(_GRWL_GLESV2_LIBRARY)
@@ -742,7 +741,7 @@ bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
 #else
             "libGLESv2.so.2",
 #endif
-            NULL
+            nullptr
         };
         const char* glsonames[] = {
 #if defined(_GRWL_OPENGL_LIBRARY)
@@ -755,7 +754,7 @@ bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
             "libOpenGL.so.0",
             "libGL.so.1",
 #endif
-            NULL
+            nullptr
         };
 
         if (ctxconfig->client == GRWL_OPENGL_ES_API)
@@ -774,7 +773,7 @@ bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig,
             sonames = glsonames;
         }
 
-        for (i = 0; sonames[i]; i++)
+        for (int i = 0; sonames[i]; i++)
         {
             // HACK: Match presence of lib prefix to increase chance of finding
             //       a matching pair in the jungle that is Win32 EGL/GLES
@@ -852,7 +851,7 @@ static void _grwlMakeUserContextCurrentEGL(_GRWLusercontext* context)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to make user context current: %s",
                         getEGLErrorString(eglGetError()));
-        _grwlPlatformSetTls(&_grwl.usercontextSlot, NULL);
+        _grwlPlatformSetTls(&_grwl.usercontextSlot, nullptr);
         return;
     }
     _grwlPlatformSetTls(&_grwl.usercontextSlot, context);
@@ -890,7 +889,7 @@ _GRWLusercontext* _grwlCreateUserContextEGL(_GRWLwindow* window)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to create user OpenGL context");
         free(context);
-        return NULL;
+        return nullptr;
     }
     if (grwlExtensionSupported("EGL_KHR_surfaceless_context"))
     {
@@ -905,7 +904,7 @@ _GRWLusercontext* _grwlCreateUserContextEGL(_GRWLwindow* window)
             _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to find surface config for user context: %s",
                             getEGLErrorString(eglGetError()));
             free(context);
-            return NULL;
+            return nullptr;
         }
         context->egl.surface = eglCreatePbufferSurface(_grwl.egl.display, dummySurfaceConfig, dummySurfaceAttribs);
         if (context->egl.surface == EGL_NO_SURFACE)
@@ -914,7 +913,7 @@ _GRWLusercontext* _grwlCreateUserContextEGL(_GRWLwindow* window)
             _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to create surface for user context: %s for %s",
                             getEGLErrorString(eglGetError()), eglQueryString(_grwl.egl.display, 0x3054));
             free(context);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -941,7 +940,7 @@ GRWLAPI EGLContext grwlGetEGLContext(GRWLwindow* handle)
 
     if (window->context.source != GRWL_EGL_CONTEXT_API)
     {
-        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
+        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
         return EGL_NO_CONTEXT;
     }
 
@@ -955,7 +954,7 @@ GRWLAPI EGLSurface grwlGetEGLSurface(GRWLwindow* handle)
 
     if (window->context.source != GRWL_EGL_CONTEXT_API)
     {
-        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
+        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
         return EGL_NO_SURFACE;
     }
 
@@ -969,7 +968,7 @@ GRWLAPI EGLConfig grwlGetEGLConfig(GRWLwindow* handle)
 
     if (window->context.source != GRWL_EGL_CONTEXT_API)
     {
-        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
+        _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
         return EGL_NO_SURFACE;
     }
 

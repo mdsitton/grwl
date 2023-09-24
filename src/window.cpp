@@ -18,7 +18,7 @@
 //
 void _grwlInputWindowFocus(_GRWLwindow* window, bool focused)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(focused == true || focused == false);
 
     if (window->callbacks.focus)
@@ -28,9 +28,7 @@ void _grwlInputWindowFocus(_GRWLwindow* window, bool focused)
 
     if (!focused)
     {
-        int key, button;
-
-        for (key = 0; key <= GRWL_KEY_LAST; key++)
+        for (int key = 0; key <= GRWL_KEY_LAST; key++)
         {
             if (window->keys[key] == GRWL_PRESS)
             {
@@ -39,7 +37,7 @@ void _grwlInputWindowFocus(_GRWLwindow* window, bool focused)
             }
         }
 
-        for (button = 0; button <= GRWL_MOUSE_BUTTON_LAST; button++)
+        for (int button = 0; button <= GRWL_MOUSE_BUTTON_LAST; button++)
         {
             if (window->mouseButtons[button] == GRWL_PRESS)
             {
@@ -54,7 +52,7 @@ void _grwlInputWindowFocus(_GRWLwindow* window, bool focused)
 //
 void _grwlInputWindowPos(_GRWLwindow* window, int x, int y)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (window->callbacks.pos)
     {
@@ -67,7 +65,7 @@ void _grwlInputWindowPos(_GRWLwindow* window, int x, int y)
 //
 void _grwlInputWindowSize(_GRWLwindow* window, int width, int height)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(width >= 0);
     assert(height >= 0);
 
@@ -81,7 +79,7 @@ void _grwlInputWindowSize(_GRWLwindow* window, int width, int height)
 //
 void _grwlInputWindowIconify(_GRWLwindow* window, bool iconified)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(iconified == true || iconified == false);
 
     if (window->callbacks.iconify)
@@ -94,7 +92,7 @@ void _grwlInputWindowIconify(_GRWLwindow* window, bool iconified)
 //
 void _grwlInputWindowMaximize(_GRWLwindow* window, bool maximized)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(maximized == true || maximized == false);
 
     if (window->callbacks.maximize)
@@ -108,7 +106,7 @@ void _grwlInputWindowMaximize(_GRWLwindow* window, bool maximized)
 //
 void _grwlInputFramebufferSize(_GRWLwindow* window, int width, int height)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(width >= 0);
     assert(height >= 0);
 
@@ -123,7 +121,7 @@ void _grwlInputFramebufferSize(_GRWLwindow* window, int width, int height)
 //
 void _grwlInputWindowContentScale(_GRWLwindow* window, float xscale, float yscale)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(xscale > 0.f);
     assert(xscale < FLT_MAX);
     assert(yscale > 0.f);
@@ -139,7 +137,7 @@ void _grwlInputWindowContentScale(_GRWLwindow* window, float xscale, float yscal
 //
 void _grwlInputWindowDamage(_GRWLwindow* window)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (window->callbacks.refresh)
     {
@@ -151,7 +149,7 @@ void _grwlInputWindowDamage(_GRWLwindow* window)
 //
 void _grwlInputWindowCloseRequest(_GRWLwindow* window)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
 
     window->shouldClose = true;
 
@@ -165,7 +163,7 @@ void _grwlInputWindowCloseRequest(_GRWLwindow* window)
 //
 void _grwlInputWindowMonitor(_GRWLwindow* window, _GRWLmonitor* monitor)
 {
-    assert(window != NULL);
+    assert(window != nullptr);
     window->monitor = monitor;
 }
 
@@ -180,17 +178,17 @@ GRWLAPI GRWLwindow* grwlCreateWindow(int width, int height, const char* title, G
     _GRWLwndconfig wndconfig;
     _GRWLwindow* window;
 
-    assert(title != NULL);
+    assert(title != nullptr);
     assert(width >= 0);
     assert(height >= 0);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (width <= 0 || height <= 0)
     {
         _grwlInputError(GRWL_INVALID_VALUE, "Invalid window size %ix%i", width, height);
 
-        return NULL;
+        return nullptr;
     }
 
     fbconfig = _grwl.hints.framebuffer;
@@ -204,7 +202,7 @@ GRWLAPI GRWLwindow* grwlCreateWindow(int width, int height, const char* title, G
 
     if (!_grwlIsValidContextConfig(&ctxconfig))
     {
-        return NULL;
+        return nullptr;
     }
 
     window = (_GRWLwindow*)_grwl_calloc(1, sizeof(_GRWLwindow));
@@ -244,7 +242,7 @@ GRWLAPI GRWLwindow* grwlCreateWindow(int width, int height, const char* title, G
     if (!_grwl.platform.createWindow(window, &wndconfig, &ctxconfig, &fbconfig))
     {
         grwlDestroyWindow((GRWLwindow*)window);
-        return NULL;
+        return nullptr;
     }
 
     return (GRWLwindow*)window;
@@ -442,7 +440,7 @@ GRWLAPI void grwlWindowHint(int hint, int value)
 
 GRWLAPI void grwlWindowHintString(int hint, const char* value)
 {
-    assert(value != NULL);
+    assert(value != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -471,8 +469,8 @@ GRWLAPI void grwlDestroyWindow(GRWLwindow* handle)
 
     _GRWL_REQUIRE_INIT();
 
-    // Allow closing of NULL (to match the behavior of free)
-    if (window == NULL)
+    // Allow closing of nullptr (to match the behavior of free)
+    if (window == nullptr)
     {
         return;
     }
@@ -484,7 +482,7 @@ GRWLAPI void grwlDestroyWindow(GRWLwindow* handle)
     // window is destroyed
     if (window == _grwlPlatformGetTls(&_grwl.contextSlot))
     {
-        grwlMakeContextCurrent(NULL);
+        grwlMakeContextCurrent(nullptr);
     }
 
     _grwl.platform.destroyWindow(window);
@@ -516,7 +514,7 @@ GRWLAPI void grwlDestroyWindow(GRWLwindow* handle)
 GRWLAPI int grwlWindowShouldClose(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT_OR_RETURN(0);
     return window->shouldClose;
@@ -525,7 +523,7 @@ GRWLAPI int grwlWindowShouldClose(GRWLwindow* handle)
 GRWLAPI void grwlSetWindowShouldClose(GRWLwindow* handle, int value)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
     window->shouldClose = value;
@@ -534,8 +532,8 @@ GRWLAPI void grwlSetWindowShouldClose(GRWLwindow* handle, int value)
 GRWLAPI void grwlSetWindowTitle(GRWLwindow* handle, const char* title)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
-    assert(title != NULL);
+    assert(window != nullptr);
+    assert(title != nullptr);
 
     _GRWL_REQUIRE_INIT();
     _grwl.platform.setWindowTitle(window, title);
@@ -543,12 +541,11 @@ GRWLAPI void grwlSetWindowTitle(GRWLwindow* handle, const char* title)
 
 GRWLAPI void grwlSetWindowIcon(GRWLwindow* handle, int count, const GRWLimage* images)
 {
-    int i;
     _GRWLwindow* window = (_GRWLwindow*)handle;
 
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(count >= 0);
-    assert(count == 0 || images != NULL);
+    assert(count == 0 || images != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -558,9 +555,9 @@ GRWLAPI void grwlSetWindowIcon(GRWLwindow* handle, int count, const GRWLimage* i
         return;
     }
 
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
-        assert(images[i].pixels != NULL);
+        assert(images[i].pixels != nullptr);
 
         if (images[i].width <= 0 || images[i].height <= 0)
         {
@@ -576,7 +573,7 @@ GRWLAPI void grwlSetWindowProgressIndicator(GRWLwindow* handle, int progressStat
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
 
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -624,7 +621,7 @@ GRWLAPI void grwlSetWindowBadgeString(GRWLwindow* handle, const char* string)
 GRWLAPI void grwlGetWindowPos(GRWLwindow* handle, int* xpos, int* ypos)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (xpos)
     {
@@ -642,7 +639,7 @@ GRWLAPI void grwlGetWindowPos(GRWLwindow* handle, int* xpos, int* ypos)
 GRWLAPI void grwlSetWindowPos(GRWLwindow* handle, int xpos, int ypos)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -657,7 +654,7 @@ GRWLAPI void grwlSetWindowPos(GRWLwindow* handle, int xpos, int ypos)
 GRWLAPI void grwlGetWindowSize(GRWLwindow* handle, int* width, int* height)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (width)
     {
@@ -675,7 +672,7 @@ GRWLAPI void grwlGetWindowSize(GRWLwindow* handle, int* width, int* height)
 GRWLAPI void grwlSetWindowSize(GRWLwindow* handle, int width, int height)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(width >= 0);
     assert(height >= 0);
 
@@ -690,7 +687,7 @@ GRWLAPI void grwlSetWindowSize(GRWLwindow* handle, int width, int height)
 GRWLAPI void grwlSetWindowSizeLimits(GRWLwindow* handle, int minwidth, int minheight, int maxwidth, int maxheight)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -728,7 +725,7 @@ GRWLAPI void grwlSetWindowSizeLimits(GRWLwindow* handle, int minwidth, int minhe
 GRWLAPI void grwlSetWindowAspectRatio(GRWLwindow* handle, int numer, int denom)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(numer != 0);
     assert(denom != 0);
 
@@ -757,7 +754,7 @@ GRWLAPI void grwlSetWindowAspectRatio(GRWLwindow* handle, int numer, int denom)
 GRWLAPI void grwlGetFramebufferSize(GRWLwindow* handle, int* width, int* height)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (width)
     {
@@ -775,7 +772,7 @@ GRWLAPI void grwlGetFramebufferSize(GRWLwindow* handle, int* width, int* height)
 GRWLAPI void grwlGetWindowFrameSize(GRWLwindow* handle, int* left, int* top, int* right, int* bottom)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (left)
     {
@@ -801,7 +798,7 @@ GRWLAPI void grwlGetWindowFrameSize(GRWLwindow* handle, int* left, int* top, int
 GRWLAPI void grwlGetWindowContentScale(GRWLwindow* handle, float* xscale, float* yscale)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     if (xscale)
     {
@@ -819,7 +816,7 @@ GRWLAPI void grwlGetWindowContentScale(GRWLwindow* handle, float* xscale, float*
 GRWLAPI float grwlGetWindowOpacity(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT_OR_RETURN(1.f);
     return _grwl.platform.getWindowOpacity(window);
@@ -828,7 +825,7 @@ GRWLAPI float grwlGetWindowOpacity(GRWLwindow* handle)
 GRWLAPI void grwlSetWindowOpacity(GRWLwindow* handle, float opacity)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(opacity == opacity);
     assert(opacity >= 0.f);
     assert(opacity <= 1.f);
@@ -847,7 +844,7 @@ GRWLAPI void grwlSetWindowOpacity(GRWLwindow* handle, float opacity)
 GRWLAPI void grwlIconifyWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
     _grwl.platform.iconifyWindow(window);
@@ -856,7 +853,7 @@ GRWLAPI void grwlIconifyWindow(GRWLwindow* handle)
 GRWLAPI void grwlRestoreWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
     _grwl.platform.restoreWindow(window);
@@ -865,7 +862,7 @@ GRWLAPI void grwlRestoreWindow(GRWLwindow* handle)
 GRWLAPI void grwlMaximizeWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -880,7 +877,7 @@ GRWLAPI void grwlMaximizeWindow(GRWLwindow* handle)
 GRWLAPI void grwlShowWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -900,7 +897,7 @@ GRWLAPI void grwlShowWindow(GRWLwindow* handle)
 GRWLAPI void grwlRequestWindowAttention(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -910,7 +907,7 @@ GRWLAPI void grwlRequestWindowAttention(GRWLwindow* handle)
 GRWLAPI void grwlHideWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -925,7 +922,7 @@ GRWLAPI void grwlHideWindow(GRWLwindow* handle)
 GRWLAPI void grwlFocusWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -935,7 +932,7 @@ GRWLAPI void grwlFocusWindow(GRWLwindow* handle)
 GRWLAPI int grwlGetWindowAttrib(GRWLwindow* handle, int attrib)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT_OR_RETURN(0);
 
@@ -998,7 +995,7 @@ GRWLAPI int grwlGetWindowAttrib(GRWLwindow* handle, int attrib)
 GRWLAPI void grwlSetWindowAttrib(GRWLwindow* handle, int attrib, int value)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -1050,9 +1047,9 @@ GRWLAPI void grwlSetWindowAttrib(GRWLwindow* handle, int attrib, int value)
 GRWLAPI GRWLmonitor* grwlGetWindowMonitor(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return (GRWLmonitor*)window->monitor;
 }
 
@@ -1061,7 +1058,7 @@ GRWLAPI void grwlSetWindowMonitor(GRWLwindow* wh, GRWLmonitor* mh, int xpos, int
 {
     _GRWLwindow* window = (_GRWLwindow*)wh;
     _GRWLmonitor* monitor = (_GRWLmonitor*)mh;
-    assert(window != NULL);
+    assert(window != nullptr);
     assert(width >= 0);
     assert(height >= 0);
 
@@ -1089,7 +1086,7 @@ GRWLAPI void grwlSetWindowMonitor(GRWLwindow* wh, GRWLmonitor* mh, int xpos, int
 GRWLAPI void grwlSetWindowUserPointer(GRWLwindow* handle, void* pointer)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
     window->userPointer = pointer;
@@ -1098,18 +1095,18 @@ GRWLAPI void grwlSetWindowUserPointer(GRWLwindow* handle, void* pointer)
 GRWLAPI void* grwlGetWindowUserPointer(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return window->userPointer;
 }
 
 GRWLAPI GRWLwindowposfun grwlSetWindowPosCallback(GRWLwindow* handle, GRWLwindowposfun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowposfun, window->callbacks.pos, cbfun);
     return cbfun;
 }
@@ -1117,9 +1114,9 @@ GRWLAPI GRWLwindowposfun grwlSetWindowPosCallback(GRWLwindow* handle, GRWLwindow
 GRWLAPI GRWLwindowsizefun grwlSetWindowSizeCallback(GRWLwindow* handle, GRWLwindowsizefun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowsizefun, window->callbacks.size, cbfun);
     return cbfun;
 }
@@ -1127,9 +1124,9 @@ GRWLAPI GRWLwindowsizefun grwlSetWindowSizeCallback(GRWLwindow* handle, GRWLwind
 GRWLAPI GRWLwindowclosefun grwlSetWindowCloseCallback(GRWLwindow* handle, GRWLwindowclosefun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowclosefun, window->callbacks.close, cbfun);
     return cbfun;
 }
@@ -1137,9 +1134,9 @@ GRWLAPI GRWLwindowclosefun grwlSetWindowCloseCallback(GRWLwindow* handle, GRWLwi
 GRWLAPI GRWLwindowrefreshfun grwlSetWindowRefreshCallback(GRWLwindow* handle, GRWLwindowrefreshfun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowrefreshfun, window->callbacks.refresh, cbfun);
     return cbfun;
 }
@@ -1147,9 +1144,9 @@ GRWLAPI GRWLwindowrefreshfun grwlSetWindowRefreshCallback(GRWLwindow* handle, GR
 GRWLAPI GRWLwindowfocusfun grwlSetWindowFocusCallback(GRWLwindow* handle, GRWLwindowfocusfun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowfocusfun, window->callbacks.focus, cbfun);
     return cbfun;
 }
@@ -1157,9 +1154,9 @@ GRWLAPI GRWLwindowfocusfun grwlSetWindowFocusCallback(GRWLwindow* handle, GRWLwi
 GRWLAPI GRWLwindowiconifyfun grwlSetWindowIconifyCallback(GRWLwindow* handle, GRWLwindowiconifyfun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowiconifyfun, window->callbacks.iconify, cbfun);
     return cbfun;
 }
@@ -1167,9 +1164,9 @@ GRWLAPI GRWLwindowiconifyfun grwlSetWindowIconifyCallback(GRWLwindow* handle, GR
 GRWLAPI GRWLwindowmaximizefun grwlSetWindowMaximizeCallback(GRWLwindow* handle, GRWLwindowmaximizefun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowmaximizefun, window->callbacks.maximize, cbfun);
     return cbfun;
 }
@@ -1177,9 +1174,9 @@ GRWLAPI GRWLwindowmaximizefun grwlSetWindowMaximizeCallback(GRWLwindow* handle, 
 GRWLAPI GRWLframebuffersizefun grwlSetFramebufferSizeCallback(GRWLwindow* handle, GRWLframebuffersizefun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLframebuffersizefun, window->callbacks.fbsize, cbfun);
     return cbfun;
 }
@@ -1187,9 +1184,9 @@ GRWLAPI GRWLframebuffersizefun grwlSetFramebufferSizeCallback(GRWLwindow* handle
 GRWLAPI GRWLwindowcontentscalefun grwlSetWindowContentScaleCallback(GRWLwindow* handle, GRWLwindowcontentscalefun cbfun)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     _GRWL_SWAP(GRWLwindowcontentscalefun, window->callbacks.scale, cbfun);
     return cbfun;
 }

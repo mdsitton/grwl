@@ -147,7 +147,7 @@ static int getWindowState(_GRWLwindow* window)
     {
         CARD32 state;
         Window icon;
-    }* state = NULL;
+    }* state = nullptr;
 
     if (_grwlGetWindowPropertyX11(window->x11.handle, _grwl.x11.WM_STATE, _grwl.x11.WM_STATE,
                                   (unsigned char**)&state) >= 2)
@@ -383,9 +383,8 @@ static void updateWindowMode(_GRWLwindow* window)
 static char* convertLatin1toUTF8(const char* source)
 {
     size_t size = 1;
-    const char* sp;
 
-    for (sp = source; *sp; sp++)
+    for (const char* sp = source; *sp; sp++)
     {
         size += (*sp & 0x80) ? 2 : 1;
     }
@@ -393,7 +392,7 @@ static char* convertLatin1toUTF8(const char* source)
     char* target = (char*)_grwl_calloc(size, 1);
     char* tp = target;
 
-    for (sp = source; *sp; sp++)
+    for (const char* sp = source; *sp; sp++)
     {
         tp += _grwlEncodeUTF8(tp, *sp);
     }
@@ -491,7 +490,7 @@ static void enableCursor(_GRWLwindow* window)
         disableRawMouseMotion(window);
     }
 
-    _grwl.x11.disabledCursorWindow = NULL;
+    _grwl.x11.disabledCursorWindow = nullptr;
     releaseCursor();
     _grwlSetCursorPosX11(window, _grwl.x11.restoreCursorPosX, _grwl.x11.restoreCursorPosY);
     updateCursorImage(window);
@@ -502,7 +501,7 @@ static void enableCursor(_GRWLwindow* window)
 static void inputContextDestroyCallback(XIC ic, XPointer clientData, XPointer callData)
 {
     _GRWLwindow* window = (_GRWLwindow*)clientData;
-    window->x11.ic = NULL;
+    window->x11.ic = nullptr;
 }
 
 // IME Start callback (do nothing)
@@ -546,7 +545,7 @@ static void _ximPreeditDrawCallback(XIC xic, XPointer clientData, XIMPreeditDraw
         XIMText* text = callData->text;
         int textLen = preedit->textCount + text->length - callData->chg_length;
         int textBufferCount = preedit->textBufferCount;
-        int i, j, rstart, rend;
+        int rstart, rend;
         const char* src;
 
         // realloc preedit text
@@ -558,7 +557,7 @@ static void _ximPreeditDrawCallback(XIC xic, XPointer clientData, XIMPreeditDraw
         {
             unsigned int* preeditText =
                 (unsigned int*)_grwl_realloc(preedit->text, sizeof(unsigned int) * textBufferCount);
-            if (preeditText == NULL)
+            if (preeditText == nullptr)
             {
                 return;
             }
@@ -580,17 +579,15 @@ static void _ximPreeditDrawCallback(XIC xic, XPointer clientData, XIMPreeditDraw
         src = text->string.multi_byte;
         rend = 0;
         rstart = textLen;
-        for (i = 0, j = callData->chg_first; i < text->length; i++)
+        for (int i = 0, j = callData->chg_first; i < text->length; i++)
         {
-            XIMFeedback f;
-
             if (i < callData->chg_first || callData->chg_first + textLen < i)
             {
                 continue;
             }
 
             preedit->text[j++] = _grwlDecodeUTF8(&src);
-            f = text->feedback[i];
+            XIMFeedback f = text->feedback[i];
             if ((f & XIMReverse) || (f & XIMHighlight))
             {
                 rend = i;
@@ -711,7 +708,7 @@ static XVaNestedList _createXIMPreeditCallbacks(_GRWLwindow* window)
     return XVaCreateNestedList(0, XNPreeditStartCallback, &window->x11.preeditStartCallback.client_data,
                                XNPreeditDoneCallback, &window->x11.preeditDoneCallback.client_data,
                                XNPreeditDrawCallback, &window->x11.preeditDrawCallback.client_data,
-                               XNPreeditCaretCallback, &window->x11.preeditCaretCallback.client_data, NULL);
+                               XNPreeditCaretCallback, &window->x11.preeditCaretCallback.client_data, nullptr);
 }
 
 // Create XIM status callback
@@ -728,7 +725,7 @@ static XVaNestedList _createXIMStatusCallbacks(_GRWLwindow* window)
     window->x11.statusDrawCallback.callback = (XIMProc)_ximStatusDrawCallback;
     return XVaCreateNestedList(0, XNStatusStartCallback, &window->x11.statusStartCallback.client_data,
                                XNStatusDoneCallback, &window->x11.statusDoneCallback.client_data, XNStatusDrawCallback,
-                               &window->x11.statusDrawCallback.client_data, NULL);
+                               &window->x11.statusDrawCallback.client_data, nullptr);
 }
 
 // Create the X11 window (and its colormap)
@@ -948,7 +945,7 @@ static bool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wndcon
 //
 static Atom writeTargetToProperty(const XSelectionRequestEvent* request)
 {
-    char* selectionString = NULL;
+    char* selectionString = nullptr;
     const Atom formats[] = { _grwl.x11.UTF8_STRING, XA_STRING };
     const int formatCount = sizeof(formats) / sizeof(formats[0]);
 
@@ -1025,7 +1022,7 @@ static Atom writeTargetToProperty(const XSelectionRequestEvent* request)
         // It should be handled as a no-op side effect target
 
         XChangeProperty(_grwl.x11.display, request->requestor, request->property, _grwl.x11.NULL_, 32, PropModeReplace,
-                        NULL, 0);
+                        nullptr, 0);
 
         return request->property;
     }
@@ -1067,7 +1064,7 @@ static void handleSelectionRequest(XEvent* event)
 
 static const char* getSelectionString(Atom selection)
 {
-    char** selectionString = NULL;
+    char** selectionString = nullptr;
     const Atom targets[] = { _grwl.x11.UTF8_STRING, XA_STRING };
     const size_t targetCount = sizeof(targets) / sizeof(targets[0]);
 
@@ -1088,7 +1085,7 @@ static const char* getSelectionString(Atom selection)
     }
 
     _grwl_free(*selectionString);
-    *selectionString = NULL;
+    *selectionString = nullptr;
 
     for (size_t i = 0; i < targetCount; i++)
     {
@@ -1103,7 +1100,7 @@ static const char* getSelectionString(Atom selection)
 
         while (!XCheckTypedWindowEvent(_grwl.x11.display, _grwl.x11.helperWindowHandle, SelectionNotify, &notification))
         {
-            waitForX11Event(NULL);
+            waitForX11Event(nullptr);
         }
 
         if (notification.xselection.property == None)
@@ -1120,13 +1117,13 @@ static const char* getSelectionString(Atom selection)
         if (actualType == _grwl.x11.INCR)
         {
             size_t size = 1;
-            char* string = NULL;
+            char* string = nullptr;
 
             for (;;)
             {
                 while (!XCheckIfEvent(_grwl.x11.display, &dummy, isSelPropNewValueNotify, (XPointer)&notification))
                 {
-                    waitForX11Event(NULL);
+                    waitForX11Event(nullptr);
                 }
 
                 XFree(data);
@@ -1234,7 +1231,7 @@ static void releaseMonitor(_GRWLwindow* window)
         return;
     }
 
-    _grwlInputMonitorWindow(window->monitor, NULL);
+    _grwlInputMonitorWindow(window->monitor, nullptr);
     _grwlRestoreVideoModeX11(window->monitor);
 
     _grwl.x11.saver.count--;
@@ -1332,7 +1329,7 @@ static void processEvent(XEvent* event)
         return;
     }
 
-    _GRWLwindow* window = NULL;
+    _GRWLwindow* window = nullptr;
     if (XFindContext(_grwl.x11.display, event->xany.window, _grwl.x11.context, (XPointer*)&window) != 0)
     {
         // This is an event for a window that has already been destroyed
@@ -1378,12 +1375,12 @@ static void processEvent(XEvent* event)
                 char buffer[100];
                 char* chars = buffer;
 
-                count = Xutf8LookupString(window->x11.ic, &event->xkey, buffer, sizeof(buffer) - 1, NULL, &status);
+                count = Xutf8LookupString(window->x11.ic, &event->xkey, buffer, sizeof(buffer) - 1, nullptr, &status);
 
                 if (status == XBufferOverflow)
                 {
                     chars = (char*)_grwl_calloc(count + 1, 1);
-                    count = Xutf8LookupString(window->x11.ic, &event->xkey, chars, count, NULL, &status);
+                    count = Xutf8LookupString(window->x11.ic, &event->xkey, chars, count, nullptr, &status);
                 }
 
                 if (status == XLookupChars || status == XLookupBoth)
@@ -1404,7 +1401,7 @@ static void processEvent(XEvent* event)
             else
             {
                 KeySym keysym;
-                XLookupString(&event->xkey, NULL, 0, &keysym, NULL);
+                XLookupString(&event->xkey, nullptr, 0, &keysym, nullptr);
 
                 _grwlInputKey(window, key, keycode, GRWL_PRESS, mods);
 
@@ -1674,7 +1671,7 @@ static void processEvent(XEvent* event)
             {
                 // A drag operation has entered the window
                 unsigned long count;
-                Atom* formats = NULL;
+                Atom* formats = nullptr;
                 const bool list = event->xclient.data.l[1] & 1;
 
                 _grwl.x11.xdnd.source = event->xclient.data.l[0];
@@ -1994,7 +1991,7 @@ void _grwlPushSelectionToManagerX11()
     {
         XEvent event;
 
-        while (XCheckIfEvent(_grwl.x11.display, &event, isSelectionEvent, NULL))
+        while (XCheckIfEvent(_grwl.x11.display, &event, isSelectionEvent, nullptr))
         {
             switch (event.type)
             {
@@ -2019,7 +2016,7 @@ void _grwlPushSelectionToManagerX11()
             }
         }
 
-        waitForX11Event(NULL);
+        waitForX11Event(nullptr);
     }
 }
 
@@ -2041,7 +2038,7 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
 
         window->x11.ic = XCreateIC(_grwl.x11.im, XNInputStyle, _grwl.x11.imStyle, XNClientWindow, window->x11.handle,
                                    XNFocusWindow, window->x11.handle, XNPreeditAttributes, preeditList,
-                                   XNStatusAttributes, statusList, XNDestroyCallback, &callback, NULL);
+                                   XNStatusAttributes, statusList, XNDestroyCallback, &callback, nullptr);
 
         XFree(preeditList);
         XFree(statusList);
@@ -2049,7 +2046,7 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
     else if (_grwl.x11.imStyle == STYLE_OVERTHESPOT)
     {
         window->x11.ic = XCreateIC(_grwl.x11.im, XNInputStyle, _grwl.x11.imStyle, XNClientWindow, window->x11.handle,
-                                   XNFocusWindow, window->x11.handle, XNDestroyCallback, &callback, NULL);
+                                   XNFocusWindow, window->x11.handle, XNDestroyCallback, &callback, nullptr);
     }
     else
     {
@@ -2065,7 +2062,7 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
         XGetWindowAttributes(_grwl.x11.display, window->x11.handle, &attribs);
 
         unsigned long filter = 0;
-        if (XGetICValues(window->x11.ic, XNFilterEvents, &filter, NULL) == NULL)
+        if (XGetICValues(window->x11.ic, XNFilterEvents, &filter, nullptr) == nullptr)
         {
             XSelectInput(_grwl.x11.display, window->x11.handle, attribs.your_event_mask | filter);
         }
@@ -2079,7 +2076,7 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
 bool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
                           const _GRWLfbconfig* fbconfig)
 {
-    Visual* visual = NULL;
+    Visual* visual = nullptr;
     int depth;
 
     if (ctxconfig->client != GRWL_NO_API)
@@ -2187,9 +2184,9 @@ bool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, 
     // Reset progress state as it gets saved between application runs
     if (_grwl.dbus.connection)
     {
-        // Window NULL is safe here because it won't get
+        // Window nullptr is safe here because it won't get
         // used inside the SetWindowTaskbarProgress function
-        _grwlSetWindowProgressIndicatorX11(NULL, GRWL_PROGRESS_INDICATOR_DISABLED, 0.0);
+        _grwlSetWindowProgressIndicatorX11(nullptr, GRWL_PROGRESS_INDICATOR_DISABLED, 0.0);
     }
 
     XFlush(_grwl.x11.display);
@@ -2211,7 +2208,7 @@ void _grwlDestroyWindowX11(_GRWLwindow* window)
     if (window->x11.ic)
     {
         XDestroyIC(window->x11.ic);
-        window->x11.ic = NULL;
+        window->x11.ic = nullptr;
     }
 
     if (window->context.destroy)
@@ -2240,7 +2237,8 @@ void _grwlSetWindowTitleX11(_GRWLwindow* window, const char* title)
 {
     if (_grwl.x11.xlib.utf8)
     {
-        Xutf8SetWMProperties(_grwl.x11.display, window->x11.handle, title, title, NULL, 0, NULL, NULL, NULL);
+        Xutf8SetWMProperties(_grwl.x11.display, window->x11.handle, title, title, nullptr, 0, nullptr, nullptr,
+                             nullptr);
     }
 
     XChangeProperty(_grwl.x11.display, window->x11.handle, _grwl.x11.NET_WM_NAME, _grwl.x11.UTF8_STRING, 8,
@@ -2310,10 +2308,10 @@ void _grwlSetWindowProgressIndicatorX11(_GRWLwindow* window, int progressState, 
 
 void _grwlSetWindowBadgeX11(_GRWLwindow* window, int count)
 {
-    if (window != NULL)
+    if (window != nullptr)
     {
         _grwlInputError(GRWL_FEATURE_UNAVAILABLE,
-                        "X11: Cannot set a badge for a window. Pass NULL to set the application's shared badge.");
+                        "X11: Cannot set a badge for a window. Pass nullptr to set the application's shared badge.");
         return;
     }
 
@@ -2428,7 +2426,7 @@ void _grwlGetFramebufferSizeX11(_GRWLwindow* window, int* width, int* height)
 
 void _grwlGetWindowFrameSizeX11(_GRWLwindow* window, int* left, int* top, int* right, int* bottom)
 {
-    long* extents = NULL;
+    long* extents = nullptr;
 
     if (window->monitor || !window->decorated)
     {
@@ -2562,7 +2560,7 @@ void _grwlMaximizeWindowX11(_GRWLwindow* window)
     }
     else
     {
-        Atom* states = NULL;
+        Atom* states = nullptr;
         unsigned long count =
             _grwlGetWindowPropertyX11(window->x11.handle, _grwl.x11.NET_WM_STATE, XA_ATOM, (unsigned char**)&states);
 
@@ -2831,7 +2829,7 @@ void _grwlSetWindowFloatingX11(_GRWLwindow* window, bool enabled)
     }
     else
     {
-        Atom* states = NULL;
+        Atom* states = nullptr;
         const unsigned long count =
             _grwlGetWindowPropertyX11(window->x11.handle, _grwl.x11.NET_WM_STATE, XA_ATOM, (unsigned char**)&states);
 
@@ -2904,7 +2902,7 @@ float _grwlGetWindowOpacityX11(_GRWLwindow* window)
 
     if (XGetSelectionOwner(_grwl.x11.display, _grwl.x11.NET_WM_CM_Sx))
     {
-        CARD32* value = NULL;
+        CARD32* value = nullptr;
 
         if (_grwlGetWindowPropertyX11(window->x11.handle, _grwl.x11.NET_WM_WINDOW_OPACITY, XA_CARDINAL,
                                       (unsigned char**)&value))
@@ -2993,7 +2991,7 @@ void _grwlPollEventsX11()
 
 void _grwlWaitEventsX11()
 {
-    waitForAnyEvent(NULL);
+    waitForAnyEvent(nullptr);
     _grwlPollEventsX11();
 }
 
@@ -3072,7 +3070,7 @@ void _grwlSetCursorModeX11(_GRWLwindow* window, int mode)
         }
         else if (_grwl.x11.disabledCursorWindow == window)
         {
-            _grwl.x11.disabledCursorWindow = NULL;
+            _grwl.x11.disabledCursorWindow = nullptr;
             _grwlSetCursorPosX11(window, _grwl.x11.restoreCursorPosX, _grwl.x11.restoreCursorPosY);
         }
     }
@@ -3085,32 +3083,32 @@ const char* _grwlGetScancodeNameX11(int scancode)
 {
     if (!_grwl.x11.xkb.available)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (scancode < 0 || scancode > 0xff || _grwl.x11.keycodes[scancode] == GRWL_KEY_UNKNOWN)
     {
         _grwlInputError(GRWL_INVALID_VALUE, "Invalid scancode %i", scancode);
-        return NULL;
+        return nullptr;
     }
 
     const int key = _grwl.x11.keycodes[scancode];
     const KeySym keysym = XkbKeycodeToKeysym(_grwl.x11.display, scancode, _grwl.x11.xkb.group, 0);
     if (keysym == NoSymbol)
     {
-        return NULL;
+        return nullptr;
     }
 
     const uint32_t codepoint = _grwlKeySym2Unicode(keysym);
     if (codepoint == GRWL_INVALID_CODEPOINT)
     {
-        return NULL;
+        return nullptr;
     }
 
     const size_t count = _grwlEncodeUTF8(_grwl.x11.keynames[key], codepoint);
     if (count == 0)
     {
-        return NULL;
+        return nullptr;
     }
 
     _grwl.x11.keynames[key][count] = '\0';
@@ -3127,7 +3125,7 @@ const char* _grwlGetKeyboardLayoutNameX11()
     if (!_grwl.x11.xkb.available)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "X11: XKB extension required for keyboard layout names");
-        return NULL;
+        return nullptr;
     }
 
     XkbStateRec state = { 0 };
@@ -3138,7 +3136,7 @@ const char* _grwlGetKeyboardLayoutNameX11()
     {
         XkbFreeKeyboard(desc, 0, True);
         _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to retrieve keyboard layout names");
-        return NULL;
+        return nullptr;
     }
 
     const Atom atom = desc->names->groups[state.group];
@@ -3147,7 +3145,7 @@ const char* _grwlGetKeyboardLayoutNameX11()
     if (atom == None)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Name missing for current keyboard layout");
-        return NULL;
+        return nullptr;
     }
 
     free(_grwl.x11.keyboardLayoutName);
@@ -3174,7 +3172,7 @@ bool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape)
         if (theme)
         {
             const int size = XcursorGetDefaultSize(_grwl.x11.display);
-            const char* name = NULL;
+            const char* name = nullptr;
 
             switch (shape)
             {
@@ -3313,8 +3311,8 @@ void _grwlUpdatePreeditCursorRectangleX11(_GRWLwindow* window)
 
     spot.x = preedit->cursorPosX + preedit->cursorWidth;
     spot.y = preedit->cursorPosY + preedit->cursorHeight;
-    preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, NULL);
-    XSetICValues(window->x11.ic, XNPreeditAttributes, preedit_attr, NULL);
+    preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &spot, nullptr);
+    XSetICValues(window->x11.ic, XNPreeditAttributes, preedit_attr, nullptr);
     XFree(preedit_attr);
 }
 
@@ -3344,14 +3342,14 @@ void _grwlResetPreeditTextX11(_GRWLwindow* window)
         return;
     }
 
-    preedit_attr = XVaCreateNestedList(0, XNPreeditState, &preedit_state, NULL);
-    XGetICValues(ic, XNPreeditAttributes, preedit_attr, NULL);
+    preedit_attr = XVaCreateNestedList(0, XNPreeditState, &preedit_state, nullptr);
+    XGetICValues(ic, XNPreeditAttributes, preedit_attr, nullptr);
     XFree(preedit_attr);
 
     result = XmbResetIC(ic);
 
-    preedit_attr = XVaCreateNestedList(0, XNPreeditState, preedit_state, NULL);
-    XSetICValues(ic, XNPreeditAttributes, preedit_attr, NULL);
+    preedit_attr = XVaCreateNestedList(0, XNPreeditState, preedit_state, nullptr);
+    XSetICValues(ic, XNPreeditAttributes, preedit_attr, nullptr);
     XFree(preedit_attr);
 
     preedit->textCount = 0;
@@ -3608,7 +3606,7 @@ _GRWLusercontext* _grwlCreateUserContextX11(_GRWLwindow* window)
         return _grwlCreateUserContextEGL(window);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3617,12 +3615,12 @@ _GRWLusercontext* _grwlCreateUserContextX11(_GRWLwindow* window)
 
 GRWLAPI Display* grwlGetX11Display()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (_grwl.platform.platformID != GRWL_PLATFORM_X11)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "X11: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     return _grwl.x11.display;
@@ -3665,12 +3663,12 @@ GRWLAPI void grwlSetX11SelectionString(const char* string)
 
 GRWLAPI const char* grwlGetX11SelectionString()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (_grwl.platform.platformID != GRWL_PLATFORM_X11)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "X11: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     return getSelectionString(_grwl.x11.PRIMARY);

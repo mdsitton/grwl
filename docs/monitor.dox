@@ -228,7 +228,7 @@ ramp.red = red;
 ramp.green = green;
 ramp.blue = blue;
 
-for (i = 0;  i < ramp.size;  i++)
+for (int i = 0;  i < ramp.size;  i++)
 {
     // Fill out gamma ramp arrays as desired
 }

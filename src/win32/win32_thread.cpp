@@ -5,10 +5,9 @@
 
 #include "internal.hpp"
 
-#if defined(GRWL_BUILD_POSIX_THREAD)
+#if defined(GRWL_BUILD_WIN32_THREAD)
 
     #include <cassert>
-    #include <cstring>
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GRWL platform API                      //////
@@ -16,71 +15,66 @@
 
 bool _grwlPlatformCreateTls(_GRWLtls* tls)
 {
-    assert(tls->posix.allocated == false);
+    assert(tls->win32.allocated == false);
 
-    if (pthread_key_create(&tls->posix.key, nullptr) != 0)
+    tls->win32.index = TlsAlloc();
+    if (tls->win32.index == TLS_OUT_OF_INDEXES)
     {
-        _grwlInputError(GRWL_PLATFORM_ERROR, "POSIX: Failed to create context TLS");
+        _grwlInputError(GRWL_PLATFORM_ERROR, "Win32: Failed to allocate TLS index");
         return false;
     }
 
-    tls->posix.allocated = true;
+    tls->win32.allocated = true;
     return true;
 }
 
 void _grwlPlatformDestroyTls(_GRWLtls* tls)
 {
-    if (tls->posix.allocated)
+    if (tls->win32.allocated)
     {
-        pthread_key_delete(tls->posix.key);
+        TlsFree(tls->win32.index);
     }
     memset(tls, 0, sizeof(_GRWLtls));
 }
 
 void* _grwlPlatformGetTls(_GRWLtls* tls)
 {
-    assert(tls->posix.allocated == true);
-    return pthread_getspecific(tls->posix.key);
+    assert(tls->win32.allocated == true);
+    return TlsGetValue(tls->win32.index);
 }
 
 void _grwlPlatformSetTls(_GRWLtls* tls, void* value)
 {
-    assert(tls->posix.allocated == true);
-    pthread_setspecific(tls->posix.key, value);
+    assert(tls->win32.allocated == true);
+    TlsSetValue(tls->win32.index, value);
 }
 
 bool _grwlPlatformCreateMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == false);
-
-    if (pthread_mutex_init(&mutex->posix.handle, nullptr) != 0)
-    {
-        _grwlInputError(GRWL_PLATFORM_ERROR, "POSIX: Failed to create mutex");
-        return false;
-    }
-
-    return mutex->posix.allocated = true;
+    assert(mutex->win32.allocated == false);
+    InitializeCriticalSection(&mutex->win32.section);
+    return mutex->win32.allocated = true;
 }
 
 void _grwlPlatformDestroyMutex(_GRWLmutex* mutex)
 {
-    if (mutex->posix.allocated)
+    if (mutex->win32.allocated)
     {
-        pthread_mutex_destroy(&mutex->posix.handle);
+        DeleteCriticalSection(&mutex->win32.section);
     }
     memset(mutex, 0, sizeof(_GRWLmutex));
 }
 
 void _grwlPlatformLockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == true);
-    pthread_mutex_lock(&mutex->posix.handle);
+    assert(mutex->win32.allocated == true);
+    EnterCriticalSection(&mutex->win32.section);
 }
 
 void _grwlPlatformUnlockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == true);
-    pthread_mutex_unlock(&mutex->posix.handle);
+    assert(mutex->win32.allocated == true);
+    LeaveCriticalSection(&mutex->win32.section);
 }
 
-#endif // GRWL_BUILD_POSIX_THREAD
+#endif // GRWL_BUILD_WIN32_THREAD

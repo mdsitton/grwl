@@ -35,7 +35,6 @@ static const struct
 bool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
 {
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
-    size_t i;
 
     if (desiredID != GRWL_ANY_PLATFORM && desiredID != GRWL_PLATFORM_WIN32 && desiredID != GRWL_PLATFORM_COCOA &&
         desiredID != GRWL_PLATFORM_WAYLAND && desiredID != GRWL_PLATFORM_X11 && desiredID != GRWL_PLATFORM_NULL)
@@ -53,7 +52,7 @@ bool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
             return supportedPlatforms[0].connect(supportedPlatforms[0].ID, platform);
         }
 
-        for (i = 0; i < count; i++)
+        for (size_t i = 0; i < count; i++)
         {
             if (supportedPlatforms[i].connect(desiredID, platform))
             {
@@ -65,7 +64,7 @@ bool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
     }
     else
     {
-        for (i = 0; i < count; i++)
+        for (size_t i = 0; i < count; i++)
         {
             if (supportedPlatforms[i].ID == desiredID)
             {
@@ -92,7 +91,6 @@ GRWLAPI int grwlGetPlatform()
 GRWLAPI int grwlPlatformSupported(int platformID)
 {
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
-    size_t i;
 
     if (platformID != GRWL_PLATFORM_WIN32 && platformID != GRWL_PLATFORM_COCOA && platformID != GRWL_PLATFORM_WAYLAND &&
         platformID != GRWL_PLATFORM_X11 && platformID != GRWL_PLATFORM_NULL)
@@ -106,7 +104,7 @@ GRWLAPI int grwlPlatformSupported(int platformID)
         return true;
     }
 
-    for (i = 0; i < count; i++)
+    for (size_t i = 0; i < count; i++)
     {
         if (platformID == supportedPlatforms[i].ID)
         {

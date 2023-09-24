@@ -23,12 +23,12 @@ bool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
             const time_t seconds = (time_t)*timeout;
             const long nanoseconds = (long)((*timeout - seconds) * 1e9);
             const struct timespec ts = { seconds, nanoseconds };
-            const int result = ppoll(fds, count, &ts, NULL);
+            const int result = ppoll(fds, count, &ts, nullptr);
     #elif defined(__NetBSD__)
             const time_t seconds = (time_t)*timeout;
             const long nanoseconds = (long)((*timeout - seconds) * 1e9);
             const struct timespec ts = { seconds, nanoseconds };
-            const int result = pollts(fds, count, &ts, NULL);
+            const int result = pollts(fds, count, &ts, nullptr);
     #else
             const int milliseconds = (int)(*timeout * 1e3);
             const int result = poll(fds, count, milliseconds);

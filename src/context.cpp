@@ -41,7 +41,7 @@ bool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
     {
         if (ctxconfig->client == GRWL_NO_API || ctxconfig->share->context.client == GRWL_NO_API)
         {
-            _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
+            _grwlInputError(GRWL_NO_WINDOW_CONTEXT, nullptr);
             return false;
         }
 
@@ -135,14 +135,13 @@ bool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
 const _GRWLfbconfig* _grwlChooseFBConfig(const _GRWLfbconfig* desired, const _GRWLfbconfig* alternatives,
                                          unsigned int count)
 {
-    unsigned int i;
     unsigned int missing, leastMissing = UINT_MAX;
     unsigned int colorDiff, leastColorDiff = UINT_MAX;
     unsigned int extraDiff, leastExtraDiff = UINT_MAX;
     const _GRWLfbconfig* current;
-    const _GRWLfbconfig* closest = NULL;
+    const _GRWLfbconfig* closest = nullptr;
 
-    for (i = 0; i < count; i++)
+    for (uint32_t i = 0; i < count; i++)
     {
         current = alternatives + i;
 
@@ -299,10 +298,9 @@ const _GRWLfbconfig* _grwlChooseFBConfig(const _GRWLfbconfig* desired, const _GR
 //
 bool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig)
 {
-    int i;
     _GRWLwindow* previous;
     const char* version;
-    const char* prefixes[] = { "OpenGL ES-CM ", "OpenGL ES-CL ", "OpenGL ES ", NULL };
+    const char* prefixes[] = { "OpenGL ES-CM ", "OpenGL ES-CL ", "OpenGL ES ", nullptr };
 
     window->context.source = ctxconfig->source;
     window->context.client = GRWL_OPENGL_API;
@@ -335,7 +333,7 @@ bool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxco
         return false;
     }
 
-    for (i = 0; prefixes[i]; i++)
+    for (int i = 0; prefixes[i]; i++)
     {
         const size_t length = strlen(prefixes[i]);
 
@@ -572,7 +570,7 @@ GRWLAPI void grwlMakeContextCurrent(GRWLwindow* handle)
 
     _GRWL_REQUIRE_INIT();
 
-    _grwlPlatformSetTls(&_grwl.usercontextSlot, NULL);
+    _grwlPlatformSetTls(&_grwl.usercontextSlot, nullptr);
     previous = (_GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
 
     if (window && window->context.client == GRWL_NO_API)
@@ -586,7 +584,7 @@ GRWLAPI void grwlMakeContextCurrent(GRWLwindow* handle)
     {
         if (!window || window->context.source != previous->context.source)
         {
-            previous->context.makeCurrent(NULL);
+            previous->context.makeCurrent(nullptr);
         }
     }
 
@@ -598,14 +596,14 @@ GRWLAPI void grwlMakeContextCurrent(GRWLwindow* handle)
 
 GRWLAPI GRWLwindow* grwlGetCurrentContext()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return (GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
 }
 
 GRWLAPI void grwlSwapBuffers(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    assert(window != NULL);
+    assert(window != nullptr);
 
     _GRWL_REQUIRE_INIT();
 
@@ -639,7 +637,7 @@ GRWLAPI void grwlSwapInterval(int interval)
 GRWLAPI int grwlExtensionSupported(const char* extension)
 {
     _GRWLwindow* window;
-    assert(extension != NULL);
+    assert(extension != nullptr);
 
     _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
@@ -659,14 +657,13 @@ GRWLAPI int grwlExtensionSupported(const char* extension)
 
     if (window->context.major >= 3)
     {
-        int i;
         GLint count;
 
         // Check if extension is in the modern OpenGL extensions string list
 
         window->context.GetIntegerv(GL_NUM_EXTENSIONS, &count);
 
-        for (i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             const char* en = (const char*)window->context.GetStringi(GL_EXTENSIONS, i);
             if (!en)
@@ -705,16 +702,16 @@ GRWLAPI int grwlExtensionSupported(const char* extension)
 GRWLAPI GRWLglproc grwlGetProcAddress(const char* procname)
 {
     _GRWLwindow* window;
-    assert(procname != NULL);
+    assert(procname != nullptr);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     window = (_GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
     if (!window)
     {
         _grwlInputError(GRWL_NO_CURRENT_CONTEXT,
                         "Cannot query entry point without a current OpenGL or OpenGL ES context");
-        return NULL;
+        return nullptr;
     }
 
     return window->context.getProcAddress(procname);
@@ -725,19 +722,19 @@ GRWLAPI GRWLusercontext* grwlCreateUserContext(GRWLwindow* handle)
     _GRWLusercontext* context;
     _GRWLwindow* window = (_GRWLwindow*)handle;
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (!window)
     {
         _grwlInputError(GRWL_INVALID_VALUE, "Cannot create a user context without a valid window handle");
-        return NULL;
+        return nullptr;
     }
 
     if (window->context.client == GRWL_NO_API)
     {
         _grwlInputError(GRWL_NO_WINDOW_CONTEXT,
                         "Cannot create a user context for a window that has no OpenGL or OpenGL ES context");
-        return NULL;
+        return nullptr;
     }
 
     context = _grwl.platform.createUserContext(window);
@@ -756,7 +753,7 @@ GRWLAPI void grwlDestroyUserContext(GRWLusercontext* handle)
     {
         if (current == context)
         {
-            grwlMakeContextCurrent(NULL);
+            grwlMakeContextCurrent(nullptr);
         }
 
         context->destroy(context);
@@ -769,10 +766,10 @@ GRWLAPI void grwlMakeUserContextCurrent(GRWLusercontext* handle)
 
     _GRWL_REQUIRE_INIT();
 
-    // Call grwlMakeContextCurrent(NULL) to both clear context TLS and set
-    // context to NULL if required by platform & context, and this
-    // handles case of calling grwlMakeUserContextCurrent(NULL)
-    grwlMakeContextCurrent(NULL);
+    // Call grwlMakeContextCurrent(nullptr) to both clear context TLS and set
+    // context to nullptr if required by platform & context, and this
+    // handles case of calling grwlMakeUserContextCurrent(nullptr)
+    grwlMakeContextCurrent(nullptr);
 
     if (context)
     {
@@ -782,6 +779,6 @@ GRWLAPI void grwlMakeUserContextCurrent(GRWLusercontext* handle)
 
 GRWLAPI GRWLusercontext* grwlGetCurrentUserContext()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
     return (GRWLusercontext*)_grwlPlatformGetTls(&_grwl.usercontextSlot);
 }

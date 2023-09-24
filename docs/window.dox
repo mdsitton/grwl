@@ -51,7 +51,7 @@ should use.  In most cases, the user's primary monitor is a good choice.
 For more information about retrieving monitors, see @ref monitor_monitors.
 
 @code
-GRWLwindow* window = glfwCreateWindow(640, 480, "My Title", glfwGetPrimaryMonitor(), NULL);
+GRWLwindow* window = glfwCreateWindow(640, 480, "My Title", glfwGetPrimaryMonitor(), nullptr);
 @endcode
 
 Full screen windows cover the entire display area of a monitor, have no border
@@ -109,7 +109,7 @@ glfwWindowHint(GRWL_GREEN_BITS, mode->greenBits);
 glfwWindowHint(GRWL_BLUE_BITS, mode->blueBits);
 glfwWindowHint(GRWL_REFRESH_RATE, mode->refreshRate);
 
-GRWLwindow* window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, NULL);
+GRWLwindow* window = glfwCreateWindow(mode->width, mode->height, "My Title", monitor, nullptr);
 @endcode
 
 This also works for windowed mode windows that are made full screen.
@@ -589,7 +589,7 @@ glfwSetWindowUserPointer and queried with @ref glfwGetWindowUserPointer.  This
 can be used for any purpose you need and will not be modified by GRWL throughout
 the life-time of the window.
 
-The initial value of the pointer is `NULL`.
+The initial value of the pointer is `nullptr`.
 
 
 @subsection window_close Window closing and close flag
@@ -917,7 +917,7 @@ sequential rows, starting from the top-left corner.
 To revert to the default window icon, pass in an empty image array.
 
 @code
-glfwSetWindowIcon(window, 0, NULL);
+glfwSetWindowIcon(window, 0, nullptr);
 @endcode
 
 
@@ -932,7 +932,7 @@ GRWLmonitor* monitor = glfwGetWindowMonitor(window);
 
 This monitor handle is one of those returned by @ref glfwGetMonitors.
 
-For windowed mode windows, this function returns `NULL`.  This is how to tell
+For windowed mode windows, this function returns `nullptr`.  This is how to tell
 full screen windows from windowed mode windows.
 
 You can move windows between monitors or between full screen and windowed mode
@@ -950,7 +950,7 @@ When making the window windowed, specify the desired position and size.  The
 refresh rate argument is ignored.
 
 @code
-glfwSetWindowMonitor(window, NULL, xpos, ypos, width, height, 0);
+glfwSetWindowMonitor(window, nullptr, xpos, ypos, width, height, 0);
 @endcode
 
 This restores any previous window settings such as whether it is decorated,

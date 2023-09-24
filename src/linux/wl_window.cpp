@@ -134,15 +134,15 @@ static struct wl_buffer* createShmBuffer(const GRWLimage* image)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create buffer file of size %d: %s", length,
                         strerror(errno));
-        return NULL;
+        return nullptr;
     }
 
-    void* data = mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    void* data = mmap(nullptr, length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (data == MAP_FAILED)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to map file: %s", strerror(errno));
         close(fd);
-        return NULL;
+        return nullptr;
     }
 
     struct wl_shm_pool* pool = wl_shm_create_pool(_grwl.wl.shm, fd, length);
@@ -234,9 +234,9 @@ static void destroyFallbackDecoration(_GRWLdecorationWayland* decoration)
     {
         wp_viewport_destroy(decoration->viewport);
     }
-    decoration->surface = NULL;
-    decoration->subsurface = NULL;
-    decoration->viewport = NULL;
+    decoration->surface = nullptr;
+    decoration->subsurface = nullptr;
+    decoration->viewport = nullptr;
 }
 
 static void destroyFallbackDecorations(_GRWLwindow* window)
@@ -420,7 +420,7 @@ static void setIdleInhibitor(_GRWLwindow* window, bool enable)
     else if (!enable && window->wl.idleInhibitor)
     {
         zwp_idle_inhibitor_v1_destroy(window->wl.idleInhibitor);
-        window->wl.idleInhibitor = NULL;
+        window->wl.idleInhibitor = nullptr;
     }
 }
 
@@ -946,11 +946,11 @@ static void destroyShellObjects(_GRWLwindow* window)
         xdg_surface_destroy(window->wl.xdg.surface);
     }
 
-    window->wl.libdecor.frame = NULL;
-    window->wl.xdg.decoration = NULL;
+    window->wl.libdecor.frame = nullptr;
+    window->wl.xdg.decoration = nullptr;
     window->wl.xdg.decorationMode = 0;
-    window->wl.xdg.toplevel = NULL;
-    window->wl.xdg.surface = NULL;
+    window->wl.xdg.toplevel = nullptr;
+    window->wl.xdg.surface = nullptr;
 }
 
 static bool createNativeSurface(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLfbconfig* fbconfig)
@@ -1012,7 +1012,7 @@ static void setCursorImage(_GRWLwindow* window, _GRWLcursorWayland* cursorWaylan
 
         timer.it_value.tv_sec = image->delay / 1000;
         timer.it_value.tv_nsec = (image->delay % 1000) * 1000000;
-        timerfd_settime(_grwl.wl.cursorTimerfd, 0, &timer, NULL);
+        timerfd_settime(_grwl.wl.cursorTimerfd, 0, &timer, nullptr);
 
         cursorWayland->width = image->width;
         cursorWayland->height = image->height;
@@ -1226,14 +1226,14 @@ static char* readDataOfferAsString(struct wl_data_offer* offer, const char* mime
     if (pipe2(fds, O_CLOEXEC) == -1)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create pipe for data offer: %s", strerror(errno));
-        return NULL;
+        return nullptr;
     }
 
     wl_data_offer_receive(offer, mimeType, fds[1]);
     flushDisplay();
     close(fds[1]);
 
-    char* string = NULL;
+    char* string = nullptr;
     size_t size = 0;
     size_t length = 0;
 
@@ -1246,9 +1246,9 @@ static char* readDataOfferAsString(struct wl_data_offer* offer, const char* mime
             char* longer = _grwl_realloc(string, requiredSize);
             if (!longer)
             {
-                _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
+                _grwlInputError(GRWL_OUT_OF_MEMORY, nullptr);
                 close(fds[0]);
-                return NULL;
+                return nullptr;
             }
 
             string = longer;
@@ -1269,7 +1269,7 @@ static char* readDataOfferAsString(struct wl_data_offer* offer, const char* mime
 
             _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to read from data offer pipe: %s", strerror(errno));
             close(fds[0]);
-            return NULL;
+            return nullptr;
         }
 
         length += result;
@@ -1349,8 +1349,8 @@ static void pointerHandleLeave(void* userData, struct wl_pointer* pointer, uint3
     window->wl.hovered = false;
 
     _grwl.wl.serial = serial;
-    _grwl.wl.pointerFocus = NULL;
-    _grwl.wl.cursorPreviousName = NULL;
+    _grwl.wl.pointerFocus = nullptr;
+    _grwl.wl.cursorPreviousName = nullptr;
     _grwlInputCursorEnter(window, false);
 }
 
@@ -1372,12 +1372,12 @@ static void pointerHandleMotion(void* userData, struct wl_pointer* pointer, uint
     window->wl.cursorPosX = xpos;
     window->wl.cursorPosY = ypos;
 
-    const char* cursorName = NULL;
+    const char* cursorName = nullptr;
 
     switch (window->wl.decorations.focus)
     {
         case GRWL_MAIN_WINDOW:
-            _grwl.wl.cursorPreviousName = NULL;
+            _grwl.wl.cursorPreviousName = nullptr;
             _grwlInputCursorPos(window, xpos, ypos);
             return;
         case GRWL_TOP_DECORATION:
@@ -1623,7 +1623,7 @@ static void keyboardHandleKeymap(void* userData, struct wl_keyboard* keyboard, u
         return;
     }
 
-    mapStr = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+    mapStr = mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0);
     if (mapStr == MAP_FAILED)
     {
         close(fd);
@@ -1731,10 +1731,10 @@ static void keyboardHandleLeave(void* userData, struct wl_keyboard* keyboard, ui
     }
 
     struct itimerspec timer = { 0 };
-    timerfd_settime(_grwl.wl.keyRepeatTimerfd, 0, &timer, NULL);
+    timerfd_settime(_grwl.wl.keyRepeatTimerfd, 0, &timer, nullptr);
 
     _grwl.wl.serial = serial;
-    _grwl.wl.keyboardFocus = NULL;
+    _grwl.wl.keyboardFocus = nullptr;
     _grwlInputWindowFocus(window, false);
 }
 
@@ -1775,7 +1775,7 @@ static void keyboardHandleKey(void* userData, struct wl_keyboard* keyboard, uint
         }
     }
 
-    timerfd_settime(_grwl.wl.keyRepeatTimerfd, 0, &timer, NULL);
+    timerfd_settime(_grwl.wl.keyRepeatTimerfd, 0, &timer, nullptr);
 
     _grwlInputKey(window, key, scancode, action, _grwl.wl.xkb.modifiers);
 
@@ -1849,23 +1849,23 @@ static void seatHandleCapabilities(void* userData, struct wl_seat* seat, enum wl
     if ((caps & WL_SEAT_CAPABILITY_POINTER) && !_grwl.wl.pointer)
     {
         _grwl.wl.pointer = wl_seat_get_pointer(seat);
-        wl_pointer_add_listener(_grwl.wl.pointer, &pointerListener, NULL);
+        wl_pointer_add_listener(_grwl.wl.pointer, &pointerListener, nullptr);
     }
     else if (!(caps & WL_SEAT_CAPABILITY_POINTER) && _grwl.wl.pointer)
     {
         wl_pointer_destroy(_grwl.wl.pointer);
-        _grwl.wl.pointer = NULL;
+        _grwl.wl.pointer = nullptr;
     }
 
     if ((caps & WL_SEAT_CAPABILITY_KEYBOARD) && !_grwl.wl.keyboard)
     {
         _grwl.wl.keyboard = wl_seat_get_keyboard(seat);
-        wl_keyboard_add_listener(_grwl.wl.keyboard, &keyboardListener, NULL);
+        wl_keyboard_add_listener(_grwl.wl.keyboard, &keyboardListener, nullptr);
     }
     else if (!(caps & WL_SEAT_CAPABILITY_KEYBOARD) && _grwl.wl.keyboard)
     {
         wl_keyboard_destroy(_grwl.wl.keyboard);
-        _grwl.wl.keyboard = NULL;
+        _grwl.wl.keyboard = nullptr;
     }
 }
 
@@ -1905,7 +1905,7 @@ static void dataDeviceHandleDataOffer(void* userData, struct wl_data_device* dev
     _GRWLofferWayland* offers = _grwl_realloc(_grwl.wl.offers, sizeof(_GRWLofferWayland) * (_grwl.wl.offerCount + 1));
     if (!offers)
     {
-        _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
+        _grwlInputError(GRWL_OUT_OF_MEMORY, nullptr);
         return;
     }
 
@@ -1913,7 +1913,7 @@ static void dataDeviceHandleDataOffer(void* userData, struct wl_data_device* dev
     _grwl.wl.offerCount++;
 
     _grwl.wl.offers[_grwl.wl.offerCount - 1] = (_GRWLofferWayland) { offer };
-    wl_data_offer_add_listener(offer, &dataOfferListener, NULL);
+    wl_data_offer_add_listener(offer, &dataOfferListener, nullptr);
 }
 
 static void dataDeviceHandleEnter(void* userData, struct wl_data_device* device, uint32_t serial,
@@ -1922,15 +1922,15 @@ static void dataDeviceHandleEnter(void* userData, struct wl_data_device* device,
     if (_grwl.wl.dragOffer)
     {
         wl_data_offer_destroy(_grwl.wl.dragOffer);
-        _grwl.wl.dragOffer = NULL;
-        _grwl.wl.dragFocus = NULL;
+        _grwl.wl.dragOffer = nullptr;
+        _grwl.wl.dragFocus = nullptr;
     }
 
     for (unsigned int i = 0; i < _grwl.wl.offerCount; i++)
     {
         if (_grwl.wl.offers[i].offer == offer)
         {
-            _GRWLwindow* window = NULL;
+            _GRWLwindow* window = nullptr;
 
             if (surface)
             {
@@ -1964,7 +1964,7 @@ static void dataDeviceHandleEnter(void* userData, struct wl_data_device* device,
     }
     else
     {
-        wl_data_offer_accept(offer, serial, NULL);
+        wl_data_offer_accept(offer, serial, nullptr);
         wl_data_offer_destroy(offer);
     }
 }
@@ -1974,8 +1974,8 @@ static void dataDeviceHandleLeave(void* userData, struct wl_data_device* device)
     if (_grwl.wl.dragOffer)
     {
         wl_data_offer_destroy(_grwl.wl.dragOffer);
-        _grwl.wl.dragOffer = NULL;
-        _grwl.wl.dragFocus = NULL;
+        _grwl.wl.dragOffer = nullptr;
+        _grwl.wl.dragFocus = nullptr;
     }
 }
 
@@ -2017,7 +2017,7 @@ static void dataDeviceHandleSelection(void* userData, struct wl_data_device* dev
     if (_grwl.wl.selectionOffer)
     {
         wl_data_offer_destroy(_grwl.wl.selectionOffer);
-        _grwl.wl.selectionOffer = NULL;
+        _grwl.wl.selectionOffer = nullptr;
     }
 
     for (unsigned int i = 0; i < _grwl.wl.offerCount; i++)
@@ -2047,12 +2047,12 @@ const struct wl_data_device_listener dataDeviceListener = {
 
 void _grwlAddSeatListenerWayland(struct wl_seat* seat)
 {
-    wl_seat_add_listener(seat, &seatListener, NULL);
+    wl_seat_add_listener(seat, &seatListener, nullptr);
 }
 
 void _grwlAddDataDeviceListenerWayland(struct wl_data_device* device)
 {
-    wl_data_device_add_listener(device, &dataDeviceListener, NULL);
+    wl_data_device_add_listener(device, &dataDeviceListener, nullptr);
 }
 
 // Callbacks for text_input_unstable_v3 protocol.
@@ -2233,8 +2233,8 @@ static void textInputV1Reset(_GRWLwindow* window)
 
     _grwl_free(window->wl.textInputV1Context.preeditText);
     _grwl_free(window->wl.textInputV1Context.commitTextOnReset);
-    window->wl.textInputV1Context.preeditText = NULL;
-    window->wl.textInputV1Context.commitTextOnReset = NULL;
+    window->wl.textInputV1Context.preeditText = nullptr;
+    window->wl.textInputV1Context.commitTextOnReset = nullptr;
 
     _grwlInputPreedit(window);
 }
@@ -2244,7 +2244,7 @@ static void textInputV1Leave(void* data, struct zwp_text_input_v1* textInputV1)
     _GRWLwindow* window = (_GRWLwindow*)data;
     char* commitText = window->wl.textInputV1Context.commitTextOnReset;
 
-    textInputV3CommitString(data, NULL, commitText);
+    textInputV3CommitString(data, nullptr, commitText);
     textInputV1Reset(window);
     deactivateTextInputV1(window);
 }
@@ -2267,7 +2267,7 @@ static void textInputV1PreeditString(void* data, struct zwp_text_input_v1* textI
     window->wl.textInputV1Context.preeditText = strdup(text);
     window->wl.textInputV1Context.commitTextOnReset = strdup(commit);
 
-    textInputV3PreeditString(data, NULL, text, 0, 0);
+    textInputV3PreeditString(data, nullptr, text, 0, 0);
     _grwlInputPreedit(window);
 }
 
@@ -2310,7 +2310,7 @@ static void textInputV1CommitString(void* data, struct zwp_text_input_v1* textIn
     _GRWLwindow* window = (_GRWLwindow*)data;
 
     textInputV1Reset(window);
-    textInputV3CommitString(data, NULL, text);
+    textInputV3CommitString(data, nullptr, text);
 }
 
 static void textInputV1CursorPosition(void* data, struct zwp_text_input_v1* textInputV1, int32_t index, int32_t anchor)
@@ -2464,9 +2464,9 @@ bool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wndconf
     // Reset progress state as it gets saved between application runs
     if (_grwl.dbus.connection)
     {
-        // Window NULL is safe here because it won't get
+        // Window nullptr is safe here because it won't get
         // used inside the SetWindowTaskbarProgress function
-        _grwlSetWindowProgressIndicatorWayland(NULL, GRWL_PROGRESS_INDICATOR_DISABLED, 0.0);
+        _grwlSetWindowProgressIndicatorWayland(nullptr, GRWL_PROGRESS_INDICATOR_DISABLED, 0.0);
     }
 
     return true;
@@ -2476,12 +2476,12 @@ void _grwlDestroyWindowWayland(_GRWLwindow* window)
 {
     if (window == _grwl.wl.pointerFocus)
     {
-        _grwl.wl.pointerFocus = NULL;
+        _grwl.wl.pointerFocus = nullptr;
     }
 
     if (window == _grwl.wl.keyboardFocus)
     {
-        _grwl.wl.keyboardFocus = NULL;
+        _grwl.wl.keyboardFocus = nullptr;
     }
 
     if (window->wl.textInputV1)
@@ -2580,10 +2580,11 @@ void _grwlSetWindowProgressIndicatorWayland(_GRWLwindow* window, const int progr
 
 void _grwlSetWindowBadgeWayland(_GRWLwindow* window, int count)
 {
-    if (window != NULL)
+    if (window != nullptr)
     {
-        _grwlInputError(GRWL_FEATURE_UNAVAILABLE,
-                        "Wayland: Cannot set a badge for a window. Pass NULL to set the application's shared badge.");
+        _grwlInputError(
+            GRWL_FEATURE_UNAVAILABLE,
+            "Wayland: Cannot set a badge for a window. Pass nullptr to set the application's shared badge.");
         return;
     }
 
@@ -2640,7 +2641,7 @@ void _grwlSetWindowSizeWayland(_GRWLwindow* window, int width, int height)
         if (window->wl.libdecor.frame)
         {
             struct libdecor_state* frameState = libdecor_state_new(width, height);
-            libdecor_frame_commit(window->wl.libdecor.frame, frameState, NULL);
+            libdecor_frame_commit(window->wl.libdecor.frame, frameState, nullptr);
             libdecor_state_free(frameState);
         }
 
@@ -2734,7 +2735,7 @@ void _grwlSetWindowAspectRatioWayland(_GRWLwindow* window, int numer, int denom)
         if (window->wl.libdecor.frame)
         {
             struct libdecor_state* frameState = libdecor_state_new(width, height);
-            libdecor_frame_commit(window->wl.libdecor.frame, frameState, NULL);
+            libdecor_frame_commit(window->wl.libdecor.frame, frameState, nullptr);
             libdecor_state_free(frameState);
         }
 
@@ -2869,7 +2870,7 @@ void _grwlHideWindowWayland(_GRWLwindow* window)
         window->wl.visible = false;
         destroyShellObjects(window);
 
-        wl_surface_attach(window->wl.surface, NULL, 0, 0);
+        wl_surface_attach(window->wl.surface, nullptr, 0, 0);
         wl_surface_commit(window->wl.surface);
     }
 }
@@ -2885,7 +2886,7 @@ static void xdgActivationHandleDone(void* userData, struct xdg_activation_token_
 
     xdg_activation_v1_activate(_grwl.wl.activationManager, token, window->wl.surface);
     xdg_activation_token_v1_destroy(window->wl.activationToken);
-    window->wl.activationToken = NULL;
+    window->wl.activationToken = nullptr;
 }
 
 static const struct xdg_activation_token_v1_listener xdgActivationListener = { xdgActivationHandleDone };
@@ -3077,7 +3078,7 @@ void _grwlPollEventsWayland()
 
 void _grwlWaitEventsWayland()
 {
-    handleEvents(NULL);
+    handleEvents(nullptr);
 }
 
 void _grwlWaitEventsTimeoutWayland(double timeout)
@@ -3118,7 +3119,7 @@ const char* _grwlGetScancodeNameWayland(int scancode)
     if (scancode < 0 || scancode > 255 || _grwl.wl.keycodes[scancode] == GRWL_KEY_UNKNOWN)
     {
         _grwlInputError(GRWL_INVALID_VALUE, "Wayland: Invalid scancode %i", scancode);
-        return NULL;
+        return nullptr;
     }
 
     const int key = _grwl.wl.keycodes[scancode];
@@ -3127,29 +3128,29 @@ const char* _grwlGetScancodeNameWayland(int scancode)
     if (layout == XKB_LAYOUT_INVALID)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to retrieve layout for key name");
-        return NULL;
+        return nullptr;
     }
 
-    const xkb_keysym_t* keysyms = NULL;
+    const xkb_keysym_t* keysyms = nullptr;
     xkb_keymap_key_get_syms_by_level(_grwl.wl.xkb.keymap, keycode, layout, 0, &keysyms);
-    if (keysyms == NULL)
+    if (keysyms == nullptr)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to retrieve keysym for key name");
-        return NULL;
+        return nullptr;
     }
 
     const uint32_t codepoint = _grwlKeySym2Unicode(keysyms[0]);
     if (codepoint == GRWL_INVALID_CODEPOINT)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to retrieve codepoint for key name");
-        return NULL;
+        return nullptr;
     }
 
     const size_t count = _grwlEncodeUTF8(_grwl.wl.keynames[key], codepoint);
     if (count == 0)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to encode codepoint for key name");
-        return NULL;
+        return nullptr;
     }
 
     _grwl.wl.keynames[key][count] = '\0';
@@ -3166,14 +3167,14 @@ const char* _grwlGetKeyboardLayoutNameWayland()
     if (!_grwl.wl.xkb.keymap)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Keymap missing");
-        return NULL;
+        return nullptr;
     }
 
     const char* name = xkb_keymap_layout_get_name(_grwl.wl.xkb.keymap, _grwl.wl.xkb.group);
     if (!name)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to query keyboard layout name");
-        return NULL;
+        return nullptr;
     }
 
     free(_grwl.wl.keyboardLayoutName);
@@ -3198,7 +3199,7 @@ bool _grwlCreateCursorWayland(_GRWLcursor* cursor, const GRWLimage* image, int x
 
 bool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape)
 {
-    const char* name = NULL;
+    const char* name = nullptr;
 
     if (!_grwl.wl.cursorTheme)
     {
@@ -3365,7 +3366,7 @@ static void lockPointer(_GRWLwindow* window)
     zwp_relative_pointer_v1_add_listener(window->wl.relativePointer, &relativePointerListener, window);
 
     window->wl.lockedPointer = zwp_pointer_constraints_v1_lock_pointer(_grwl.wl.pointerConstraints, window->wl.surface,
-                                                                       _grwl.wl.pointer, NULL,
+                                                                       _grwl.wl.pointer, nullptr,
                                                                        ZWP_POINTER_CONSTRAINTS_V1_LIFETIME_PERSISTENT);
     zwp_locked_pointer_v1_add_listener(window->wl.lockedPointer, &lockedPointerListener, window);
 }
@@ -3373,10 +3374,10 @@ static void lockPointer(_GRWLwindow* window)
 static void unlockPointer(_GRWLwindow* window)
 {
     zwp_relative_pointer_v1_destroy(window->wl.relativePointer);
-    window->wl.relativePointer = NULL;
+    window->wl.relativePointer = nullptr;
 
     zwp_locked_pointer_v1_destroy(window->wl.lockedPointer);
-    window->wl.lockedPointer = NULL;
+    window->wl.lockedPointer = nullptr;
 }
 
 static void confinedPointerHandleConfined(void* userData, struct zwp_confined_pointer_v1* confinedPointer)
@@ -3394,7 +3395,7 @@ static void confinePointer(_GRWLwindow* window)
 {
     window->wl.confinedPointer =
         zwp_pointer_constraints_v1_confine_pointer(_grwl.wl.pointerConstraints, window->wl.surface, _grwl.wl.pointer,
-                                                   NULL, ZWP_POINTER_CONSTRAINTS_V1_LIFETIME_PERSISTENT);
+                                                   nullptr, ZWP_POINTER_CONSTRAINTS_V1_LIFETIME_PERSISTENT);
 
     zwp_confined_pointer_v1_add_listener(window->wl.confinedPointer, &confinedPointerListener, window);
 }
@@ -3402,7 +3403,7 @@ static void confinePointer(_GRWLwindow* window)
 static void unconfinePointer(_GRWLwindow* window)
 {
     zwp_confined_pointer_v1_destroy(window->wl.confinedPointer);
-    window->wl.confinedPointer = NULL;
+    window->wl.confinedPointer = nullptr;
 }
 
 void _grwlSetCursorWayland(_GRWLwindow* window, _GRWLcursor* cursor)
@@ -3471,20 +3472,20 @@ void _grwlSetCursorWayland(_GRWLwindow* window, _GRWLcursor* cursor)
                 return;
             }
 
-            struct wl_cursor* defaultCursorHiDPI = NULL;
+            struct wl_cursor* defaultCursorHiDPI = nullptr;
             if (_grwl.wl.cursorThemeHiDPI)
             {
                 defaultCursorHiDPI = wl_cursor_theme_get_cursor(_grwl.wl.cursorThemeHiDPI, "left_ptr");
             }
 
-            _GRWLcursorWayland cursorWayland = { defaultCursor, defaultCursorHiDPI, NULL, 0, 0, 0, 0, 0 };
+            _GRWLcursorWayland cursorWayland = { defaultCursor, defaultCursorHiDPI, nullptr, 0, 0, 0, 0, 0 };
 
             setCursorImage(window, &cursorWayland);
         }
     }
     else if (window->cursorMode == GRWL_CURSOR_HIDDEN || window->cursorMode == GRWL_CURSOR_DISABLED)
     {
-        wl_pointer_set_cursor(_grwl.wl.pointer, _grwl.wl.pointerEnterSerial, NULL, 0, 0);
+        wl_pointer_set_cursor(_grwl.wl.pointer, _grwl.wl.pointerEnterSerial, nullptr, 0, 0);
     }
 }
 
@@ -3539,7 +3540,7 @@ static void dataSourceHandleCancelled(void* userData, struct wl_data_source* sou
         return;
     }
 
-    _grwl.wl.selectionSource = NULL;
+    _grwl.wl.selectionSource = nullptr;
 }
 
 static const struct wl_data_source_listener dataSourceListener = {
@@ -3553,13 +3554,13 @@ void _grwlSetClipboardStringWayland(const char* string)
     if (_grwl.wl.selectionSource)
     {
         wl_data_source_destroy(_grwl.wl.selectionSource);
-        _grwl.wl.selectionSource = NULL;
+        _grwl.wl.selectionSource = nullptr;
     }
 
     char* copy = _grwl_strdup(string);
     if (!copy)
     {
-        _grwlInputError(GRWL_OUT_OF_MEMORY, NULL);
+        _grwlInputError(GRWL_OUT_OF_MEMORY, nullptr);
         return;
     }
 
@@ -3572,7 +3573,7 @@ void _grwlSetClipboardStringWayland(const char* string)
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create clipboard data source");
         return;
     }
-    wl_data_source_add_listener(_grwl.wl.selectionSource, &dataSourceListener, NULL);
+    wl_data_source_add_listener(_grwl.wl.selectionSource, &dataSourceListener, nullptr);
     wl_data_source_offer(_grwl.wl.selectionSource, "text/plain;charset=utf-8");
     wl_data_device_set_selection(_grwl.wl.dataDevice, _grwl.wl.selectionSource, _grwl.wl.serial);
 }
@@ -3582,7 +3583,7 @@ const char* _grwlGetClipboardStringWayland()
     if (!_grwl.wl.selectionOffer)
     {
         _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "Wayland: No clipboard data available");
-        return NULL;
+        return nullptr;
     }
 
     if (_grwl.wl.selectionSource)
@@ -3712,7 +3713,7 @@ _GRWLusercontext* _grwlCreateUserContextWayland(_GRWLwindow* window)
         return _grwlCreateUserContextEGL(window);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3721,12 +3722,12 @@ _GRWLusercontext* _grwlCreateUserContextWayland(_GRWLwindow* window)
 
 GRWLAPI struct wl_display* grwlGetWaylandDisplay()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (_grwl.platform.platformID != GRWL_PLATFORM_WAYLAND)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "Wayland: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     return _grwl.wl.display;
@@ -3735,12 +3736,12 @@ GRWLAPI struct wl_display* grwlGetWaylandDisplay()
 GRWLAPI struct wl_surface* grwlGetWaylandWindow(GRWLwindow* handle)
 {
     _GRWLwindow* window = (_GRWLwindow*)handle;
-    _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
+    _GRWL_REQUIRE_INIT_OR_RETURN(nullptr);
 
     if (_grwl.platform.platformID != GRWL_PLATFORM_WAYLAND)
     {
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "Wayland: Platform not initialized");
-        return NULL;
+        return nullptr;
     }
 
     return window->wl.surface;
