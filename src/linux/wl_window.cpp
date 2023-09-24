@@ -406,7 +406,7 @@ static void surfaceHandleLeave(void* userData, struct wl_surface* surface, struc
 
 static const struct wl_surface_listener surfaceListener = { surfaceHandleEnter, surfaceHandleLeave };
 
-static void setIdleInhibitor(_GRWLwindow* window, GRWLbool enable)
+static void setIdleInhibitor(_GRWLwindow* window, bool enable)
 {
     if (enable && !window->wl.idleInhibitor && _grwl.wl.idleInhibitManager)
     {
@@ -437,7 +437,7 @@ static void acquireMonitor(_GRWLwindow* window)
         xdg_toplevel_set_fullscreen(window->wl.xdg.toplevel, window->monitor->wl.output);
     }
 
-    setIdleInhibitor(window, GRWL_TRUE);
+    setIdleInhibitor(window, true);
 
     if (window->wl.decorations.top.surface)
     {
@@ -458,7 +458,7 @@ static void releaseMonitor(_GRWLwindow* window)
         xdg_toplevel_unset_fullscreen(window->wl.xdg.toplevel);
     }
 
-    setIdleInhibitor(window, GRWL_FALSE);
+    setIdleInhibitor(window, false);
 
     if (!window->wl.libdecor.frame && window->wl.xdg.decorationMode != ZXDG_TOPLEVEL_DECORATION_V1_MODE_SERVER_SIDE)
     {
@@ -495,24 +495,24 @@ static void xdgToplevelHandleConfigure(void* userData, struct xdg_toplevel* topl
     _GRWLwindow* window = userData;
     uint32_t* state;
 
-    window->wl.pending.activated = GRWL_FALSE;
-    window->wl.pending.maximized = GRWL_FALSE;
-    window->wl.pending.fullscreen = GRWL_FALSE;
+    window->wl.pending.activated = false;
+    window->wl.pending.maximized = false;
+    window->wl.pending.fullscreen = false;
 
     wl_array_for_each(state, states)
     {
         switch (*state)
         {
             case XDG_TOPLEVEL_STATE_MAXIMIZED:
-                window->wl.pending.maximized = GRWL_TRUE;
+                window->wl.pending.maximized = true;
                 break;
             case XDG_TOPLEVEL_STATE_FULLSCREEN:
-                window->wl.pending.fullscreen = GRWL_TRUE;
+                window->wl.pending.fullscreen = true;
                 break;
             case XDG_TOPLEVEL_STATE_RESIZING:
                 break;
             case XDG_TOPLEVEL_STATE_ACTIVATED:
-                window->wl.pending.activated = GRWL_TRUE;
+                window->wl.pending.activated = true;
                 activateTextInputV1(window);
                 break;
         }
@@ -612,7 +612,7 @@ static void xdgSurfaceHandleConfigure(void* userData, struct xdg_surface* surfac
         // decorations or they have already received a configure event
         if (!window->wl.xdg.decoration || window->wl.xdg.decorationMode)
         {
-            window->wl.visible = GRWL_TRUE;
+            window->wl.visible = true;
             _grwlInputWindowDamage(window);
         }
     }
@@ -626,7 +626,7 @@ void libdecorFrameHandleConfigure(struct libdecor_frame* frame, struct libdecor_
     int width, height;
 
     enum libdecor_window_state windowState;
-    GRWLbool fullscreen, activated, maximized;
+    bool fullscreen, activated, maximized;
 
     if (libdecor_configuration_get_window_state(config, &windowState))
     {
@@ -688,12 +688,12 @@ void libdecorFrameHandleConfigure(struct libdecor_frame* frame, struct libdecor_
 
     window->wl.fullscreen = fullscreen;
 
-    GRWLbool damaged = GRWL_FALSE;
+    bool damaged = false;
 
     if (!window->wl.visible)
     {
-        window->wl.visible = GRWL_TRUE;
-        damaged = GRWL_TRUE;
+        window->wl.visible = true;
+        damaged = true;
     }
 
     if (width != window->wl.width || height != window->wl.height)
@@ -703,7 +703,7 @@ void libdecorFrameHandleConfigure(struct libdecor_frame* frame, struct libdecor_
         resizeWindow(window);
 
         _grwlInputWindowSize(window, width, height);
-        damaged = GRWL_TRUE;
+        damaged = true;
     }
 
     if (damaged)
@@ -736,14 +736,14 @@ static const struct libdecor_frame_interface libdecorFrameInterface = {
     libdecorFrameHandleConfigure, libdecorFrameHandleClose, libdecorFrameHandleCommit, libdecorFrameHandleDismissPopup
 };
 
-static GRWLbool createLibdecorFrame(_GRWLwindow* window)
+static bool createLibdecorFrame(_GRWLwindow* window)
 {
     window->wl.libdecor.frame =
         libdecor_decorate(_grwl.wl.libdecor.context, window->wl.surface, &libdecorFrameInterface, window);
     if (!window->wl.libdecor.frame)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create libdecor frame");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (strlen(window->wl.appId))
@@ -782,7 +782,7 @@ static GRWLbool createLibdecorFrame(_GRWLwindow* window)
         }
 
         libdecor_frame_set_fullscreen(window->wl.libdecor.frame, window->monitor->wl.output);
-        setIdleInhibitor(window, GRWL_TRUE);
+        setIdleInhibitor(window, true);
     }
     else
     {
@@ -796,21 +796,21 @@ static GRWLbool createLibdecorFrame(_GRWLwindow* window)
             libdecor_frame_set_visibility(window->wl.libdecor.frame, false);
         }
 
-        setIdleInhibitor(window, GRWL_FALSE);
+        setIdleInhibitor(window, false);
     }
 
     libdecor_frame_map(window->wl.libdecor.frame);
     wl_display_roundtrip(_grwl.wl.display);
-    return GRWL_TRUE;
+    return true;
 }
 
-static GRWLbool createXdgShellObjects(_GRWLwindow* window)
+static bool createXdgShellObjects(_GRWLwindow* window)
 {
     window->wl.xdg.surface = xdg_wm_base_get_xdg_surface(_grwl.wl.wmBase, window->wl.surface);
     if (!window->wl.xdg.surface)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create xdg-surface for window");
-        return GRWL_FALSE;
+        return false;
     }
 
     xdg_surface_add_listener(window->wl.xdg.surface, &xdgSurfaceListener, window);
@@ -819,7 +819,7 @@ static GRWLbool createXdgShellObjects(_GRWLwindow* window)
     if (!window->wl.xdg.toplevel)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create xdg-toplevel for window");
-        return GRWL_FALSE;
+        return false;
     }
 
     xdg_toplevel_add_listener(window->wl.xdg.toplevel, &xdgToplevelListener, window);
@@ -837,7 +837,7 @@ static GRWLbool createXdgShellObjects(_GRWLwindow* window)
     if (window->monitor)
     {
         xdg_toplevel_set_fullscreen(window->wl.xdg.toplevel, window->monitor->wl.output);
-        setIdleInhibitor(window, GRWL_TRUE);
+        setIdleInhibitor(window, true);
     }
     else
     {
@@ -846,7 +846,7 @@ static GRWLbool createXdgShellObjects(_GRWLwindow* window)
             xdg_toplevel_set_maximized(window->wl.xdg.toplevel);
         }
 
-        setIdleInhibitor(window, GRWL_FALSE);
+        setIdleInhibitor(window, false);
     }
 
     if (_grwl.wl.decorationManager)
@@ -906,16 +906,16 @@ static GRWLbool createXdgShellObjects(_GRWLwindow* window)
 
     wl_surface_commit(window->wl.surface);
     wl_display_roundtrip(_grwl.wl.display);
-    return GRWL_TRUE;
+    return true;
 }
 
-static GRWLbool createShellObjects(_GRWLwindow* window)
+static bool createShellObjects(_GRWLwindow* window)
 {
     if (_grwl.wl.libdecor.context)
     {
         if (createLibdecorFrame(window))
         {
-            return GRWL_TRUE;
+            return true;
         }
     }
 
@@ -953,13 +953,13 @@ static void destroyShellObjects(_GRWLwindow* window)
     window->wl.xdg.surface = NULL;
 }
 
-static GRWLbool createNativeSurface(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLfbconfig* fbconfig)
+static bool createNativeSurface(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLfbconfig* fbconfig)
 {
     window->wl.surface = wl_compositor_create_surface(_grwl.wl.compositor);
     if (!window->wl.surface)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create window surface");
-        return GRWL_FALSE;
+        return false;
     }
 
     wl_proxy_set_tag((struct wl_proxy*)window->wl.surface, &_grwl.wl.tag);
@@ -979,7 +979,7 @@ static GRWLbool createNativeSurface(_GRWLwindow* window, const _GRWLwndconfig* w
         setContentAreaOpaque(window);
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 static void setCursorImage(_GRWLwindow* window, _GRWLcursorWayland* cursorWayland)
@@ -1046,13 +1046,13 @@ static void incrementCursorImage(_GRWLwindow* window)
     }
 }
 
-static GRWLbool flushDisplay(void)
+static bool flushDisplay()
 {
     while (wl_display_flush(_grwl.wl.display) == -1)
     {
         if (errno != EAGAIN)
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         struct pollfd fd = { wl_display_get_fd(_grwl.wl.display), POLLOUT };
@@ -1061,12 +1061,12 @@ static GRWLbool flushDisplay(void)
         {
             if (errno != EINTR && errno != EAGAIN)
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 static int translateKey(uint32_t scancode)
@@ -1129,7 +1129,7 @@ static void handleEvents(double* timeout)
     }
     #endif
 
-    GRWLbool event = GRWL_FALSE;
+    bool event = false;
     struct pollfd fds[4] = { { wl_display_get_fd(_grwl.wl.display), POLLIN },
                              { _grwl.wl.keyRepeatTimerfd, POLLIN },
                              { _grwl.wl.cursorTimerfd, POLLIN },
@@ -1174,7 +1174,7 @@ static void handleEvents(double* timeout)
             wl_display_read_events(_grwl.wl.display);
             if (wl_display_dispatch_pending(_grwl.wl.display) > 0)
             {
-                event = GRWL_TRUE;
+                event = true;
             }
         }
         else
@@ -1195,7 +1195,7 @@ static void handleEvents(double* timeout)
                     inputText(_grwl.wl.keyboardFocus, _grwl.wl.keyRepeatScancode);
                 }
 
-                event = GRWL_TRUE;
+                event = true;
             }
         }
 
@@ -1206,7 +1206,7 @@ static void handleEvents(double* timeout)
             if (read(_grwl.wl.cursorTimerfd, &repeats, sizeof(repeats)) == 8)
             {
                 incrementCursorImage(_grwl.wl.pointerFocus);
-                event = GRWL_TRUE;
+                event = true;
             }
         }
 
@@ -1322,10 +1322,10 @@ static void pointerHandleEnter(void* userData, struct wl_pointer* pointer, uint3
     _grwl.wl.pointerEnterSerial = serial;
     _grwl.wl.pointerFocus = window;
 
-    window->wl.hovered = GRWL_TRUE;
+    window->wl.hovered = true;
 
     _grwlSetCursorWayland(window, window->wl.currentCursor);
-    _grwlInputCursorEnter(window, GRWL_TRUE);
+    _grwlInputCursorEnter(window, true);
 }
 
 static void pointerHandleLeave(void* userData, struct wl_pointer* pointer, uint32_t serial, struct wl_surface* surface)
@@ -1346,12 +1346,12 @@ static void pointerHandleLeave(void* userData, struct wl_pointer* pointer, uint3
         return;
     }
 
-    window->wl.hovered = GRWL_FALSE;
+    window->wl.hovered = false;
 
     _grwl.wl.serial = serial;
     _grwl.wl.pointerFocus = NULL;
     _grwl.wl.cursorPreviousName = NULL;
-    _grwlInputCursorEnter(window, GRWL_FALSE);
+    _grwlInputCursorEnter(window, false);
 }
 
 static void pointerHandleMotion(void* userData, struct wl_pointer* pointer, uint32_t time, wl_fixed_t sx, wl_fixed_t sy)
@@ -1717,7 +1717,7 @@ static void keyboardHandleEnter(void* userData, struct wl_keyboard* keyboard, ui
 
     _grwl.wl.serial = serial;
     _grwl.wl.keyboardFocus = window;
-    _grwlInputWindowFocus(window, GRWL_TRUE);
+    _grwlInputWindowFocus(window, true);
 }
 
 static void keyboardHandleLeave(void* userData, struct wl_keyboard* keyboard, uint32_t serial,
@@ -1735,7 +1735,7 @@ static void keyboardHandleLeave(void* userData, struct wl_keyboard* keyboard, ui
 
     _grwl.wl.serial = serial;
     _grwl.wl.keyboardFocus = NULL;
-    _grwlInputWindowFocus(window, GRWL_FALSE);
+    _grwlInputWindowFocus(window, false);
 }
 
 static void keyboardHandleKey(void* userData, struct wl_keyboard* keyboard, uint32_t serial, uint32_t time,
@@ -1886,11 +1886,11 @@ static void dataOfferHandleOffer(void* userData, struct wl_data_offer* offer, co
         {
             if (strcmp(mimeType, "text/plain;charset=utf-8") == 0)
             {
-                _grwl.wl.offers[i].text_plain_utf8 = GRWL_TRUE;
+                _grwl.wl.offers[i].text_plain_utf8 = true;
             }
             else if (strcmp(mimeType, "text/uri-list") == 0)
             {
-                _grwl.wl.offers[i].text_uri_list = GRWL_TRUE;
+                _grwl.wl.offers[i].text_uri_list = true;
             }
 
             break;
@@ -2391,12 +2391,12 @@ static const struct zwp_text_input_v1_listener textInputV1Listener = {
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                                  const _GRWLfbconfig* fbconfig)
+bool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                              const _GRWLfbconfig* fbconfig)
 {
     if (!createNativeSurface(window, wndconfig, fbconfig))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->client != GRWL_NO_API)
@@ -2407,46 +2407,46 @@ GRWLbool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wnd
             if (!window->wl.egl.window)
             {
                 _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to create EGL window");
-                return GRWL_FALSE;
+                return false;
             }
 
             if (!_grwlInitEGL())
             {
-                return GRWL_FALSE;
+                return false;
             }
             if (!_grwlCreateContextEGL(window, ctxconfig, fbconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else if (ctxconfig->source == GRWL_OSMESA_CONTEXT_API)
         {
             if (!_grwlInitOSMesa())
             {
-                return GRWL_FALSE;
+                return false;
             }
             if (!_grwlCreateContextOSMesa(window, ctxconfig, fbconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
 
         if (!_grwlRefreshContextAttribs(window, ctxconfig))
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
     if (wndconfig->mousePassthrough)
     {
-        _grwlSetWindowMousePassthroughWayland(window, GRWL_TRUE);
+        _grwlSetWindowMousePassthroughWayland(window, true);
     }
 
     if (window->monitor || wndconfig->visible)
     {
         if (!createShellObjects(window))
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -2469,7 +2469,7 @@ GRWLbool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wnd
         _grwlSetWindowProgressIndicatorWayland(NULL, GRWL_PROGRESS_INDICATOR_DISABLED, 0.0);
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 void _grwlDestroyWindowWayland(_GRWLwindow* window)
@@ -2571,7 +2571,7 @@ void _grwlSetWindowIconWayland(_GRWLwindow* window, int count, const GRWLimage* 
 
 void _grwlSetWindowProgressIndicatorWayland(_GRWLwindow* window, const int progressState, double value)
 {
-    (void)window;
+    () window;
 
     const dbus_bool_t progressVisible = (progressState != GRWL_PROGRESS_INDICATOR_DISABLED);
 
@@ -2830,7 +2830,7 @@ void _grwlRestoreWindowWayland(_GRWLwindow* window)
             }
             else
             {
-                window->wl.maximized = GRWL_FALSE;
+                window->wl.maximized = false;
             }
         }
     }
@@ -2848,7 +2848,7 @@ void _grwlMaximizeWindowWayland(_GRWLwindow* window)
     }
     else
     {
-        window->wl.maximized = GRWL_TRUE;
+        window->wl.maximized = true;
     }
 }
 
@@ -2866,7 +2866,7 @@ void _grwlHideWindowWayland(_GRWLwindow* window)
 {
     if (window->wl.visible)
     {
-        window->wl.visible = GRWL_FALSE;
+        window->wl.visible = false;
         destroyShellObjects(window);
 
         wl_surface_attach(window->wl.surface, NULL, 0, 0);
@@ -2944,39 +2944,39 @@ void _grwlSetWindowMonitorWayland(_GRWLwindow* window, _GRWLmonitor* monitor, in
     }
 }
 
-GRWLbool _grwlWindowFocusedWayland(_GRWLwindow* window)
+bool _grwlWindowFocusedWayland(_GRWLwindow* window)
 {
     return _grwl.wl.keyboardFocus == window;
 }
 
-GRWLbool _grwlWindowIconifiedWayland(_GRWLwindow* window)
+bool _grwlWindowIconifiedWayland(_GRWLwindow* window)
 {
     // xdg-shell doesn’t give any way to request whether a surface is
     // iconified.
-    return GRWL_FALSE;
+    return false;
 }
 
-GRWLbool _grwlWindowVisibleWayland(_GRWLwindow* window)
+bool _grwlWindowVisibleWayland(_GRWLwindow* window)
 {
     return window->wl.visible;
 }
 
-GRWLbool _grwlWindowMaximizedWayland(_GRWLwindow* window)
+bool _grwlWindowMaximizedWayland(_GRWLwindow* window)
 {
     return window->wl.maximized;
 }
 
-GRWLbool _grwlWindowHoveredWayland(_GRWLwindow* window)
+bool _grwlWindowHoveredWayland(_GRWLwindow* window)
 {
     return window->wl.hovered;
 }
 
-GRWLbool _grwlFramebufferTransparentWayland(_GRWLwindow* window)
+bool _grwlFramebufferTransparentWayland(_GRWLwindow* window)
 {
     return window->wl.transparent;
 }
 
-void _grwlSetWindowResizableWayland(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowResizableWayland(_GRWLwindow* window, bool enabled)
 {
     if (window->wl.libdecor.frame)
     {
@@ -2996,7 +2996,7 @@ void _grwlSetWindowResizableWayland(_GRWLwindow* window, GRWLbool enabled)
     }
 }
 
-void _grwlSetWindowDecoratedWayland(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowDecoratedWayland(_GRWLwindow* window, bool enabled)
 {
     if (window->wl.libdecor.frame)
     {
@@ -3030,12 +3030,12 @@ void _grwlSetWindowDecoratedWayland(_GRWLwindow* window, GRWLbool enabled)
     }
 }
 
-void _grwlSetWindowFloatingWayland(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowFloatingWayland(_GRWLwindow* window, bool enabled)
 {
     _grwlInputError(GRWL_FEATURE_UNAVAILABLE, "Wayland: Platform does not support making a window floating");
 }
 
-void _grwlSetWindowMousePassthroughWayland(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowMousePassthroughWayland(_GRWLwindow* window, bool enabled)
 {
     if (enabled)
     {
@@ -3059,23 +3059,23 @@ void _grwlSetWindowOpacityWayland(_GRWLwindow* window, float opacity)
     _grwlInputError(GRWL_FEATURE_UNAVAILABLE, "Wayland: The platform does not support setting the window opacity");
 }
 
-void _grwlSetRawMouseMotionWayland(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetRawMouseMotionWayland(_GRWLwindow* window, bool enabled)
 {
     // This is handled in relativePointerHandleRelativeMotion
 }
 
-GRWLbool _grwlRawMouseMotionSupportedWayland(void)
+bool _grwlRawMouseMotionSupportedWayland()
 {
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlPollEventsWayland(void)
+void _grwlPollEventsWayland()
 {
     double timeout = 0.0;
     handleEvents(&timeout);
 }
 
-void _grwlWaitEventsWayland(void)
+void _grwlWaitEventsWayland()
 {
     handleEvents(NULL);
 }
@@ -3085,7 +3085,7 @@ void _grwlWaitEventsTimeoutWayland(double timeout)
     handleEvents(&timeout);
 }
 
-void _grwlPostEmptyEventWayland(void)
+void _grwlPostEmptyEventWayland()
 {
     wl_display_sync(_grwl.wl.display);
     flushDisplay();
@@ -3161,7 +3161,7 @@ int _grwlGetKeyScancodeWayland(int key)
     return _grwl.wl.scancodes[key];
 }
 
-const char* _grwlGetKeyboardLayoutNameWayland(void)
+const char* _grwlGetKeyboardLayoutNameWayland()
 {
     if (!_grwl.wl.xkb.keymap)
     {
@@ -3181,29 +3181,29 @@ const char* _grwlGetKeyboardLayoutNameWayland(void)
     return _grwl.wl.keyboardLayoutName;
 }
 
-GRWLbool _grwlCreateCursorWayland(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
+bool _grwlCreateCursorWayland(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
 {
     cursor->wl.buffer = createShmBuffer(image);
     if (!cursor->wl.buffer)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     cursor->wl.width = image->width;
     cursor->wl.height = image->height;
     cursor->wl.xhot = xhot;
     cursor->wl.yhot = yhot;
-    return GRWL_TRUE;
+    return true;
 }
 
-GRWLbool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape)
+bool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape)
 {
     const char* name = NULL;
 
     if (!_grwl.wl.cursorTheme)
     {
         _grwlInputError(GRWL_CURSOR_UNAVAILABLE, "Wayland: No cursor theme");
-        return GRWL_FALSE;
+        return false;
     }
 
     // Try the XDG names first
@@ -3276,14 +3276,14 @@ GRWLbool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape)
                 break;
             default:
                 _grwlInputError(GRWL_CURSOR_UNAVAILABLE, "Wayland: Standard cursor shape unavailable");
-                return GRWL_FALSE;
+                return false;
         }
 
         cursor->wl.cursor = wl_cursor_theme_get_cursor(_grwl.wl.cursorTheme, name);
         if (!cursor->wl.cursor)
         {
             _grwlInputError(GRWL_CURSOR_UNAVAILABLE, "Wayland: Failed to create standard cursor \"%s\"", name);
-            return GRWL_FALSE;
+            return false;
         }
 
         if (_grwl.wl.cursorThemeHiDPI)
@@ -3295,7 +3295,7 @@ GRWLbool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape)
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 void _grwlDestroyCursorWayland(_GRWLcursor* cursor)
@@ -3577,7 +3577,7 @@ void _grwlSetClipboardStringWayland(const char* string)
     wl_data_device_set_selection(_grwl.wl.dataDevice, _grwl.wl.selectionSource, _grwl.wl.serial);
 }
 
-const char* _grwlGetClipboardStringWayland(void)
+const char* _grwlGetClipboardStringWayland()
 {
     if (!_grwl.wl.selectionOffer)
     {
@@ -3624,7 +3624,7 @@ void _grwlSetIMEStatusWayland(_GRWLwindow* window, int active)
 
 int _grwlGetIMEStatusWayland(_GRWLwindow* window)
 {
-    return GRWL_FALSE;
+    return false;
 }
 
 EGLenum _grwlGetEGLPlatformWayland(EGLint** attribs)
@@ -3639,7 +3639,7 @@ EGLenum _grwlGetEGLPlatformWayland(EGLint** attribs)
     }
 }
 
-EGLNativeDisplayType _grwlGetEGLNativeDisplayWayland(void)
+EGLNativeDisplayType _grwlGetEGLNativeDisplayWayland()
 {
     return _grwl.wl.display;
 }
@@ -3660,8 +3660,8 @@ void _grwlGetRequiredInstanceExtensionsWayland(char** extensions)
     extensions[1] = "VK_KHR_wayland_surface";
 }
 
-GRWLbool _grwlGetPhysicalDevicePresentationSupportWayland(VkInstance instance, VkPhysicalDevice device,
-                                                          uint32_t queuefamily)
+bool _grwlGetPhysicalDevicePresentationSupportWayland(VkInstance instance, VkPhysicalDevice device,
+                                                      uint32_t queuefamily)
 {
     PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR =
         (PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)vkGetInstanceProcAddr(
@@ -3719,7 +3719,7 @@ _GRWLusercontext* _grwlCreateUserContextWayland(_GRWLwindow* window)
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI struct wl_display* grwlGetWaylandDisplay(void)
+GRWLAPI struct wl_display* grwlGetWaylandDisplay()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
 

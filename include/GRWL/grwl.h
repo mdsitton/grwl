@@ -293,25 +293,6 @@ extern "C"
 #define GRWL_VERSION_REVISION 0
 /*! @} */
 
-/*! @brief One.
- *
- *  This is only semantic sugar for the number 1.  You can instead use `1` or
- *  `true` or `_True` or `GL_TRUE` or `VK_TRUE` or anything else that is equal
- *  to one.
- *
- *  @ingroup init
- */
-#define GRWL_TRUE 1
-/*! @brief Zero.
- *
- *  This is only semantic sugar for the number 0.  You can instead use `0` or
- *  `false` or `_False` or `GL_FALSE` or `VK_FALSE` or anything else that is
- *  equal to zero.
- *
- *  @ingroup init
- */
-#define GRWL_FALSE 0
-
 /*! @name Key and button actions
  *  @{ */
 /*! @brief The key or mouse button was released.
@@ -1410,7 +1391,7 @@ extern "C"
      *
      *  @ingroup context
      */
-    typedef void (*GRWLglproc)(void);
+    typedef void (*GRWLglproc)();
 
     /*! @brief Vulkan API function pointer type.
      *
@@ -1422,7 +1403,7 @@ extern "C"
      *
      *  @ingroup vulkan
      */
-    typedef void (*GRWLvkproc)(void);
+    typedef void (*GRWLvkproc)();
 
     /*! @brief Opaque monitor object.
      *
@@ -1610,7 +1591,7 @@ extern "C"
      *  This is the function pointer type for keyboard layout callbacks.  A keyboard
      *  layout callback function has the following signature:
      *  @code
-     *  void callback_name(void);
+     *  void callback_name();
      *  @endcode
      *
      *  @sa @ref keyboard_layout
@@ -1618,7 +1599,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    typedef void (*GRWLkeyboardlayoutfun)(void);
+    typedef void (*GRWLkeyboardlayoutfun)();
 
     /*! @brief The function pointer type for window position callbacks.
      *
@@ -1703,8 +1684,8 @@ extern "C"
      *  @endcode
      *
      *  @param[in] window The window that gained or lost input focus.
-     *  @param[in] focused `GRWL_TRUE` if the window was given input focus, or
-     *  `GRWL_FALSE` if it lost it.
+     *  @param[in] focused `true` if the window was given input focus, or
+     *  `false` if it lost it.
      *
      *  @sa @ref window_focus
      *  @sa @ref grwlSetWindowFocusCallback
@@ -1722,8 +1703,8 @@ extern "C"
      *  @endcode
      *
      *  @param[in] window The window that was iconified or restored.
-     *  @param[in] iconified `GRWL_TRUE` if the window was iconified, or
-     *  `GRWL_FALSE` if it was restored.
+     *  @param[in] iconified `true` if the window was iconified, or
+     *  `false` if it was restored.
      *
      *  @sa @ref window_iconify
      *  @sa @ref grwlSetWindowIconifyCallback
@@ -1741,8 +1722,8 @@ extern "C"
      *  @endcode
      *
      *  @param[in] window The window that was maximized or restored.
-     *  @param[in] maximized `GRWL_TRUE` if the window was maximized, or
-     *  `GRWL_FALSE` if it was restored.
+     *  @param[in] maximized `true` if the window was maximized, or
+     *  `false` if it was restored.
      *
      *  @sa @ref window_maximize
      *  @sa grwlSetWindowMaximizeCallback
@@ -1842,8 +1823,8 @@ extern "C"
      *  @endcode
      *
      *  @param[in] window The window that received the event.
-     *  @param[in] entered `GRWL_TRUE` if the cursor entered the window's content
-     *  area, or `GRWL_FALSE` if it left it.
+     *  @param[in] entered `true` if the cursor entered the window's content
+     *  area, or `false` if it left it.
      *
      *  @sa @ref cursor_enter
      *  @sa @ref grwlSetCursorEnterCallback
@@ -2280,13 +2261,13 @@ extern "C"
      *  succeeds, you should call @ref grwlTerminate before the application exits.
      *
      *  Additional calls to this function after successful initialization but before
-     *  termination will return `GRWL_TRUE` immediately.
+     *  termination will return `true` immediately.
      *
      *  The @ref GRWL_PLATFORM init hint controls which platforms are considered during
      *  initialization.  This also depends on which platforms the library was compiled to
      *  support.
      *
-     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
+     *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_PLATFORM_UNAVAILABLE and @ref
@@ -2318,7 +2299,7 @@ extern "C"
      *
      *  @ingroup init
      */
-    GRWLAPI int grwlInit(void);
+    GRWLAPI int grwlInit();
 
     /*! @brief Terminates the GRWL library.
      *
@@ -2350,7 +2331,7 @@ extern "C"
      *
      *  @ingroup init
      */
-    GRWLAPI void grwlTerminate(void);
+    GRWLAPI void grwlTerminate();
 
     /*! @brief Sets the specified init hint to the desired value.
      *
@@ -2508,7 +2489,7 @@ extern "C"
      *
      *  @ingroup init
      */
-    GRWLAPI const char* grwlGetVersionString(void);
+    GRWLAPI const char* grwlGetVersionString();
 
     /*! @brief Returns and clears the last error for the calling thread.
      *
@@ -2541,7 +2522,7 @@ extern "C"
 
     /*! @brief Returns the initialization state.
      *   This function returns whether the library has been initialized or not.
-     *   @return `GRWL_TRUE` if initialized, or `GRWL_FALSE` otherwise.
+     *   @return `true` if initialized, or `false` otherwise.
      *
      *   @errors None.
      *
@@ -2551,7 +2532,7 @@ extern "C"
      *
      *   @ingroup init
      */
-    GRWLAPI int grwlIsInitialized(void);
+    GRWLAPI int grwlIsInitialized();
 
     /*! @brief Sets the error callback.
      *
@@ -2615,7 +2596,7 @@ extern "C"
      *
      *  @ingroup init
      */
-    GRWLAPI int grwlGetPlatform(void);
+    GRWLAPI int grwlGetPlatform();
 
     /*! @brief Returns whether the library includes support for the specified platform.
      *
@@ -2624,7 +2605,7 @@ extern "C"
      *  `GRWL_PLATFORM_WAYLAND`, `GRWL_PLATFORM_X11` or `GRWL_PLATFORM_NULL`.
      *
      *  @param[in] platform The platform to query.
-     *  @return `GRWL_TRUE` if the platform is supported, or `GRWL_FALSE` otherwise.
+     *  @return `true` if the platform is supported, or `false` otherwise.
      *
      *  @errors Possible errors include @ref GRWL_INVALID_ENUM.
      *
@@ -2686,7 +2667,7 @@ extern "C"
      *
      *  @ingroup monitor
      */
-    GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor(void);
+    GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor();
 
     /*! @brief Returns the position of the monitor's viewport on the virtual screen.
      *
@@ -3070,7 +3051,7 @@ extern "C"
      *
      *  @ingroup window
      */
-    GRWLAPI void grwlDefaultWindowHints(void);
+    GRWLAPI void grwlDefaultWindowHints();
 
     /*! @brief Sets the specified window hint to the desired value.
      *
@@ -3236,7 +3217,7 @@ extern "C"
      *  @remark @macos On OS X 10.10 and later the window frame will not be rendered
      *  at full resolution on Retina displays unless the
      *  [GRWL_COCOA_RETINA_FRAMEBUFFER](@ref GRWL_COCOA_RETINA_FRAMEBUFFER_hint)
-     *  hint is `GRWL_TRUE` and the `NSHighResolutionCapable` key is enabled in the
+     *  hint is `true` and the `NSHighResolutionCapable` key is enabled in the
      *  application bundle's `Info.plist`.  For more information, see
      *  [High Resolution Guidelines for OS
      * X](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Explained/Explained.html)
@@ -4162,7 +4143,7 @@ extern "C"
      *  valid arguments and the library has been [initialized](@ref intro_init).
      *
      *  @remark @wayland The Wayland protocol provides no way to check whether a
-     *  window is iconfied, so @ref GRWL_ICONIFIED always returns `GRWL_FALSE`.
+     *  window is iconfied, so @ref GRWL_ICONIFIED always returns `false`.
      *
      *  @thread_safety This function must only be called from the main thread.
      *
@@ -4194,7 +4175,7 @@ extern "C"
      *
      *  @param[in] window The window to set the attribute for.
      *  @param[in] attrib A supported window attribute.
-     *  @param[in] value `GRWL_TRUE` or `GRWL_FALSE`.
+     *  @param[in] value `true` or `false`.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
      *  GRWL_INVALID_ENUM, @ref GRWL_INVALID_VALUE, @ref GRWL_PLATFORM_ERROR and @ref
@@ -4565,7 +4546,7 @@ extern "C"
      *
      *  @ingroup window
      */
-    GRWLAPI void grwlPollEvents(void);
+    GRWLAPI void grwlPollEvents();
 
     /*! @brief Waits until events are queued and processes them.
      *
@@ -4608,7 +4589,7 @@ extern "C"
      *
      *  @ingroup window
      */
-    GRWLAPI void grwlWaitEvents(void);
+    GRWLAPI void grwlWaitEvents();
 
     /*! @brief Waits with timeout until events are queued and processes them.
      *
@@ -4673,7 +4654,7 @@ extern "C"
      *
      *  @ingroup window
      */
-    GRWLAPI void grwlPostEmptyEvent(void);
+    GRWLAPI void grwlPostEmptyEvent();
 
     /*! @brief Returns the value of an input option for the specified window.
      *
@@ -4716,35 +4697,35 @@ extern "C"
      *  - `GRWL_CURSOR_CAPTURED` makes the cursor visible and confines it to the
      *    content area of the window.
      *
-     *  If the mode is `GRWL_STICKY_KEYS`, the value must be either `GRWL_TRUE` to
-     *  enable sticky keys, or `GRWL_FALSE` to disable it.  If sticky keys are
+     *  If the mode is `GRWL_STICKY_KEYS`, the value must be either `true` to
+     *  enable sticky keys, or `false` to disable it.  If sticky keys are
      *  enabled, a key press will ensure that @ref grwlGetKey returns `GRWL_PRESS`
      *  the next time it is called even if the key had been released before the
      *  call.  This is useful when you are only interested in whether keys have been
      *  pressed but not when or in which order.
      *
      *  If the mode is `GRWL_STICKY_MOUSE_BUTTONS`, the value must be either
-     *  `GRWL_TRUE` to enable sticky mouse buttons, or `GRWL_FALSE` to disable it.
+     *  `true` to enable sticky mouse buttons, or `false` to disable it.
      *  If sticky mouse buttons are enabled, a mouse button press will ensure that
      *  @ref grwlGetMouseButton returns `GRWL_PRESS` the next time it is called even
      *  if the mouse button had been released before the call.  This is useful when
      *  you are only interested in whether mouse buttons have been pressed but not
      *  when or in which order.
      *
-     *  If the mode is `GRWL_LOCK_KEY_MODS`, the value must be either `GRWL_TRUE` to
-     *  enable lock key modifier bits, or `GRWL_FALSE` to disable them.  If enabled,
+     *  If the mode is `GRWL_LOCK_KEY_MODS`, the value must be either `true` to
+     *  enable lock key modifier bits, or `false` to disable them.  If enabled,
      *  callbacks that receive modifier bits will also have the @ref
      *  GRWL_MOD_CAPS_LOCK bit set when the event was generated with Caps Lock on,
      *  and the @ref GRWL_MOD_NUM_LOCK bit when Num Lock was on.
      *
-     *  If the mode is `GRWL_RAW_MOUSE_MOTION`, the value must be either `GRWL_TRUE`
+     *  If the mode is `GRWL_RAW_MOUSE_MOTION`, the value must be either `true`
      *  to enable raw (unscaled and unaccelerated) mouse motion when the cursor is
-     *  disabled, or `GRWL_FALSE` to disable it.  If raw motion is not supported,
+     *  disabled, or `false` to disable it.  If raw motion is not supported,
      *  attempting to set this will emit @ref GRWL_FEATURE_UNAVAILABLE.  Call @ref
      *  grwlRawMouseMotionSupported to check for support.
      *
-     *  If the mode is `GRWL_IME`, the value must be either `GRWL_TRUE` to turn on
-     *  IME, or `GRWL_FALSE` to turn off it.
+     *  If the mode is `GRWL_IME`, the value must be either `true` to turn on
+     *  IME, or `false` to turn off it.
      *
      *  @param[in] window The window whose input mode to set.
      *  @param[in] mode One of `GRWL_CURSOR`, `GRWL_STICKY_KEYS`,
@@ -4777,8 +4758,8 @@ extern "C"
      *  while raw motion is better for controlling for example a 3D camera.  Because
      *  of this, raw mouse motion is only provided when the cursor is disabled.
      *
-     *  @return `GRWL_TRUE` if raw mouse motion is supported on the current machine,
-     *  or `GRWL_FALSE` otherwise.
+     *  @return `true` if raw mouse motion is supported on the current machine,
+     *  or `false` otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
      *
@@ -4789,7 +4770,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    GRWLAPI int grwlRawMouseMotionSupported(void);
+    GRWLAPI int grwlRawMouseMotionSupported();
 
     /*! @brief Returns the layout-specific name of the specified printable key.
      *
@@ -4911,7 +4892,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    GRWLAPI const char* grwlGetKeyboardLayoutName(void);
+    GRWLAPI const char* grwlGetKeyboardLayoutName();
 
     /*! @brief Sets the keyboard layout callback.
      *
@@ -4930,7 +4911,7 @@ extern "C"
      *
      *  @callback_signature
      *  @code
-     *  void function_name(void)
+     *  void function_name()
      *  @endcode
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -5706,7 +5687,7 @@ extern "C"
      *  work.
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
-     *  @return `GRWL_TRUE` if the joystick is present, or `GRWL_FALSE` otherwise.
+     *  @return `true` if the joystick is present, or `false` otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
      *  GRWL_INVALID_ENUM and @ref GRWL_PLATFORM_ERROR.
@@ -5963,13 +5944,13 @@ extern "C"
      *  a gamepad mapping.
      *
      *  If the specified joystick is present but does not have a gamepad mapping
-     *  this function will return `GRWL_FALSE` but will not generate an error.  Call
+     *  this function will return `false` but will not generate an error.  Call
      *  @ref grwlJoystickPresent to check if a joystick is present regardless of
      *  whether it has a mapping.
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
-     *  @return `GRWL_TRUE` if a joystick is both present and has a gamepad mapping,
-     *  or `GRWL_FALSE` otherwise.
+     *  @return `true` if a joystick is both present and has a gamepad mapping,
+     *  or `false` otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
      *  GRWL_INVALID_ENUM.
@@ -6158,7 +6139,7 @@ extern "C"
      *  default.
      *
      *  @param[in] string The string containing the gamepad mappings.
-     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
+     *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED and @ref
@@ -6210,7 +6191,7 @@ extern "C"
      *  an Xbox-like gamepad.
      *
      *  If the specified joystick is not present or does not have a gamepad mapping
-     *  this function will return `GRWL_FALSE` but will not generate an error.  Call
+     *  this function will return `false` but will not generate an error.  Call
      *  @ref grwlJoystickPresent to check whether it is present regardless of
      *  whether it has a mapping.
      *
@@ -6223,7 +6204,7 @@ extern "C"
      *
      *  @param[in] jid The [joystick](@ref joysticks) to query.
      *  @param[out] state The gamepad input state of the joystick.
-     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if no joystick is
+     *  @return `true` if successful, or `false` if no joystick is
      *  connected, it has no gamepad mapping or an [error](@ref error_handling)
      *  occurred.
      *
@@ -6317,7 +6298,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    GRWLAPI double grwlGetTime(void);
+    GRWLAPI double grwlGetTime();
 
     /*! @brief Sets the GRWL time.
      *
@@ -6365,7 +6346,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    GRWLAPI uint64_t grwlGetTimerValue(void);
+    GRWLAPI uint64_t grwlGetTimerValue();
 
     /*! @brief Returns the frequency, in Hz, of the raw timer.
      *
@@ -6383,7 +6364,7 @@ extern "C"
      *
      *  @ingroup input
      */
-    GRWLAPI uint64_t grwlGetTimerFrequency(void);
+    GRWLAPI uint64_t grwlGetTimerFrequency();
 
     /*! @brief Makes the context of the specified window current for the calling
      *  thread.
@@ -6444,7 +6425,7 @@ extern "C"
      *
      *  @ingroup context
      */
-    GRWLAPI GRWLwindow* grwlGetCurrentContext(void);
+    GRWLAPI GRWLwindow* grwlGetCurrentContext();
 
     /*! @brief Swaps the front and back buffers of the specified window.
      *
@@ -6541,7 +6522,7 @@ extern "C"
      *  and `vkEnumerateDeviceExtensionProperties` instead.
      *
      *  @param[in] extension The ASCII encoded name of the extension.
-     *  @return `GRWL_TRUE` if the extension is available, or `GRWL_FALSE`
+     *  @return `true` if the extension is available, or `false`
      *  otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
@@ -6727,7 +6708,7 @@ extern "C"
      *
      *  @ingroup context
      */
-    GRWLAPI GRWLusercontext* grwlGetCurrentUserContext(void);
+    GRWLAPI GRWLusercontext* grwlGetCurrentUserContext();
 
     /*! @brief Returns whether the Vulkan loader and an ICD have been found.
      *
@@ -6740,7 +6721,7 @@ extern "C"
      *  surface creation are available and @ref grwlGetPhysicalDevicePresentationSupport to
      *  check whether a queue family of a physical device supports image presentation.
      *
-     *  @return `GRWL_TRUE` if Vulkan is minimally available, or `GRWL_FALSE`
+     *  @return `true` if Vulkan is minimally available, or `false`
      *  otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED.
@@ -6751,7 +6732,7 @@ extern "C"
      *
      *  @ingroup vulkan
      */
-    GRWLAPI int grwlVulkanSupported(void);
+    GRWLAPI int grwlVulkanSupported();
 
     /*! @brief Returns the Vulkan instance extensions required by GRWL.
      *
@@ -6843,7 +6824,7 @@ extern "C"
      *
      *  If Vulkan or the required window surface creation instance extensions are
      *  not available on the machine, or if the specified instance was not created
-     *  with the required extensions, this function returns `GRWL_FALSE` and
+     *  with the required extensions, this function returns `false` and
      *  generates a @ref GRWL_API_UNAVAILABLE error.  Call @ref grwlVulkanSupported
      *  to check whether Vulkan is at least minimally available and @ref
      *  grwlGetRequiredInstanceExtensions to check what instance extensions are
@@ -6852,13 +6833,13 @@ extern "C"
      *  @param[in] instance The instance that the physical device belongs to.
      *  @param[in] device The physical device that the queue family belongs to.
      *  @param[in] queuefamily The index of the queue family to query.
-     *  @return `GRWL_TRUE` if the queue family supports presentation, or
-     *  `GRWL_FALSE` otherwise.
+     *  @return `true` if the queue family supports presentation, or
+     *  `false` otherwise.
      *
      *  @errors Possible errors include @ref GRWL_NOT_INITIALIZED, @ref
      *  GRWL_API_UNAVAILABLE and @ref GRWL_PLATFORM_ERROR.
      *
-     *  @remark @macos This function currently always returns `GRWL_TRUE`, as the
+     *  @remark @macos This function currently always returns `true`, as the
      *  `VK_MVK_macos_surface` and `VK_EXT_metal_surface` extensions do not provide
      *  a `vkGetPhysicalDevice*PresentationSupport` type function.
      *

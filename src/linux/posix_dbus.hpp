@@ -122,12 +122,12 @@ typedef struct _GRWLDBusPOSIX
     char* signalName;
 } _GRWLDBusPOSIX;
 
-void _grwlInitDBusPOSIX(void);
-void _grwlCacheSignalNameDBusPOSIX(void);
-void _grwlCacheFullExecutableNameDBusPOSIX(void);
-void _grwlCacheLegalExecutableNameDBusPOSIX(void);
-void _grwlCacheDesktopFilePathDBusPOSIX(void);
-void _grwlTerminateDBusPOSIX(void);
+void _grwlInitDBusPOSIX();
+void _grwlCacheSignalNameDBusPOSIX();
+void _grwlCacheFullExecutableNameDBusPOSIX();
+void _grwlCacheLegalExecutableNameDBusPOSIX();
+void _grwlCacheDesktopFilePathDBusPOSIX();
+void _grwlTerminateDBusPOSIX();
 void _grwlUpdateTaskbarProgressDBusPOSIX(dbus_bool_t progressVisible, double progressValue);
 void _grwlUpdateBadgeDBusPOSIX(dbus_bool_t badgeVisible, int badgeCount);
 

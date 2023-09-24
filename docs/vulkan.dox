@@ -101,7 +101,7 @@ if (glfwVulkanSupported())
 }
 @endcode
 
-This function returns `GRWL_TRUE` if the Vulkan loader and any minimally
+This function returns `true` if the Vulkan loader and any minimally
 functional ICD was found.
 
 If one or both were not found, calling any other Vulkan related GRWL function

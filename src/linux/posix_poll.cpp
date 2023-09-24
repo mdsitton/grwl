@@ -11,7 +11,7 @@
     #include <ctime>
     #include <cerrno>
 
-GRWLbool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
+bool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
 {
     for (;;)
     {
@@ -39,15 +39,15 @@ GRWLbool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
 
             if (result > 0)
             {
-                return GRWL_TRUE;
+                return true;
             }
             else if (result == -1 && error != EINTR && error != EAGAIN)
             {
-                return GRWL_FALSE;
+                return false;
             }
             else if (*timeout <= 0.0)
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else
@@ -55,11 +55,11 @@ GRWLbool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout)
             const int result = poll(fds, count, -1);
             if (result > 0)
             {
-                return GRWL_TRUE;
+                return true;
             }
             else if (result == -1 && errno != EINTR && errno != EAGAIN)
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
     }

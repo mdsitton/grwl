@@ -77,7 +77,7 @@ static void swapIntervalNSGL(int interval)
 static int extensionSupportedNSGL(const char* extension)
 {
     // There are no NSGL extensions
-    return GRWL_FALSE;
+    return false;
 }
 
 static GRWLglproc getProcAddressNSGL(const char* procname)
@@ -111,37 +111,37 @@ static void destroyContextNSGL(_GRWLwindow* window)
 
 // Initialize OpenGL support
 //
-GRWLbool _grwlInitNSGL(void)
+bool _grwlInitNSGL()
 {
     if (_grwl.nsgl.framework)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     _grwl.nsgl.framework = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
     if (_grwl.nsgl.framework == NULL)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "NSGL: Failed to locate OpenGL framework");
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Terminate OpenGL support
 //
-void _grwlTerminateNSGL(void)
+void _grwlTerminateNSGL()
 {
 }
 
 // Create the OpenGL context
 //
-GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig)
+bool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig)
 {
     if (ctxconfig->client == GRWL_OPENGL_ES_API)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "NSGL: OpenGL ES is not available on macOS");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->major > 2)
@@ -151,7 +151,7 @@ GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxco
             _grwlInputError(
                 GRWL_VERSION_UNAVAILABLE,
                 "NSGL: The targeted version of macOS does not support OpenGL 3.0 or 3.1 but may support 3.2 and above");
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -260,7 +260,7 @@ GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxco
     {
     #if MAC_OS_X_VERSION_MAX_ALLOWED >= 101200
         _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "NSGL: Stereo rendering is deprecated");
-        return GRWL_FALSE;
+        return false;
     #else
         ADD_ATTRIB(NSOpenGLPFAStereo);
     #endif
@@ -296,7 +296,7 @@ GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxco
     if (window->context.nsgl.pixelFormat == nil)
     {
         _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "NSGL: Failed to find a suitable pixel format");
-        return GRWL_FALSE;
+        return false;
     }
 
     NSOpenGLContext* share = nil;
@@ -311,7 +311,7 @@ GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxco
     if (window->context.nsgl.object == nil)
     {
         _grwlInputError(GRWL_VERSION_UNAVAILABLE, "NSGL: Failed to create OpenGL context");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (fbconfig->transparent)
@@ -331,7 +331,7 @@ GRWLbool _grwlCreateContextNSGL(_GRWLwindow* window, const _GRWLctxconfig* ctxco
     window->context.getProcAddress = getProcAddressNSGL;
     window->context.destroy = destroyContextNSGL;
 
-    return GRWL_TRUE;
+    return true;
 }
 
 static void _grwlMakeUserContextCurrentNSGL(_GRWLusercontext* context)

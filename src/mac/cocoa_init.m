@@ -14,7 +14,7 @@
 
 // Change to our application bundle's resources directory, if present
 //
-static void changeToResourcesDirectory(void)
+static void changeToResourcesDirectory()
 {
     char resourcesPath[MAXPATHLEN];
 
@@ -52,7 +52,7 @@ static void changeToResourcesDirectory(void)
 // could go away at any moment, lots of stuff that really should be
 // localize(d|able), etc.  Add a nib to save us this horror.
 //
-static void createMenuBar(void)
+static void createMenuBar()
 {
     NSString* appName = nil;
     NSDictionary* bundleInfo = [[NSBundle mainBundle] infoDictionary];
@@ -138,7 +138,7 @@ static void createMenuBar(void)
 
 // Create key code translation tables
 //
-static void createKeyTables(void)
+static void createKeyTables()
 {
     memset(_grwl.ns.keycodes, -1, sizeof(_grwl.ns.keycodes));
     memset(_grwl.ns.scancodes, -1, sizeof(_grwl.ns.scancodes));
@@ -270,14 +270,14 @@ static void createKeyTables(void)
 
 // Load HIToolbox.framework and the TIS symbols we need from it
 //
-static GRWLbool initializeTIS(void)
+static bool initializeTIS()
 {
     // This works only because Cocoa has already loaded it properly
     _grwl.ns.tis.bundle = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.HIToolbox"));
     if (!_grwl.ns.tis.bundle)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to load HIToolbox.framework");
-        return GRWL_FALSE;
+        return false;
     }
 
     CFStringRef* kCategoryKeyboardInputSource =
@@ -325,7 +325,7 @@ static GRWLbool initializeTIS(void)
         !TISSelectInputSource || !LMGetKbdType)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to load TIS API symbols");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.ns.tis.kCategoryKeyboardInputSource = *kCategoryKeyboardInputSource;
@@ -342,7 +342,7 @@ static GRWLbool initializeTIS(void)
     _grwl.ns.keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
     _grwl.ns.unicodeData = TISGetInputSourceProperty(_grwl.ns.keyboardLayout, kTISPropertyUnicodeKeyLayoutData);
 
-    return GRWL_TRUE;
+    return true;
 }
 
 @interface GRWLHelper: NSObject
@@ -350,7 +350,7 @@ static GRWLbool initializeTIS(void)
 
 @implementation GRWLHelper
 
-- (void)selectedKeyboardInputSourceChanged:(NSObject*)object
+- ()selectedKeyboardInputSourceChanged:(NSObject*)object
 {
     // The keyboard layout is needed for Unicode data which is the source of
     // GRWL key names on Cocoa (the generic input source may not have this)
@@ -374,7 +374,7 @@ static GRWLbool initializeTIS(void)
     }
 }
 
-- (void)doNothing:(id)object
+- ()doNothing:(id)object
 {
 }
 
@@ -395,7 +395,7 @@ static GRWLbool initializeTIS(void)
     return NSTerminateCancel;
 }
 
-- (void)applicationDidChangeScreenParameters:(NSNotification*)notification
+- ()applicationDidChangeScreenParameters:(NSNotification*)notification
 {
     for (_GRWLwindow* window = _grwl.windowListHead; window; window = window->next)
     {
@@ -408,7 +408,7 @@ static GRWLbool initializeTIS(void)
     _grwlPollMonitorsCocoa();
 }
 
-- (void)applicationWillFinishLaunching:(NSNotification*)notification
+- ()applicationWillFinishLaunching:(NSNotification*)notification
 {
     if (_grwl.hints.init.ns.menubar)
     {
@@ -426,13 +426,13 @@ static GRWLbool initializeTIS(void)
     }
 }
 
-- (void)applicationDidFinishLaunching:(NSNotification*)notification
+- ()applicationDidFinishLaunching:(NSNotification*)notification
 {
     _grwlPostEmptyEventCocoa();
     [NSApp stop:nil];
 }
 
-- (void)applicationDidHide:(NSNotification*)notification
+- ()applicationDidHide:(NSNotification*)notification
 {
     for (int i = 0; i < _grwl.monitorCount; i++)
     {
@@ -446,7 +446,7 @@ static GRWLbool initializeTIS(void)
 //////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void* _grwlLoadLocalVulkanLoaderCocoa(void)
+void* _grwlLoadLocalVulkanLoaderCocoa()
 {
     CFBundleRef bundle = CFBundleGetMainBundle();
     if (!bundle)
@@ -485,7 +485,7 @@ void* _grwlLoadLocalVulkanLoaderCocoa(void)
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlConnectCocoa(int platformID, _GRWLplatform* platform)
+bool _grwlConnectCocoa(int platformID, _GRWLplatform* platform)
 {
     const _GRWLplatform cocoa = {
         GRWL_PLATFORM_COCOA,
@@ -572,10 +572,10 @@ GRWLbool _grwlConnectCocoa(int platformID, _GRWLplatform* platform)
     };
 
     *platform = cocoa;
-    return GRWL_TRUE;
+    return true;
 }
 
-int _grwlInitCocoa(void)
+int _grwlInitCocoa()
 {
     @autoreleasepool
     {
@@ -590,7 +590,7 @@ int _grwlInitCocoa(void)
         if (_grwl.ns.delegate == nil)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to create application delegate");
-            return GRWL_FALSE;
+            return false;
         }
 
         [NSApp setDelegate:_grwl.ns.delegate];
@@ -625,14 +625,14 @@ int _grwlInitCocoa(void)
         _grwl.ns.eventSource = CGEventSourceCreate(kCGEventSourceStateHIDSystemState);
         if (!_grwl.ns.eventSource)
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         CGEventSourceSetLocalEventsSuppressionInterval(_grwl.ns.eventSource, 0.0);
 
         if (!initializeTIS())
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         _grwlPollMonitorsCocoa();
@@ -648,12 +648,12 @@ int _grwlInitCocoa(void)
             [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
         }
 
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }
 
-void _grwlTerminateCocoa(void)
+void _grwlTerminateCocoa()
 {
     @autoreleasepool
     {

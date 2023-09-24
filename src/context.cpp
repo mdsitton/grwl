@@ -21,20 +21,20 @@
 // exists and whether all relevant options have supported and non-conflicting
 // values
 //
-GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
+bool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
 {
     if (ctxconfig->source != GRWL_NATIVE_CONTEXT_API && ctxconfig->source != GRWL_EGL_CONTEXT_API &&
         ctxconfig->source != GRWL_OSMESA_CONTEXT_API)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid context creation API 0x%08X", ctxconfig->source);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->client != GRWL_NO_API && ctxconfig->client != GRWL_OPENGL_API &&
         ctxconfig->client != GRWL_OPENGL_ES_API)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid client API 0x%08X", ctxconfig->client);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->share)
@@ -42,13 +42,13 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
         if (ctxconfig->client == GRWL_NO_API || ctxconfig->share->context.client == GRWL_NO_API)
         {
             _grwlInputError(GRWL_NO_WINDOW_CONTEXT, NULL);
-            return GRWL_FALSE;
+            return false;
         }
 
         if (ctxconfig->source != ctxconfig->share->context.source)
         {
             _grwlInputError(GRWL_INVALID_ENUM, "Context creation APIs do not match between contexts");
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -64,7 +64,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
             // For now, let everything else through
 
             _grwlInputError(GRWL_INVALID_VALUE, "Invalid OpenGL version %i.%i", ctxconfig->major, ctxconfig->minor);
-            return GRWL_FALSE;
+            return false;
         }
 
         if (ctxconfig->profile)
@@ -72,7 +72,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
             if (ctxconfig->profile != GRWL_OPENGL_CORE_PROFILE && ctxconfig->profile != GRWL_OPENGL_COMPAT_PROFILE)
             {
                 _grwlInputError(GRWL_INVALID_ENUM, "Invalid OpenGL profile 0x%08X", ctxconfig->profile);
-                return GRWL_FALSE;
+                return false;
             }
 
             if (ctxconfig->major <= 2 || (ctxconfig->major == 3 && ctxconfig->minor < 2))
@@ -82,7 +82,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
 
                 _grwlInputError(GRWL_INVALID_VALUE,
                                 "Context profiles are only defined for OpenGL version 3.2 and above");
-                return GRWL_FALSE;
+                return false;
             }
         }
 
@@ -91,7 +91,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
             // Forward-compatible contexts are only defined for OpenGL version 3.0 and above
             _grwlInputError(GRWL_INVALID_VALUE,
                             "Forward-compatibility is only defined for OpenGL version 3.0 and above");
-            return GRWL_FALSE;
+            return false;
         }
     }
     else if (ctxconfig->client == GRWL_OPENGL_ES_API)
@@ -105,7 +105,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
             // For now, let everything else through
 
             _grwlInputError(GRWL_INVALID_VALUE, "Invalid OpenGL ES version %i.%i", ctxconfig->major, ctxconfig->minor);
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -114,7 +114,7 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
         if (ctxconfig->robustness != GRWL_NO_RESET_NOTIFICATION && ctxconfig->robustness != GRWL_LOSE_CONTEXT_ON_RESET)
         {
             _grwlInputError(GRWL_INVALID_ENUM, "Invalid context robustness mode 0x%08X", ctxconfig->robustness);
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -123,11 +123,11 @@ GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig)
         if (ctxconfig->release != GRWL_RELEASE_BEHAVIOR_NONE && ctxconfig->release != GRWL_RELEASE_BEHAVIOR_FLUSH)
         {
             _grwlInputError(GRWL_INVALID_ENUM, "Invalid context release behavior 0x%08X", ctxconfig->release);
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Chooses the framebuffer config that best matches the desired one
@@ -146,7 +146,7 @@ const _GRWLfbconfig* _grwlChooseFBConfig(const _GRWLfbconfig* desired, const _GR
     {
         current = alternatives + i;
 
-        if (desired->stereo > 0 && current->stereo == 0)
+        if (desired->stereo == true && current->stereo == false)
         {
             // Stereo is a hard constraint
             continue;
@@ -297,7 +297,7 @@ const _GRWLfbconfig* _grwlChooseFBConfig(const _GRWLfbconfig* desired, const _GR
 
 // Retrieves the attributes of the current context
 //
-GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig)
+bool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig)
 {
     int i;
     _GRWLwindow* previous;
@@ -316,7 +316,7 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Entry point retrieval is broken");
         grwlMakeContextCurrent((GRWLwindow*)previous);
-        return GRWL_FALSE;
+        return false;
     }
 
     version = (const char*)window->context.GetString(GL_VERSION);
@@ -332,7 +332,7 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
         }
 
         grwlMakeContextCurrent((GRWLwindow*)previous);
-        return GRWL_FALSE;
+        return false;
     }
 
     for (i = 0; prefixes[i]; i++)
@@ -359,7 +359,7 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
         }
 
         grwlMakeContextCurrent((GRWLwindow*)previous);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (window->context.major < ctxconfig->major ||
@@ -384,7 +384,7 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
         }
 
         grwlMakeContextCurrent((GRWLwindow*)previous);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (window->context.major >= 3)
@@ -398,7 +398,7 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "Entry point retrieval is broken");
             grwlMakeContextCurrent((GRWLwindow*)previous);
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -412,24 +412,24 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
 
             if (flags & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT)
             {
-                window->context.forward = GRWL_TRUE;
+                window->context.forward = true;
             }
 
             if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
             {
-                window->context.debug = GRWL_TRUE;
+                window->context.debug = true;
             }
             else if (grwlExtensionSupported("GL_ARB_debug_output") && ctxconfig->debug)
             {
                 // HACK: This is a workaround for older drivers (pre KHR_debug)
                 //       not setting the debug bit in the context flags for
                 //       debug contexts
-                window->context.debug = GRWL_TRUE;
+                window->context.debug = true;
             }
 
             if (flags & GL_CONTEXT_FLAG_NO_ERROR_BIT_KHR)
             {
-                window->context.noerror = GRWL_TRUE;
+                window->context.noerror = true;
             }
         }
 
@@ -526,12 +526,12 @@ GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* c
     }
 
     grwlMakeContextCurrent((GRWLwindow*)previous);
-    return GRWL_TRUE;
+    return true;
 }
 
 // Searches an extension string for the specified extension
 //
-GRWLbool _grwlStringInExtensionString(const char* string, const char* extensions)
+bool _grwlStringInExtensionString(const char* string, const char* extensions)
 {
     const char* start = extensions;
 
@@ -543,7 +543,7 @@ GRWLbool _grwlStringInExtensionString(const char* string, const char* extensions
         where = strstr(start, string);
         if (!where)
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         terminator = where + strlen(string);
@@ -558,7 +558,7 @@ GRWLbool _grwlStringInExtensionString(const char* string, const char* extensions
         start = terminator;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -596,7 +596,7 @@ GRWLAPI void grwlMakeContextCurrent(GRWLwindow* handle)
     }
 }
 
-GRWLAPI GRWLwindow* grwlGetCurrentContext(void)
+GRWLAPI GRWLwindow* grwlGetCurrentContext()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
     return (GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
@@ -641,20 +641,20 @@ GRWLAPI int grwlExtensionSupported(const char* extension)
     _GRWLwindow* window;
     assert(extension != NULL);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     window = (_GRWLwindow*)_grwlPlatformGetTls(&_grwl.contextSlot);
     if (!window)
     {
         _grwlInputError(GRWL_NO_CURRENT_CONTEXT,
                         "Cannot query extension without a current OpenGL or OpenGL ES context");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (*extension == '\0')
     {
         _grwlInputError(GRWL_INVALID_VALUE, "Extension name cannot be an empty string");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (window->context.major >= 3)
@@ -672,12 +672,12 @@ GRWLAPI int grwlExtensionSupported(const char* extension)
             if (!en)
             {
                 _grwlInputError(GRWL_PLATFORM_ERROR, "Extension string retrieval is broken");
-                return GRWL_FALSE;
+                return false;
             }
 
             if (strcmp(en, extension) == 0)
             {
-                return GRWL_TRUE;
+                return true;
             }
         }
     }
@@ -689,12 +689,12 @@ GRWLAPI int grwlExtensionSupported(const char* extension)
         if (!extensions)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "Extension string retrieval is broken");
-            return GRWL_FALSE;
+            return false;
         }
 
         if (_grwlStringInExtensionString(extension, extensions))
         {
-            return GRWL_TRUE;
+            return true;
         }
     }
 
@@ -780,7 +780,7 @@ GRWLAPI void grwlMakeUserContextCurrent(GRWLusercontext* handle)
     }
 }
 
-GRWLAPI GRWLusercontext* grwlGetCurrentUserContext(void)
+GRWLAPI GRWLusercontext* grwlGetCurrentUserContext()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
     return (GRWLusercontext*)_grwlPlatformGetTls(&_grwl.usercontextSlot);

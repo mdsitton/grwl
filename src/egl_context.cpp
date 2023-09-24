@@ -62,13 +62,13 @@ static int getEGLConfigAttrib(EGLConfig config, int attrib)
 
 // Return the EGLConfig most closely matching the specified hints
 //
-static GRWLbool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig, EGLConfig* result)
+static bool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig, EGLConfig* result)
 {
     EGLConfig* nativeConfigs;
     _GRWLfbconfig* usableConfigs;
     const _GRWLfbconfig* closest;
     int i, nativeCount, usableCount, apiBit;
-    GRWLbool wrongApiAvailable = GRWL_FALSE;
+    bool wrongApiAvailable = false;
 
     if (ctxconfig->client == GRWL_OPENGL_ES_API)
     {
@@ -89,14 +89,14 @@ static GRWLbool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbco
     if (fbconfig->stereo)
     {
         _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "EGL: Stereo rendering not supported");
-        return GRWL_FALSE;
+        return false;
     }
 
     eglGetConfigs(_grwl.egl.display, NULL, 0, &nativeCount);
     if (!nativeCount)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: No EGLConfigs returned");
-        return GRWL_FALSE;
+        return false;
     }
 
     nativeConfigs = (EGLConfig*)_grwl_calloc(nativeCount, sizeof(EGLConfig));
@@ -149,7 +149,7 @@ static GRWLbool chooseEGLConfig(const _GRWLctxconfig* ctxconfig, const _GRWLfbco
 
         if (!(getEGLConfigAttrib(n, EGL_RENDERABLE_TYPE) & apiBit))
         {
-            wrongApiAvailable = GRWL_TRUE;
+            wrongApiAvailable = true;
             continue;
         }
 
@@ -282,11 +282,11 @@ static int extensionSupportedEGL(const char* extension)
     {
         if (_grwlStringInExtensionString(extension, extensions))
         {
-            return GRWL_TRUE;
+            return true;
         }
     }
 
-    return GRWL_FALSE;
+    return false;
 }
 
 static GRWLglproc getProcAddressEGL(const char* procname)
@@ -337,7 +337,7 @@ static void destroyContextEGL(_GRWLwindow* window)
 
 // Initialize EGL
 //
-GRWLbool _grwlInitEGL(void)
+bool _grwlInitEGL()
 {
     int i;
     EGLint* attribs = NULL;
@@ -362,7 +362,7 @@ GRWLbool _grwlInitEGL(void)
 
     if (_grwl.egl.handle)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     for (i = 0; sonames[i]; i++)
@@ -377,7 +377,7 @@ GRWLbool _grwlInitEGL(void)
     if (!_grwl.egl.handle)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Library not found");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.egl.prefix = (strncmp(sonames[i], "lib", 3) == 0);
@@ -416,13 +416,13 @@ GRWLbool _grwlInitEGL(void)
         _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to load required entry points");
 
         _grwlTerminateEGL();
-        return GRWL_FALSE;
+        return false;
     }
 
     extensions = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     if (extensions && eglGetError() == EGL_SUCCESS)
     {
-        _grwl.egl.EXT_client_extensions = GRWL_TRUE;
+        _grwl.egl.EXT_client_extensions = true;
     }
 
     if (_grwl.egl.EXT_client_extensions)
@@ -465,7 +465,7 @@ GRWLbool _grwlInitEGL(void)
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Failed to get EGL display: %s", getEGLErrorString(eglGetError()));
 
         _grwlTerminateEGL();
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!eglInitialize(_grwl.egl.display, &_grwl.egl.major, &_grwl.egl.minor))
@@ -473,7 +473,7 @@ GRWLbool _grwlInitEGL(void)
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Failed to initialize EGL: %s", getEGLErrorString(eglGetError()));
 
         _grwlTerminateEGL();
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.egl.KHR_create_context = extensionSupportedEGL("EGL_KHR_create_context");
@@ -483,12 +483,12 @@ GRWLbool _grwlInitEGL(void)
     _grwl.egl.KHR_context_flush_control = extensionSupportedEGL("EGL_KHR_context_flush_control");
     _grwl.egl.EXT_present_opaque = extensionSupportedEGL("EGL_EXT_present_opaque");
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Terminate EGL
 //
-void _grwlTerminateEGL(void)
+void _grwlTerminateEGL()
 {
     if (_grwl.egl.display)
     {
@@ -512,7 +512,7 @@ void _grwlTerminateEGL(void)
 
 // Create the OpenGL or OpenGL ES context for the window eglConfig
 //
-GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfig* ctxconfig, EGLContext* context)
+bool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfig* ctxconfig, EGLContext* context)
 {
     EGLint attribs[40];
     int index = 0;
@@ -521,7 +521,7 @@ GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfi
     if (!_grwl.egl.display)
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: API not available");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->share)
@@ -535,7 +535,7 @@ GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfi
         {
             _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Failed to bind OpenGL ES: %s",
                             getEGLErrorString(eglGetError()));
-            return GRWL_FALSE;
+            return false;
         }
     }
     else
@@ -543,7 +543,7 @@ GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfi
         if (!eglBindAPI(EGL_OPENGL_API))
         {
             _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Failed to bind OpenGL: %s", getEGLErrorString(eglGetError()));
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -597,7 +597,7 @@ GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfi
         {
             if (_grwl.egl.KHR_create_context_no_error)
             {
-                SET_ATTRIB(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, GRWL_TRUE);
+                SET_ATTRIB(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, true);
             }
         }
 
@@ -639,15 +639,15 @@ GRWLbool _grwlCreateContextForConfigEGL(EGLConfig eglConfig, const _GRWLctxconfi
     {
         _grwlInputError(GRWL_VERSION_UNAVAILABLE, "EGL: Failed to create context: %s",
                         getEGLErrorString(eglGetError()));
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Create the OpenGL or OpenGL ES context
 //
-GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig)
+bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig)
 {
     EGLNativeWindowType native;
     EGLint attribs[40];
@@ -656,12 +656,12 @@ GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxcon
     if (!chooseEGLConfig(ctxconfig, fbconfig, &window->context.egl.config))
     {
         _grwlInputError(GRWL_FORMAT_UNAVAILABLE, "EGL: Failed to find a suitable EGLConfig");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwlCreateContextForConfigEGL(window->context.egl.config, ctxconfig, &window->context.egl.handle))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     // Set up attributes for surface creation
@@ -703,7 +703,7 @@ GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxcon
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to create window surface: %s",
                         getEGLErrorString(eglGetError()));
-        return GRWL_FALSE;
+        return false;
     }
 
     // Load the appropriate client library
@@ -793,7 +793,7 @@ GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxcon
         if (!window->context.egl.client)
         {
             _grwlInputError(GRWL_API_UNAVAILABLE, "EGL: Failed to load client library");
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -804,7 +804,7 @@ GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxcon
     window->context.getProcAddress = getProcAddressEGL;
     window->context.destroy = destroyContextEGL;
 
-    return GRWL_TRUE;
+    return true;
 }
 
 #undef SET_ATTRIB
@@ -812,8 +812,8 @@ GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxcon
 // Returns the Visual and depth of the chosen EGLConfig
 //
 #if defined(_GRWL_X11)
-GRWLbool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                              const _GRWLfbconfig* fbconfig, Visual** visual, int* depth)
+bool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                          const _GRWLfbconfig* fbconfig, Visual** visual, int* depth)
 {
     XVisualInfo* result;
     XVisualInfo desired;
@@ -823,7 +823,7 @@ GRWLbool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxcon
 
     if (!chooseEGLConfig(ctxconfig, fbconfig, &native))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     eglGetConfigAttrib(_grwl.egl.display, native, EGL_NATIVE_VISUAL_ID, &visualID);
@@ -835,14 +835,14 @@ GRWLbool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxcon
     if (!result)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "EGL: Failed to retrieve Visual for EGLConfig");
-        return GRWL_FALSE;
+        return false;
     }
 
     *visual = result->visual;
     *depth = result->depth;
 
     XFree(result);
-    return GRWL_TRUE;
+    return true;
 }
 #endif // _GRWL_X11
 
@@ -928,7 +928,7 @@ _GRWLusercontext* _grwlCreateUserContextEGL(_GRWLwindow* window)
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI EGLDisplay grwlGetEGLDisplay(void)
+GRWLAPI EGLDisplay grwlGetEGLDisplay()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(EGL_NO_DISPLAY);
     return _grwl.egl.display;

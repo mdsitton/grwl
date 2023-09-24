@@ -25,18 +25,18 @@
 
 // Initializes the platform joystick API if it has not been already
 //
-static GRWLbool initJoysticks(void)
+static bool initJoysticks()
 {
     if (!_grwl.joysticksInitialized)
     {
         if (!_grwl.platform.initJoysticks())
         {
             _grwl.platform.terminateJoysticks();
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return _grwl.joysticksInitialized = GRWL_TRUE;
+    return _grwl.joysticksInitialized = true;
 }
 
 #if defined(GRWL_BUILD_LINUX_JOYSTICK)
@@ -55,7 +55,7 @@ uint16_t parseHexDigit(char c)
     {
         return c - 'A' + 10;
     }
-    assert(GRWL_FALSE);
+    assert(false);
 }
 
 struct vendor_product
@@ -116,22 +116,22 @@ static _GRWLmapping* findMapping(const char* guid)
 
 // Checks whether a gamepad mapping element is present in the hardware
 //
-static GRWLbool isValidElementForJoystick(const _GRWLmapelement* e, const _GRWLjoystick* js)
+static bool isValidElementForJoystick(const _GRWLmapelement* e, const _GRWLjoystick* js)
 {
     if (e->type == _GRWL_JOYSTICK_HATBIT && (e->index >> 4) >= js->hatCount)
     {
-        return GRWL_FALSE;
+        return false;
     }
     else if (e->type == _GRWL_JOYSTICK_BUTTON && e->index >= js->buttonCount)
     {
-        return GRWL_FALSE;
+        return false;
     }
     else if (e->type == _GRWL_JOYSTICK_AXIS && e->index >= js->axisCount)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Finds a mapping based on joystick GUID and verifies element indices
@@ -165,7 +165,7 @@ static _GRWLmapping* findValidMapping(const _GRWLjoystick* js)
 
 // Parses an SDL_GameControllerDB line and adds it to the mapping list
 //
-static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
+static bool parseMapping(_GRWLmapping* mapping, const char* string)
 {
     const char* c = string;
     size_t i, length;
@@ -201,7 +201,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
     if (length != 32 || c[length] != ',')
     {
         _grwlInputError(GRWL_INVALID_VALUE, NULL);
-        return GRWL_FALSE;
+        return false;
     }
 
     memcpy(mapping->guid, c, length);
@@ -211,7 +211,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
     if (length >= sizeof(mapping->name) || c[length] != ',')
     {
         _grwlInputError(GRWL_INVALID_VALUE, NULL);
-        return GRWL_FALSE;
+        return false;
     }
 
     memcpy(mapping->name, c, length);
@@ -222,7 +222,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
         // TODO: Implement output modifiers
         if (*c == '+' || *c == '-')
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         for (i = 0; i < sizeof(fields) / sizeof(fields[0]); i++)
@@ -298,7 +298,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
                 length = strlen(name);
                 if (strncmp(c, name, length) != 0)
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
             }
 
@@ -318,7 +318,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
     }
 
     _grwl.platform.updateGamepadGUID(mapping->guid);
-    return GRWL_TRUE;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ static GRWLbool parseMapping(_GRWLmapping* mapping, const char* string)
 
 // Notifies shared code of a keyboard layout change event
 //
-void _grwlInputKeyboardLayout(void)
+void _grwlInputKeyboardLayout()
 {
     if (_grwl.callbacks.layout)
     {
@@ -347,7 +347,7 @@ void _grwlInputKey(_GRWLwindow* window, int key, int scancode, int action, int m
 
     if (key >= 0 && key <= GRWL_KEY_LAST)
     {
-        GRWLbool repeated = GRWL_FALSE;
+        bool repeated = false;
 
         if (action == GRWL_RELEASE && window->keys[key] == GRWL_RELEASE)
         {
@@ -356,7 +356,7 @@ void _grwlInputKey(_GRWLwindow* window, int key, int scancode, int action, int m
 
         if (action == GRWL_PRESS && window->keys[key] == GRWL_PRESS)
         {
-            repeated = GRWL_TRUE;
+            repeated = true;
         }
 
         if (action == GRWL_RELEASE && window->stickyKeys)
@@ -388,11 +388,11 @@ void _grwlInputKey(_GRWLwindow* window, int key, int scancode, int action, int m
 // Notifies shared code of a Unicode codepoint input event
 // The 'plain' parameter determines whether to emit a regular character event
 //
-void _grwlInputChar(_GRWLwindow* window, uint32_t codepoint, int mods, GRWLbool plain)
+void _grwlInputChar(_GRWLwindow* window, uint32_t codepoint, int mods, bool plain)
 {
     assert(window != NULL);
     assert(mods == (mods & GRWL_MOD_MASK));
-    assert(plain == GRWL_TRUE || plain == GRWL_FALSE);
+    assert(plain == true || plain == false);
 
     if (codepoint < 32 || (codepoint > 126 && codepoint < 160))
     {
@@ -530,10 +530,10 @@ void _grwlInputCursorPos(_GRWLwindow* window, double xpos, double ypos)
 
 // Notifies shared code of a cursor enter/leave event
 //
-void _grwlInputCursorEnter(_GRWLwindow* window, GRWLbool entered)
+void _grwlInputCursorEnter(_GRWLwindow* window, bool entered)
 {
     assert(window != NULL);
-    assert(entered == GRWL_TRUE || entered == GRWL_FALSE);
+    assert(entered == true || entered == false);
 
     if (window->callbacks.cursorEnter)
     {
@@ -584,11 +584,11 @@ void _grwlInputJoystick(_GRWLjoystick* js, int event)
 
     if (event == GRWL_CONNECTED)
     {
-        js->connected = GRWL_TRUE;
+        js->connected = true;
     }
     else if (event == GRWL_DISCONNECTED)
     {
-        js->connected = GRWL_FALSE;
+        js->connected = false;
     }
 
     if (_grwl.callbacks.joystick)
@@ -673,7 +673,7 @@ void _grwlInputJoystickHat(_GRWLjoystick* js, int hat, char value)
 
 // Adds the built-in set of gamepad mappings
 //
-void _grwlInitGamepadMappings(void)
+void _grwlInitGamepadMappings()
 {
     size_t i;
     const size_t count = sizeof(_grwlDefaultMappings) / sizeof(char*);
@@ -709,7 +709,7 @@ _GRWLjoystick* _grwlAllocJoystick(const char* name, const char* guid, int axisCo
     }
 
     js = _grwl.joysticks + jid;
-    js->allocated = GRWL_TRUE;
+    js->allocated = true;
     js->axes = (float*)_grwl_calloc(axisCount, sizeof(float));
     js->buttons = (unsigned char*)_grwl_calloc(buttonCount + (size_t)hatCount * 4, 1);
     js->hats = (unsigned char*)_grwl_calloc(hatCount, 1);
@@ -750,7 +750,7 @@ void _grwlPollAllJoysticks()
 
     for (jid = 0; jid <= GRWL_JOYSTICK_LAST; jid++)
     {
-        if (_grwl.joysticks[jid].connected == GRWL_TRUE)
+        if (_grwl.joysticks[jid].connected == true)
         {
             _grwl.platform.pollJoystick(_grwl.joysticks + jid, _GRWL_POLL_ALL);
         }
@@ -820,13 +820,13 @@ GRWLAPI void grwlSetInputMode(GRWLwindow* handle, int mode, int value)
 
         case GRWL_STICKY_KEYS:
         {
-            value = value ? GRWL_TRUE : GRWL_FALSE;
-            if (window->stickyKeys == value)
+            bool bvalue = value ? true : false;
+            if (window->stickyKeys == bvalue)
             {
                 return;
             }
 
-            if (!value)
+            if (!bvalue)
             {
                 int i;
 
@@ -840,19 +840,19 @@ GRWLAPI void grwlSetInputMode(GRWLwindow* handle, int mode, int value)
                 }
             }
 
-            window->stickyKeys = value;
+            window->stickyKeys = bvalue;
             return;
         }
 
         case GRWL_STICKY_MOUSE_BUTTONS:
         {
-            value = value ? GRWL_TRUE : GRWL_FALSE;
-            if (window->stickyMouseButtons == value)
+            bool bvalue = value ? true : false;
+            if (window->stickyMouseButtons == bvalue)
             {
                 return;
             }
 
-            if (!value)
+            if (!bvalue)
             {
                 int i;
 
@@ -866,13 +866,13 @@ GRWLAPI void grwlSetInputMode(GRWLwindow* handle, int mode, int value)
                 }
             }
 
-            window->stickyMouseButtons = value;
+            window->stickyMouseButtons = bvalue;
             return;
         }
 
         case GRWL_LOCK_KEY_MODS:
         {
-            window->lockKeyMods = value ? GRWL_TRUE : GRWL_FALSE;
+            window->lockKeyMods = value ? true : false;
             return;
         }
 
@@ -884,20 +884,20 @@ GRWLAPI void grwlSetInputMode(GRWLwindow* handle, int mode, int value)
                 return;
             }
 
-            value = value ? GRWL_TRUE : GRWL_FALSE;
-            if (window->rawMouseMotion == value)
+            bool bvalue = value ? true : false;
+            if (window->rawMouseMotion == bvalue)
             {
                 return;
             }
 
-            window->rawMouseMotion = value;
-            _grwl.platform.setRawMouseMotion(window, value);
+            window->rawMouseMotion = bvalue;
+            _grwl.platform.setRawMouseMotion(window, bvalue);
             return;
         }
 
         case GRWL_IME:
         {
-            _grwl.platform.setIMEStatus(window, value ? GRWL_TRUE : GRWL_FALSE);
+            _grwl.platform.setIMEStatus(window, value ? true : false);
             return;
         }
     }
@@ -905,9 +905,9 @@ GRWLAPI void grwlSetInputMode(GRWLwindow* handle, int mode, int value)
     _grwlInputError(GRWL_INVALID_ENUM, "Invalid input mode 0x%08X", mode);
 }
 
-GRWLAPI int grwlRawMouseMotionSupported(void)
+GRWLAPI int grwlRawMouseMotionSupported()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
     return _grwl.platform.rawMouseMotionSupported();
 }
 
@@ -942,7 +942,7 @@ GRWLAPI int grwlGetKeyScancode(int key)
     return _grwl.platform.getKeyScancode(key);
 }
 
-GRWLAPI const char* grwlGetKeyboardLayoutName(void)
+GRWLAPI const char* grwlGetKeyboardLayoutName()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
     return _grwl.platform.getKeyboardLayoutName();
@@ -1350,23 +1350,23 @@ GRWLAPI int grwlJoystickPresent(int jid)
     assert(jid >= GRWL_JOYSTICK_1);
     assert(jid <= GRWL_JOYSTICK_LAST);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     if (jid < 0 || jid > GRWL_JOYSTICK_LAST)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid joystick ID %i", jid);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!initJoysticks())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     js = _grwl.joysticks + jid;
     if (!js->connected)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     return _grwl.platform.pollJoystick(js, _GRWL_POLL_PRESENCE);
@@ -1646,7 +1646,7 @@ GRWLAPI int grwlUpdateGamepadMappings(const char* string)
 
     assert(string != NULL);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     while (*c)
     {
@@ -1697,7 +1697,7 @@ GRWLAPI int grwlUpdateGamepadMappings(const char* string)
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 GRWLAPI int grwlJoystickIsGamepad(int jid)
@@ -1707,28 +1707,28 @@ GRWLAPI int grwlJoystickIsGamepad(int jid)
     assert(jid >= GRWL_JOYSTICK_1);
     assert(jid <= GRWL_JOYSTICK_LAST);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     if (jid < 0 || jid > GRWL_JOYSTICK_LAST)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid joystick ID %i", jid);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!initJoysticks())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     js = _grwl.joysticks + jid;
     if (!js->connected)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwl.platform.pollJoystick(js, _GRWL_POLL_PRESENCE))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     return js->mapping != NULL;
@@ -1784,33 +1784,33 @@ GRWLAPI int grwlGetGamepadState(int jid, GRWLgamepadstate* state)
 
     memset(state, 0, sizeof(GRWLgamepadstate));
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     if (jid < 0 || jid > GRWL_JOYSTICK_LAST)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid joystick ID %i", jid);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!initJoysticks())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     js = _grwl.joysticks + jid;
     if (!js->connected)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwl.platform.pollJoystick(js, _GRWL_POLL_ALL))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!js->mapping)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     for (i = 0; i <= GRWL_GAMEPAD_BUTTON_LAST; i++)
@@ -1878,7 +1878,7 @@ GRWLAPI int grwlGetGamepadState(int jid, GRWLgamepadstate* state)
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 GRWLAPI void grwlSetClipboardString(GRWLwindow* handle, const char* string)
@@ -1895,7 +1895,7 @@ GRWLAPI const char* grwlGetClipboardString(GRWLwindow* handle)
     return _grwl.platform.getClipboardString();
 }
 
-GRWLAPI double grwlGetTime(void)
+GRWLAPI double grwlGetTime()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(0.0);
     return (double)(_grwlPlatformGetTimerValue() - _grwl.timer.offset) / _grwlPlatformGetTimerFrequency();
@@ -1914,13 +1914,13 @@ GRWLAPI void grwlSetTime(double time)
     _grwl.timer.offset = _grwlPlatformGetTimerValue() - (uint64_t)(time * _grwlPlatformGetTimerFrequency());
 }
 
-GRWLAPI uint64_t grwlGetTimerValue(void)
+GRWLAPI uint64_t grwlGetTimerValue()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(0);
     return _grwlPlatformGetTimerValue();
 }
 
-GRWLAPI uint64_t grwlGetTimerFrequency(void)
+GRWLAPI uint64_t grwlGetTimerFrequency()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(0);
     return _grwlPlatformGetTimerFrequency();

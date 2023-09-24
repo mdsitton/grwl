@@ -16,10 +16,10 @@
 
 // Notifies shared code that a window has lost or received input focus
 //
-void _grwlInputWindowFocus(_GRWLwindow* window, GRWLbool focused)
+void _grwlInputWindowFocus(_GRWLwindow* window, bool focused)
 {
     assert(window != NULL);
-    assert(focused == GRWL_TRUE || focused == GRWL_FALSE);
+    assert(focused == true || focused == false);
 
     if (window->callbacks.focus)
     {
@@ -79,10 +79,10 @@ void _grwlInputWindowSize(_GRWLwindow* window, int width, int height)
 
 // Notifies shared code that a window has been iconified or restored
 //
-void _grwlInputWindowIconify(_GRWLwindow* window, GRWLbool iconified)
+void _grwlInputWindowIconify(_GRWLwindow* window, bool iconified)
 {
     assert(window != NULL);
-    assert(iconified == GRWL_TRUE || iconified == GRWL_FALSE);
+    assert(iconified == true || iconified == false);
 
     if (window->callbacks.iconify)
     {
@@ -92,10 +92,10 @@ void _grwlInputWindowIconify(_GRWLwindow* window, GRWLbool iconified)
 
 // Notifies shared code that a window has been maximized or restored
 //
-void _grwlInputWindowMaximize(_GRWLwindow* window, GRWLbool maximized)
+void _grwlInputWindowMaximize(_GRWLwindow* window, bool maximized)
 {
     assert(window != NULL);
-    assert(maximized == GRWL_TRUE || maximized == GRWL_FALSE);
+    assert(maximized == true || maximized == false);
 
     if (window->callbacks.maximize)
     {
@@ -153,7 +153,7 @@ void _grwlInputWindowCloseRequest(_GRWLwindow* window)
 {
     assert(window != NULL);
 
-    window->shouldClose = GRWL_TRUE;
+    window->shouldClose = true;
 
     if (window->callbacks.close)
     {
@@ -250,7 +250,7 @@ GRWLAPI GRWLwindow* grwlCreateWindow(int width, int height, const char* title, G
     return (GRWLwindow*)window;
 }
 
-void grwlDefaultWindowHints(void)
+void grwlDefaultWindowHints()
 {
     _GRWL_REQUIRE_INIT();
 
@@ -263,18 +263,18 @@ void grwlDefaultWindowHints(void)
 
     // The default is a focused, visible, resizable window with decorations
     memset(&_grwl.hints.window, 0, sizeof(_grwl.hints.window));
-    _grwl.hints.window.resizable = GRWL_TRUE;
-    _grwl.hints.window.visible = GRWL_TRUE;
-    _grwl.hints.window.decorated = GRWL_TRUE;
-    _grwl.hints.window.focused = GRWL_TRUE;
-    _grwl.hints.window.autoIconify = GRWL_TRUE;
-    _grwl.hints.window.centerCursor = GRWL_TRUE;
-    _grwl.hints.window.focusOnShow = GRWL_TRUE;
+    _grwl.hints.window.resizable = true;
+    _grwl.hints.window.visible = true;
+    _grwl.hints.window.decorated = true;
+    _grwl.hints.window.focused = true;
+    _grwl.hints.window.autoIconify = true;
+    _grwl.hints.window.centerCursor = true;
+    _grwl.hints.window.focusOnShow = true;
     _grwl.hints.window.xpos = GRWL_ANY_POSITION;
     _grwl.hints.window.ypos = GRWL_ANY_POSITION;
     // The default is hard-fullscreen, which is exclusive.
     // Soft-fullscreen is not exclusive and is suitable for applications such as text-editors.
-    _grwl.hints.window.softFullscreen = GRWL_FALSE;
+    _grwl.hints.window.softFullscreen = false;
 
     // The default is 24 bits of color, 24 bits of depth and 8 bits of stencil,
     // double buffered
@@ -285,13 +285,13 @@ void grwlDefaultWindowHints(void)
     _grwl.hints.framebuffer.alphaBits = 8;
     _grwl.hints.framebuffer.depthBits = 24;
     _grwl.hints.framebuffer.stencilBits = 8;
-    _grwl.hints.framebuffer.doublebuffer = GRWL_TRUE;
+    _grwl.hints.framebuffer.doublebuffer = true;
 
     // The default is to select the highest available refresh rate
     _grwl.hints.refreshRate = GRWL_DONT_CARE;
 
     // The default is to use full Retina resolution framebuffers
-    _grwl.hints.window.ns.retina = GRWL_TRUE;
+    _grwl.hints.window.ns.retina = true;
 }
 
 GRWLAPI void grwlWindowHint(int hint, int value)
@@ -334,40 +334,40 @@ GRWLAPI void grwlWindowHint(int hint, int value)
             _grwl.hints.framebuffer.auxBuffers = value;
             return;
         case GRWL_STEREO:
-            _grwl.hints.framebuffer.stereo = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.framebuffer.stereo = value ? true : false;
             return;
         case GRWL_DOUBLEBUFFER:
-            _grwl.hints.framebuffer.doublebuffer = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.framebuffer.doublebuffer = value ? true : false;
             return;
         case GRWL_TRANSPARENT_FRAMEBUFFER:
-            _grwl.hints.framebuffer.transparent = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.framebuffer.transparent = value ? true : false;
             return;
         case GRWL_SAMPLES:
             _grwl.hints.framebuffer.samples = value;
             return;
         case GRWL_SRGB_CAPABLE:
-            _grwl.hints.framebuffer.sRGB = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.framebuffer.sRGB = value ? true : false;
             return;
         case GRWL_RESIZABLE:
-            _grwl.hints.window.resizable = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.resizable = value ? true : false;
             return;
         case GRWL_DECORATED:
-            _grwl.hints.window.decorated = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.decorated = value ? true : false;
             return;
         case GRWL_FOCUSED:
-            _grwl.hints.window.focused = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.focused = value ? true : false;
             return;
         case GRWL_AUTO_ICONIFY:
-            _grwl.hints.window.autoIconify = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.autoIconify = value ? true : false;
             return;
         case GRWL_FLOATING:
-            _grwl.hints.window.floating = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.floating = value ? true : false;
             return;
         case GRWL_MAXIMIZED:
-            _grwl.hints.window.maximized = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.maximized = value ? true : false;
             return;
         case GRWL_VISIBLE:
-            _grwl.hints.window.visible = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.visible = value ? true : false;
             return;
         case GRWL_POSITION_X:
             _grwl.hints.window.xpos = value;
@@ -376,31 +376,31 @@ GRWLAPI void grwlWindowHint(int hint, int value)
             _grwl.hints.window.ypos = value;
             return;
         case GRWL_COCOA_RETINA_FRAMEBUFFER:
-            _grwl.hints.window.ns.retina = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.ns.retina = value ? true : false;
             return;
         case GRWL_WIN32_KEYBOARD_MENU:
-            _grwl.hints.window.win32.keymenu = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.win32.keymenu = value ? true : false;
             return;
         case GRWL_WIN32_GENERIC_BADGE:
-            _grwl.hints.window.win32.genericBadge = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.win32.genericBadge = value ? true : false;
             return;
         case GRWL_COCOA_GRAPHICS_SWITCHING:
-            _grwl.hints.context.nsgl.offline = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.context.nsgl.offline = value ? true : false;
             return;
         case GRWL_SCALE_TO_MONITOR:
-            _grwl.hints.window.scaleToMonitor = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.scaleToMonitor = value ? true : false;
             return;
         case GRWL_CENTER_CURSOR:
-            _grwl.hints.window.centerCursor = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.centerCursor = value ? true : false;
             return;
         case GRWL_FOCUS_ON_SHOW:
-            _grwl.hints.window.focusOnShow = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.focusOnShow = value ? true : false;
             return;
         case GRWL_MOUSE_PASSTHROUGH:
-            _grwl.hints.window.mousePassthrough = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.mousePassthrough = value ? true : false;
             return;
         case GRWL_SOFT_FULLSCREEN:
-            _grwl.hints.window.softFullscreen = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.window.softFullscreen = value ? true : false;
             return;
         case GRWL_CLIENT_API:
             _grwl.hints.context.client = value;
@@ -418,13 +418,13 @@ GRWLAPI void grwlWindowHint(int hint, int value)
             _grwl.hints.context.robustness = value;
             return;
         case GRWL_OPENGL_FORWARD_COMPAT:
-            _grwl.hints.context.forward = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.context.forward = value ? true : false;
             return;
         case GRWL_CONTEXT_DEBUG:
-            _grwl.hints.context.debug = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.context.debug = value ? true : false;
             return;
         case GRWL_CONTEXT_NO_ERROR:
-            _grwl.hints.context.noerror = value ? GRWL_TRUE : GRWL_FALSE;
+            _grwl.hints.context.noerror = value ? true : false;
             return;
         case GRWL_OPENGL_PROFILE:
             _grwl.hints.context.profile = value;
@@ -1002,7 +1002,7 @@ GRWLAPI void grwlSetWindowAttrib(GRWLwindow* handle, int attrib, int value)
 
     _GRWL_REQUIRE_INIT();
 
-    value = value ? GRWL_TRUE : GRWL_FALSE;
+    value = value ? true : false;
 
     switch (attrib)
     {
@@ -1194,13 +1194,13 @@ GRWLAPI GRWLwindowcontentscalefun grwlSetWindowContentScaleCallback(GRWLwindow* 
     return cbfun;
 }
 
-GRWLAPI void grwlPollEvents(void)
+GRWLAPI void grwlPollEvents()
 {
     _GRWL_REQUIRE_INIT();
     _grwl.platform.pollEvents();
 }
 
-GRWLAPI void grwlWaitEvents(void)
+GRWLAPI void grwlWaitEvents()
 {
     _GRWL_REQUIRE_INIT();
     _grwl.platform.waitEvents();
@@ -1223,7 +1223,7 @@ GRWLAPI void grwlWaitEventsTimeout(double timeout)
     _grwl.platform.waitEventsTimeout(timeout);
 }
 
-GRWLAPI void grwlPostEmptyEvent(void)
+GRWLAPI void grwlPostEmptyEvent()
 {
     _GRWL_REQUIRE_INIT();
     _grwl.platform.postEmptyEvent();

@@ -109,7 +109,7 @@ static void pollAbsState(_GRWLjoystick* js)
 
 // Attempt to open the specified joystick device
 //
-static GRWLbool openJoystickDevice(const char* path)
+static bool openJoystickDevice(const char* path)
 {
     for (int jid = 0; jid <= GRWL_JOYSTICK_LAST; jid++)
     {
@@ -119,7 +119,7 @@ static GRWLbool openJoystickDevice(const char* path)
         }
         if (strcmp(_grwl.joysticks[jid].linjs.path, path) == 0)
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -127,7 +127,7 @@ static GRWLbool openJoystickDevice(const char* path)
     linjs.fd = open(path, O_RDONLY | O_NONBLOCK);
     if (linjs.fd == -1)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     char evBits[(EV_CNT + 7) / 8] = { 0 };
@@ -141,14 +141,14 @@ static GRWLbool openJoystickDevice(const char* path)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Linux: Failed to query input device: %s", strerror(errno));
         close(linjs.fd);
-        return GRWL_FALSE;
+        return false;
     }
 
     // Ensure this device supports the events expected of a joystick
     if (!isBitSet(EV_ABS, evBits))
     {
         close(linjs.fd);
-        return GRWL_FALSE;
+        return false;
     }
 
     char name[256] = "";
@@ -223,7 +223,7 @@ static GRWLbool openJoystickDevice(const char* path)
     if (!js)
     {
         close(linjs.fd);
-        return GRWL_FALSE;
+        return false;
     }
     js->usbInfo = usbinfo;
 
@@ -233,7 +233,7 @@ static GRWLbool openJoystickDevice(const char* path)
     pollAbsState(js);
 
     _grwlInputJoystick(js, GRWL_CONNECTED);
-    return GRWL_TRUE;
+    return true;
 }
 
     #undef isBitSet
@@ -260,7 +260,7 @@ static int compareJoysticks(const void* fp, const void* sp)
 //////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _grwlDetectJoystickConnectionLinux(void)
+void _grwlDetectJoystickConnectionLinux()
 {
     if (_grwl.linjs.inotify <= 0)
     {
@@ -308,7 +308,7 @@ void _grwlDetectJoystickConnectionLinux(void)
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlInitJoysticksLinux(void)
+bool _grwlInitJoysticksLinux()
 {
     const char* dirname = "/dev/input";
 
@@ -326,7 +326,7 @@ GRWLbool _grwlInitJoysticksLinux(void)
     if (regcomp(&_grwl.linjs.regex, "^event[0-9]\\+$", 0) != 0)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Linux: Failed to compile regex");
-        return GRWL_FALSE;
+        return false;
     }
 
     int count = 0;
@@ -361,10 +361,10 @@ GRWLbool _grwlInitJoysticksLinux(void)
     // Continue with no joysticks if enumeration fails
 
     qsort(_grwl.joysticks, count, sizeof(_GRWLjoystick), compareJoysticks);
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlTerminateJoysticksLinux(void)
+void _grwlTerminateJoysticksLinux()
 {
     for (int jid = 0; jid <= GRWL_JOYSTICK_LAST; jid++)
     {
@@ -387,7 +387,7 @@ void _grwlTerminateJoysticksLinux(void)
     }
 }
 
-GRWLbool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode)
+bool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode)
 {
     // Read all queued events (non-blocking)
     for (;;)
@@ -410,11 +410,11 @@ GRWLbool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode)
         {
             if (e.code == SYN_DROPPED)
             {
-                _grwl.linjs.dropped = GRWL_TRUE;
+                _grwl.linjs.dropped = true;
             }
             else if (e.code == SYN_REPORT)
             {
-                _grwl.linjs.dropped = GRWL_FALSE;
+                _grwl.linjs.dropped = false;
                 pollAbsState(js);
             }
         }
@@ -437,7 +437,7 @@ GRWLbool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode)
     return js->connected;
 }
 
-const char* _grwlGetMappingNameLinux(void)
+const char* _grwlGetMappingNameLinux()
 {
     return "Linux";
 }

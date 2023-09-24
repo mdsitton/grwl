@@ -71,7 +71,7 @@ contexts with hidden windows can be created with the
 [GRWL_VISIBLE](@ref GRWL_VISIBLE_hint) window hint.
 
 @code
-grwlWindowHint(GRWL_VISIBLE, GRWL_FALSE);
+grwlWindowHint(GRWL_VISIBLE, false);
 
 GRWLwindow* offscreen_context = grwlCreateWindow(640, 480, "", NULL, NULL);
 @endcode
@@ -329,8 +329,8 @@ if (grwlExtensionSupported("GL_ARB_gl_spirv"))
 @endcode
 
 The argument is a null terminated ASCII string with the extension name.  If the
-extension is supported, @ref grwlExtensionSupported returns `GRWL_TRUE`,
-otherwise it returns `GRWL_FALSE`.
+extension is supported, @ref grwlExtensionSupported returns `true`,
+otherwise it returns `false`.
 
 
 @subsubsection context_glext_proc Fetching function pointers
@@ -361,7 +361,7 @@ PFNGLSPECIALIZESHADERARBPROC pfnSpecializeShaderARB;
 // Flag indicating whether the extension is supported
 int has_ARB_gl_spirv = 0;
 
-void load_extensions(void)
+void load_extensions()
 {
     if (grwlExtensionSupported("GL_ARB_gl_spirv"))
     {
@@ -371,7 +371,7 @@ void load_extensions(void)
     }
 }
 
-void some_function(void)
+void some_function()
 {
     if (has_ARB_gl_spirv)
     {

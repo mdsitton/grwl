@@ -5,4 +5,4 @@
 
 #include <poll.h>
 
-GRWLbool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout);
+bool _grwlPollPOSIX(struct pollfd* fds, nfds_t count, double* timeout);

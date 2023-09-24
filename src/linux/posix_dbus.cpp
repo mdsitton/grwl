@@ -11,7 +11,7 @@
 #include <cstdio>
 #include <cctype>
 
-void _grwlInitDBusPOSIX(void)
+void _grwlInitDBusPOSIX()
 {
     // Initialize DBus library functions
     _grwl.dbus.handle = NULL;
@@ -124,7 +124,7 @@ void _grwlInitDBusPOSIX(void)
     _grwlCacheSignalNameDBusPOSIX();
 }
 
-void _grwlCacheSignalNameDBusPOSIX(void)
+void _grwlCacheSignalNameDBusPOSIX()
 {
     if (!_grwl.dbus.legalExecutableName)
     {
@@ -152,7 +152,7 @@ void _grwlCacheSignalNameDBusPOSIX(void)
     _grwl.dbus.signalName = signalName;
 }
 
-void _grwlCacheFullExecutableNameDBusPOSIX(void)
+void _grwlCacheFullExecutableNameDBusPOSIX()
 {
     char exeName[PATH_MAX];
     memset(exeName, 0, sizeof(char) * PATH_MAX);
@@ -184,7 +184,7 @@ void _grwlCacheFullExecutableNameDBusPOSIX(void)
     _grwl.dbus.fullExecutableName = exeNameFinal;
 }
 
-void _grwlCacheLegalExecutableNameDBusPOSIX(void)
+void _grwlCacheLegalExecutableNameDBusPOSIX()
 {
     // The executable name is stripped of any illegal characters
     // according to the DBus specification
@@ -236,7 +236,7 @@ void _grwlCacheLegalExecutableNameDBusPOSIX(void)
     _grwl.dbus.legalExecutableName = exeNameFinal;
 }
 
-void _grwlCacheDesktopFilePathDBusPOSIX(void)
+void _grwlCacheDesktopFilePathDBusPOSIX()
 {
     if (!_grwl.dbus.fullExecutableName)
     {
@@ -264,7 +264,7 @@ void _grwlCacheDesktopFilePathDBusPOSIX(void)
     _grwl.dbus.desktopFilePath[desktopFileLength - 1] = '\0';
 }
 
-void _grwlTerminateDBusPOSIX(void)
+void _grwlTerminateDBusPOSIX()
 {
     if (_grwl.dbus.signalName)
     {
@@ -401,7 +401,7 @@ dbus_bool_t _grwlNewMessageSignalDBusPOSIX(const char* objectPath, const char* i
     if (!outMessage)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Failed to create new DBus message, output message pointer is NULL");
-        return GRWL_FALSE;
+        return false;
     }
 
     *outMessage = dbus_message_new_signal(objectPath, interfaceName, signalName);
@@ -409,10 +409,10 @@ dbus_bool_t _grwlNewMessageSignalDBusPOSIX(const char* objectPath, const char* i
     {
         *outMessage = NULL;
         _grwlInputError(GRWL_PLATFORM_ERROR, "Failed to create new DBus message");
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 dbus_bool_t _grwlOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DBusType, const char* signature,
@@ -422,12 +422,12 @@ dbus_bool_t _grwlOpenContainerDBusPOSIX(struct DBusMessageIter* iterator, int DB
         DBusType != DBUS_TYPE_VARIANT && DBusType != DBUS_TYPE_DICT_ENTRY)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Invalid DBUS container type provided");
-        return GRWL_FALSE;
+        return false;
     }
     if (!iterator || !subIterator)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "DBus message iterator is NULL");
-        return GRWL_FALSE;
+        return false;
     }
 
     return dbus_message_iter_open_container(iterator, DBusType, signature, subIterator);
@@ -438,7 +438,7 @@ dbus_bool_t _grwlCloseContainerDBusPOSIX(struct DBusMessageIter* iterator, struc
     if (!iterator || !subIterator)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "DBus message iterator is NULL");
-        return GRWL_FALSE;
+        return false;
     }
 
     return dbus_message_iter_close_container(iterator, subIterator);
@@ -450,17 +450,17 @@ dbus_bool_t _grwlAppendDataDBusPOSIX(struct DBusMessageIter* iterator, int DBusT
         DBusType == DBUS_TYPE_STRUCT_OPEN || DBusType == DBUS_TYPE_STRUCT_CLOSE)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Invalid DBus type provided");
-        return GRWL_FALSE;
+        return false;
     }
     if (!iterator)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "DBus message iterator is NULL");
-        return GRWL_FALSE;
+        return false;
     }
     if (!data)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "DBus data to append is NULL");
-        return GRWL_FALSE;
+        return false;
     }
 
     return dbus_message_iter_append_basic(iterator, DBusType, data);
@@ -476,37 +476,37 @@ dbus_bool_t _grwlAppendDictDataDBusPOSIX(struct DBusMessageIter* iterator, int k
 
     if (!_grwlOpenContainerDBusPOSIX(iterator, DBUS_TYPE_DICT_ENTRY, NULL, &keyIterator))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     // Append key data
     if (!_grwlAppendDataDBusPOSIX(&keyIterator, keyType, keyData))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwlOpenContainerDBusPOSIX(&keyIterator, DBUS_TYPE_VARIANT, (const char*)&valueType, &valueIterator))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     // Append value data
     if (!_grwlAppendDataDBusPOSIX(&valueIterator, valueType, valueData))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwlCloseContainerDBusPOSIX(&keyIterator, &valueIterator))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwlCloseContainerDBusPOSIX(iterator, &keyIterator))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 dbus_bool_t _grwlSendMessageDBusPOSIX(struct DBusMessage* message)
@@ -514,17 +514,17 @@ dbus_bool_t _grwlSendMessageDBusPOSIX(struct DBusMessage* message)
     if (!message)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "DBus message is NULL");
-        return GRWL_FALSE;
+        return false;
     }
 
     unsigned int serial = 0;
     if (!dbus_connection_send(_grwl.dbus.connection, message, &serial))
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Failed to send DBus message");
-        return GRWL_FALSE;
+        return false;
     }
 
     dbus_connection_flush(_grwl.dbus.connection);
 
-    return GRWL_TRUE;
+    return true;
 }

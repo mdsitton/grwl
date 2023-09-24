@@ -77,11 +77,11 @@ typedef XID GLXWindow;
 typedef XID GLXDrawable;
 typedef struct __GLXFBConfig* GLXFBConfig;
 typedef struct __GLXcontext* GLXContext;
-typedef void (*__GLXextproc)(void);
+typedef void (*__GLXextproc)();
 
-typedef XClassHint* (*PFN_XAllocClassHint)(void);
-typedef XSizeHints* (*PFN_XAllocSizeHints)(void);
-typedef XWMHints* (*PFN_XAllocWMHints)(void);
+typedef XClassHint* (*PFN_XAllocClassHint)();
+typedef XSizeHints* (*PFN_XAllocSizeHints)();
+typedef XWMHints* (*PFN_XAllocWMHints)();
 typedef int (*PFN_XChangeProperty)(Display*, Window, Atom, Atom, int, int, const unsigned char*, int);
 typedef int (*PFN_XChangeWindowAttributes)(Display*, Window, unsigned long, XSetWindowAttributes*);
 typedef Bool (*PFN_XCheckIfEvent)(Display*, XEvent*, Bool (*)(Display*, XEvent*, XPointer), XPointer);
@@ -92,7 +92,7 @@ typedef int (*PFN_XConvertSelection)(Display*, Atom, Atom, Atom, Window, Time);
 typedef Colormap (*PFN_XCreateColormap)(Display*, Window, Visual*, int);
 typedef Cursor (*PFN_XCreateFontCursor)(Display*, unsigned int);
 typedef XIC (*PFN_XCreateIC)(XIM, ...);
-typedef Region (*PFN_XCreateRegion)(void);
+typedef Region (*PFN_XCreateRegion)();
 typedef Window (*PFN_XCreateWindow)(Display*, Window, int, int, unsigned int, unsigned int, unsigned int, int,
                                     unsigned int, Visual*, unsigned long, XSetWindowAttributes*);
 typedef int (*PFN_XDefineCursor)(Display*, Window, Cursor);
@@ -126,7 +126,7 @@ typedef int (*PFN_XGetWindowProperty)(Display*, Window, Atom, long, long, Bool, 
                                       unsigned long*, unsigned char**);
 typedef int (*PFN_XGrabPointer)(Display*, Window, Bool, unsigned int, int, int, Window, Cursor, Time);
 typedef Status (*PFN_XIconifyWindow)(Display*, Window, int);
-typedef Status (*PFN_XInitThreads)(void);
+typedef Status (*PFN_XInitThreads)();
 typedef Atom (*PFN_XInternAtom)(Display*, const char*, Bool);
 typedef int (*PFN_XLookupString)(XKeyEvent*, char*, int, KeySym*, XComposeStatus*);
 typedef int (*PFN_XMapRaised)(Display*, Window);
@@ -159,7 +159,7 @@ typedef int (*PFN_XSetSelectionOwner)(Display*, Atom, Window, Time);
 typedef int (*PFN_XSetWMHints)(Display*, Window, XWMHints*);
 typedef void (*PFN_XSetWMNormalHints)(Display*, Window, XSizeHints*);
 typedef Status (*PFN_XSetWMProtocols)(Display*, Window, Atom*, int);
-typedef Bool (*PFN_XSupportsLocale)(void);
+typedef Bool (*PFN_XSupportsLocale)();
 typedef int (*PFN_XSync)(Display*, Bool);
 typedef Bool (*PFN_XTranslateCoordinates)(Display*, Window, Window, int, int, int*, int*, Window*);
 typedef int (*PFN_XUndefineCursor)(Display*, Window);
@@ -171,7 +171,7 @@ typedef VisualID (*PFN_XVisualIDFromVisual)(Visual*);
 typedef int (*PFN_XWarpPointer)(Display*, Window, Window, int, int, unsigned int, unsigned int, int, int);
 typedef void (*PFN_XkbFreeKeyboard)(XkbDescPtr, unsigned int, Bool);
 typedef void (*PFN_XkbFreeNames)(XkbDescPtr, unsigned int, Bool);
-typedef XkbDescPtr (*PFN_XkbAllocKeyboard)(void);
+typedef XkbDescPtr (*PFN_XkbAllocKeyboard)();
 typedef XkbDescPtr (*PFN_XkbGetMap)(Display*, unsigned int, unsigned int);
 typedef Status (*PFN_XkbGetNames)(Display*, unsigned int, XkbDescPtr);
 typedef Status (*PFN_XkbGetState)(Display*, unsigned int, XkbStatePtr);
@@ -183,8 +183,8 @@ typedef char* (*PFN_XmbResetIC)(XIC);
 typedef void (*PFN_XrmDestroyDatabase)(XrmDatabase);
 typedef Bool (*PFN_XrmGetResource)(XrmDatabase, const char*, const char*, char**, XrmValue*);
 typedef XrmDatabase (*PFN_XrmGetStringDatabase)(const char*);
-typedef void (*PFN_XrmInitialize)(void);
-typedef XrmQuark (*PFN_XrmUniqueQuark)(void);
+typedef void (*PFN_XrmInitialize)();
+typedef XrmQuark (*PFN_XrmUniqueQuark)();
 typedef Bool (*PFN_XUnregisterIMInstantiateCallback)(Display*, void*, char*, char*, XIDProc, XPointer);
 typedef int (*PFN_Xutf8LookupString)(XIC, XKeyPressedEvent*, char*, int, KeySym*, Status*);
 typedef void (*PFN_Xutf8SetWMProperties)(Display*, Window, const char*, const char*, char**, int, XSizeHints*,
@@ -505,18 +505,18 @@ typedef struct _GRWLlibraryGLX
     PFNGLXSWAPINTERVALEXTPROC SwapIntervalEXT;
     PFNGLXSWAPINTERVALMESAPROC SwapIntervalMESA;
     PFNGLXCREATECONTEXTATTRIBSARBPROC CreateContextAttribsARB;
-    GRWLbool SGI_swap_control;
-    GRWLbool EXT_swap_control;
-    GRWLbool MESA_swap_control;
-    GRWLbool ARB_multisample;
-    GRWLbool ARB_framebuffer_sRGB;
-    GRWLbool EXT_framebuffer_sRGB;
-    GRWLbool ARB_create_context;
-    GRWLbool ARB_create_context_profile;
-    GRWLbool ARB_create_context_robustness;
-    GRWLbool EXT_create_context_es2_profile;
-    GRWLbool ARB_create_context_no_error;
-    GRWLbool ARB_context_flush_control;
+    bool SGI_swap_control;
+    bool EXT_swap_control;
+    bool MESA_swap_control;
+    bool ARB_multisample;
+    bool ARB_framebuffer_sRGB;
+    bool EXT_framebuffer_sRGB;
+    bool ARB_create_context;
+    bool ARB_create_context_profile;
+    bool ARB_create_context_robustness;
+    bool EXT_create_context_es2_profile;
+    bool ARB_create_context_no_error;
+    bool ARB_context_flush_control;
 } _GRWLlibraryGLX;
 
 // GLX-specific per usercontext data
@@ -535,12 +535,12 @@ typedef struct _GRWLwindowX11
     Window parent;
     XIC ic;
 
-    GRWLbool overrideRedirect;
-    GRWLbool iconified;
-    GRWLbool maximized;
+    bool overrideRedirect;
+    bool iconified;
+    bool maximized;
 
     // Whether the visual supports framebuffer transparency
-    GRWLbool transparent;
+    bool transparent;
 
     // Cached position and size used to filter out duplicate events
     int width, height;
@@ -667,7 +667,7 @@ typedef struct _GRWLlibraryX11
     struct
     {
         void* handle;
-        GRWLbool utf8;
+        bool utf8;
         PFN_XAllocClassHint AllocClassHint;
         PFN_XAllocSizeHints AllocSizeHints;
         PFN_XAllocWMHints AllocWMHints;
@@ -770,14 +770,14 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int eventBase;
         int errorBase;
         int major;
         int minor;
-        GRWLbool gammaBroken;
-        GRWLbool monitorBroken;
+        bool gammaBroken;
+        bool monitorBroken;
         PFN_XRRAllocGamma AllocGamma;
         PFN_XRRFreeCrtcInfo FreeCrtcInfo;
         PFN_XRRFreeGamma FreeGamma;
@@ -799,8 +799,8 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
-        GRWLbool detectable;
+        bool available;
+        bool detectable;
         int majorOpcode;
         int eventBase;
         int errorBase;
@@ -848,7 +848,7 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int major;
         int minor;
@@ -865,7 +865,7 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int eventBase;
         int errorBase;
@@ -877,7 +877,7 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int majorOpcode;
         int eventBase;
@@ -890,7 +890,7 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int major;
         int minor;
@@ -903,7 +903,7 @@ typedef struct _GRWLlibraryX11
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         int major;
         int minor;
@@ -936,12 +936,12 @@ typedef struct _GRWLcursorX11
     Cursor handle;
 } _GRWLcursorX11;
 
-GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform);
-int _grwlInitX11(void);
-void _grwlTerminateX11(void);
+bool _grwlConnectX11(int platformID, _GRWLplatform* platform);
+int _grwlInitX11();
+void _grwlTerminateX11();
 
-GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                              const _GRWLfbconfig* fbconfig);
+bool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                          const _GRWLfbconfig* fbconfig);
 void _grwlDestroyWindowX11(_GRWLwindow* window);
 void _grwlSetWindowTitleX11(_GRWLwindow* window, const char* title);
 void _grwlSetWindowIconX11(_GRWLwindow* window, int count, const GRWLimage* images);
@@ -966,39 +966,39 @@ void _grwlRequestWindowAttentionX11(_GRWLwindow* window);
 void _grwlFocusWindowX11(_GRWLwindow* window);
 void _grwlSetWindowMonitorX11(_GRWLwindow* window, _GRWLmonitor* monitor, int xpos, int ypos, int width, int height,
                               int refreshRate);
-GRWLbool _grwlWindowFocusedX11(_GRWLwindow* window);
-GRWLbool _grwlWindowIconifiedX11(_GRWLwindow* window);
-GRWLbool _grwlWindowVisibleX11(_GRWLwindow* window);
-GRWLbool _grwlWindowMaximizedX11(_GRWLwindow* window);
-GRWLbool _grwlWindowHoveredX11(_GRWLwindow* window);
-GRWLbool _grwlFramebufferTransparentX11(_GRWLwindow* window);
-void _grwlSetWindowResizableX11(_GRWLwindow* window, GRWLbool enabled);
-void _grwlSetWindowDecoratedX11(_GRWLwindow* window, GRWLbool enabled);
-void _grwlSetWindowFloatingX11(_GRWLwindow* window, GRWLbool enabled);
+bool _grwlWindowFocusedX11(_GRWLwindow* window);
+bool _grwlWindowIconifiedX11(_GRWLwindow* window);
+bool _grwlWindowVisibleX11(_GRWLwindow* window);
+bool _grwlWindowMaximizedX11(_GRWLwindow* window);
+bool _grwlWindowHoveredX11(_GRWLwindow* window);
+bool _grwlFramebufferTransparentX11(_GRWLwindow* window);
+void _grwlSetWindowResizableX11(_GRWLwindow* window, bool enabled);
+void _grwlSetWindowDecoratedX11(_GRWLwindow* window, bool enabled);
+void _grwlSetWindowFloatingX11(_GRWLwindow* window, bool enabled);
 float _grwlGetWindowOpacityX11(_GRWLwindow* window);
 void _grwlSetWindowOpacityX11(_GRWLwindow* window, float opacity);
-void _grwlSetWindowMousePassthroughX11(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowMousePassthroughX11(_GRWLwindow* window, bool enabled);
 
-void _grwlSetRawMouseMotionX11(_GRWLwindow* window, GRWLbool enabled);
-GRWLbool _grwlRawMouseMotionSupportedX11(void);
+void _grwlSetRawMouseMotionX11(_GRWLwindow* window, bool enabled);
+bool _grwlRawMouseMotionSupportedX11();
 
-void _grwlPollEventsX11(void);
-void _grwlWaitEventsX11(void);
+void _grwlPollEventsX11();
+void _grwlWaitEventsX11();
 void _grwlWaitEventsTimeoutX11(double timeout);
-void _grwlPostEmptyEventX11(void);
+void _grwlPostEmptyEventX11();
 
 void _grwlGetCursorPosX11(_GRWLwindow* window, double* xpos, double* ypos);
 void _grwlSetCursorPosX11(_GRWLwindow* window, double xpos, double ypos);
 void _grwlSetCursorModeX11(_GRWLwindow* window, int mode);
 const char* _grwlGetScancodeNameX11(int scancode);
 int _grwlGetKeyScancodeX11(int key);
-const char* _grwlGetKeyboardLayoutNameX11(void);
-GRWLbool _grwlCreateCursorX11(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
-GRWLbool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape);
+const char* _grwlGetKeyboardLayoutNameX11();
+bool _grwlCreateCursorX11(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
+bool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape);
 void _grwlDestroyCursorX11(_GRWLcursor* cursor);
 void _grwlSetCursorX11(_GRWLwindow* window, _GRWLcursor* cursor);
 void _grwlSetClipboardStringX11(const char* string);
-const char* _grwlGetClipboardStringX11(void);
+const char* _grwlGetClipboardStringX11();
 
 void _grwlUpdatePreeditCursorRectangleX11(_GRWLwindow* window);
 void _grwlResetPreeditTextX11(_GRWLwindow* window);
@@ -1006,12 +1006,11 @@ void _grwlSetIMEStatusX11(_GRWLwindow* window, int active);
 int _grwlGetIMEStatusX11(_GRWLwindow* window);
 
 EGLenum _grwlGetEGLPlatformX11(EGLint** attribs);
-EGLNativeDisplayType _grwlGetEGLNativeDisplayX11(void);
+EGLNativeDisplayType _grwlGetEGLNativeDisplayX11();
 EGLNativeWindowType _grwlGetEGLNativeWindowX11(_GRWLwindow* window);
 
 void _grwlGetRequiredInstanceExtensionsX11(char** extensions);
-GRWLbool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device,
-                                                      uint32_t queuefamily);
+bool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device, uint32_t queuefamily);
 VkResult _grwlCreateWindowSurfaceX11(VkInstance instance, _GRWLwindow* window, const VkAllocationCallbacks* allocator,
                                      VkSurfaceKHR* surface);
 
@@ -1021,31 +1020,31 @@ void _grwlGetMonitorContentScaleX11(_GRWLmonitor* monitor, float* xscale, float*
 void _grwlGetMonitorWorkareaX11(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesX11(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode);
-GRWLbool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
+bool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
 void _grwlSetGammaRampX11(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
-void _grwlPollMonitorsX11(void);
+void _grwlPollMonitorsX11();
 void _grwlSetVideoModeX11(_GRWLmonitor* monitor, const GRWLvidmode* desired);
 void _grwlRestoreVideoModeX11(_GRWLmonitor* monitor);
 
 Cursor _grwlCreateNativeCursorX11(const GRWLimage* image, int xhot, int yhot);
 
 unsigned long _grwlGetWindowPropertyX11(Window window, Atom property, Atom type, unsigned char** value);
-GRWLbool _grwlIsVisualTransparentX11(Visual* visual);
+bool _grwlIsVisualTransparentX11(Visual* visual);
 
-void _grwlGrabErrorHandlerX11(void);
-void _grwlReleaseErrorHandlerX11(void);
+void _grwlGrabErrorHandlerX11();
+void _grwlReleaseErrorHandlerX11();
 void _grwlInputErrorX11(int error, const char* message);
 
-void _grwlPushSelectionToManagerX11(void);
+void _grwlPushSelectionToManagerX11();
 void _grwlCreateInputContextX11(_GRWLwindow* window);
 
-GRWLbool _grwlInitGLX(void);
-void _grwlTerminateGLX(void);
-GRWLbool _grwlCreateContextGLX(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
+bool _grwlInitGLX();
+void _grwlTerminateGLX();
+bool _grwlCreateContextGLX(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
 void _grwlDestroyContextGLX(_GRWLwindow* window);
-GRWLbool _grwlChooseVisualGLX(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                              const _GRWLfbconfig* fbconfig, Visual** visual, int* depth);
+bool _grwlChooseVisualGLX(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                          const _GRWLfbconfig* fbconfig, Visual** visual, int* depth);
 
 _GRWLusercontext* _grwlCreateUserContextX11(_GRWLwindow* window);
 _GRWLusercontext* _grwlCreateUserContextGLX(_GRWLwindow* window);

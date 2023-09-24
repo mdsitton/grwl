@@ -179,7 +179,7 @@ static const struct libdecor_interface libdecorInterface = { libdecorHandleError
 
 // Create key code translation tables
 //
-static void createKeyTables(void)
+static void createKeyTables()
 {
     memset(_grwl.wl.keycodes, -1, sizeof(_grwl.wl.keycodes));
     memset(_grwl.wl.scancodes, -1, sizeof(_grwl.wl.scancodes));
@@ -312,7 +312,7 @@ static void createKeyTables(void)
     }
 }
 
-static GRWLbool loadCursorTheme(void)
+static bool loadCursorTheme()
 {
     int cursorSize = 16;
 
@@ -333,7 +333,7 @@ static GRWLbool loadCursorTheme(void)
     if (!_grwl.wl.cursorTheme)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load default cursor theme");
-        return GRWL_FALSE;
+        return false;
     }
 
     // If this happens to be NULL, we just fallback to the scale=1 version.
@@ -341,14 +341,14 @@ static GRWLbool loadCursorTheme(void)
 
     _grwl.wl.cursorSurface = wl_compositor_create_surface(_grwl.wl.compositor);
     _grwl.wl.cursorTimerfd = timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK);
-    return GRWL_TRUE;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
+bool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
 {
     const _GRWLplatform wayland = {
         GRWL_PLATFORM_WAYLAND,
@@ -450,7 +450,7 @@ GRWLbool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
             _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load libwayland-client");
         }
 
-        return GRWL_FALSE;
+        return false;
     }
 
     PFN_wl_display_connect wl_display_connect =
@@ -463,7 +463,7 @@ GRWLbool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
         }
 
         _grwlPlatformFreeModule(module);
-        return GRWL_FALSE;
+        return false;
     }
 
     struct wl_display* display = wl_display_connect(NULL);
@@ -475,17 +475,17 @@ GRWLbool _grwlConnectWayland(int platformID, _GRWLplatform* platform)
         }
 
         _grwlPlatformFreeModule(module);
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.wl.display = display;
     _grwl.wl.client.handle = module;
 
     *platform = wayland;
-    return GRWL_TRUE;
+    return true;
 }
 
-int _grwlInitWayland(void)
+int _grwlInitWayland()
 {
     _grwlInitDBusPOSIX();
 
@@ -545,14 +545,14 @@ int _grwlInitWayland(void)
         !_grwl.wl.client.proxy_get_tag || !_grwl.wl.client.proxy_set_tag)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load libwayland-client entry point");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.wl.cursor.handle = _grwlPlatformLoadModule("libwayland-cursor.so.0");
     if (!_grwl.wl.cursor.handle)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load libwayland-cursor");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.wl.cursor.theme_load =
@@ -568,7 +568,7 @@ int _grwlInitWayland(void)
     if (!_grwl.wl.egl.handle)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load libwayland-egl");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.wl.egl.window_create =
@@ -582,7 +582,7 @@ int _grwlInitWayland(void)
     if (!_grwl.wl.xkb.handle)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to load libxkbcommon");
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.wl.xkb.context_new =
@@ -730,7 +730,7 @@ int _grwlInitWayland(void)
     if (!_grwl.wl.xkb.context)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to initialize xkb context");
-        return GRWL_FALSE;
+        return false;
     }
 
     // Sync so we got all registry objects
@@ -760,18 +760,18 @@ int _grwlInitWayland(void)
     if (!_grwl.wl.wmBase)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to find xdg-shell in your compositor");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwl.wl.shm)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Wayland: Failed to find wl_shm in your compositor");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!loadCursorTheme())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (_grwl.wl.seat && _grwl.wl.dataDeviceManager)
@@ -780,10 +780,10 @@ int _grwlInitWayland(void)
         _grwlAddDataDeviceListenerWayland(_grwl.wl.dataDevice);
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlTerminateWayland(void)
+void _grwlTerminateWayland()
 {
     _grwlTerminateEGL();
     _grwlTerminateOSMesa();

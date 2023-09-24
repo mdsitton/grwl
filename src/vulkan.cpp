@@ -16,7 +16,7 @@
 //////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlInitVulkan(int mode)
+bool _grwlInitVulkan(int mode)
 {
     VkResult err;
     VkExtensionProperties* ep;
@@ -25,7 +25,7 @@ GRWLbool _grwlInitVulkan(int mode)
 
     if (_grwl.vk.available)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     if (_grwl.hints.init.vulkanLoader)
@@ -56,7 +56,7 @@ GRWLbool _grwlInitVulkan(int mode)
                 _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Loader not found");
             }
 
-            return GRWL_FALSE;
+            return false;
         }
 
         _grwl.vk.GetInstanceProcAddr =
@@ -66,7 +66,7 @@ GRWLbool _grwlInitVulkan(int mode)
             _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Loader does not export vkGetInstanceProcAddr");
 
             _grwlTerminateVulkan();
-            return GRWL_FALSE;
+            return false;
         }
     }
 
@@ -77,7 +77,7 @@ GRWLbool _grwlInitVulkan(int mode)
         _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Failed to retrieve vkEnumerateInstanceExtensionProperties");
 
         _grwlTerminateVulkan();
-        return GRWL_FALSE;
+        return false;
     }
 
     err = vkEnumerateInstanceExtensionProperties(NULL, &count, NULL);
@@ -91,7 +91,7 @@ GRWLbool _grwlInitVulkan(int mode)
         }
 
         _grwlTerminateVulkan();
-        return GRWL_FALSE;
+        return false;
     }
 
     ep = (VkExtensionProperties*)_grwl_calloc(count, sizeof(VkExtensionProperties));
@@ -104,51 +104,51 @@ GRWLbool _grwlInitVulkan(int mode)
 
         _grwl_free(ep);
         _grwlTerminateVulkan();
-        return GRWL_FALSE;
+        return false;
     }
 
     for (i = 0; i < count; i++)
     {
         if (strcmp(ep[i].extensionName, "VK_KHR_surface") == 0)
         {
-            _grwl.vk.KHR_surface = GRWL_TRUE;
+            _grwl.vk.KHR_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_KHR_win32_surface") == 0)
         {
-            _grwl.vk.KHR_win32_surface = GRWL_TRUE;
+            _grwl.vk.KHR_win32_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_MVK_macos_surface") == 0)
         {
-            _grwl.vk.MVK_macos_surface = GRWL_TRUE;
+            _grwl.vk.MVK_macos_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_EXT_metal_surface") == 0)
         {
-            _grwl.vk.EXT_metal_surface = GRWL_TRUE;
+            _grwl.vk.EXT_metal_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_KHR_xlib_surface") == 0)
         {
-            _grwl.vk.KHR_xlib_surface = GRWL_TRUE;
+            _grwl.vk.KHR_xlib_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_KHR_xcb_surface") == 0)
         {
-            _grwl.vk.KHR_xcb_surface = GRWL_TRUE;
+            _grwl.vk.KHR_xcb_surface = true;
         }
         else if (strcmp(ep[i].extensionName, "VK_KHR_wayland_surface") == 0)
         {
-            _grwl.vk.KHR_wayland_surface = GRWL_TRUE;
+            _grwl.vk.KHR_wayland_surface = true;
         }
     }
 
     _grwl_free(ep);
 
-    _grwl.vk.available = GRWL_TRUE;
+    _grwl.vk.available = true;
 
     _grwl.platform.getRequiredInstanceExtensions(_grwl.vk.extensions);
 
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlTerminateVulkan(void)
+void _grwlTerminateVulkan()
 {
     if (_grwl.vk.handle)
     {
@@ -215,9 +215,9 @@ const char* _grwlGetVulkanResultString(VkResult result)
 //////                        GRWL public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI int grwlVulkanSupported(void)
+GRWLAPI int grwlVulkanSupported()
 {
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
     return _grwlInitVulkan(_GRWL_FIND_LOADER);
 }
 
@@ -278,17 +278,17 @@ GRWLAPI int grwlGetPhysicalDevicePresentationSupport(VkInstance instance, VkPhys
     assert(instance != VK_NULL_HANDLE);
     assert(device != VK_NULL_HANDLE);
 
-    _GRWL_REQUIRE_INIT_OR_RETURN(GRWL_FALSE);
+    _GRWL_REQUIRE_INIT_OR_RETURN(false);
 
     if (!_grwlInitVulkan(_GRWL_REQUIRE_LOADER))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwl.vk.extensions[0])
     {
         _grwlInputError(GRWL_API_UNAVAILABLE, "Vulkan: Window surface creation extensions not found");
-        return GRWL_FALSE;
+        return false;
     }
 
     return _grwl.platform.getPhysicalDevicePresentationSupport(instance, device, queuefamily);

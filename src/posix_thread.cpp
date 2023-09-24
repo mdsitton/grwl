@@ -14,18 +14,18 @@
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlPlatformCreateTls(_GRWLtls* tls)
+bool _grwlPlatformCreateTls(_GRWLtls* tls)
 {
-    assert(tls->posix.allocated == GRWL_FALSE);
+    assert(tls->posix.allocated == false);
 
     if (pthread_key_create(&tls->posix.key, NULL) != 0)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "POSIX: Failed to create context TLS");
-        return GRWL_FALSE;
+        return false;
     }
 
-    tls->posix.allocated = GRWL_TRUE;
-    return GRWL_TRUE;
+    tls->posix.allocated = true;
+    return true;
 }
 
 void _grwlPlatformDestroyTls(_GRWLtls* tls)
@@ -39,27 +39,27 @@ void _grwlPlatformDestroyTls(_GRWLtls* tls)
 
 void* _grwlPlatformGetTls(_GRWLtls* tls)
 {
-    assert(tls->posix.allocated == GRWL_TRUE);
+    assert(tls->posix.allocated == true);
     return pthread_getspecific(tls->posix.key);
 }
 
 void _grwlPlatformSetTls(_GRWLtls* tls, void* value)
 {
-    assert(tls->posix.allocated == GRWL_TRUE);
+    assert(tls->posix.allocated == true);
     pthread_setspecific(tls->posix.key, value);
 }
 
-GRWLbool _grwlPlatformCreateMutex(_GRWLmutex* mutex)
+bool _grwlPlatformCreateMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == GRWL_FALSE);
+    assert(mutex->posix.allocated == false);
 
     if (pthread_mutex_init(&mutex->posix.handle, NULL) != 0)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "POSIX: Failed to create mutex");
-        return GRWL_FALSE;
+        return false;
     }
 
-    return mutex->posix.allocated = GRWL_TRUE;
+    return mutex->posix.allocated = true;
 }
 
 void _grwlPlatformDestroyMutex(_GRWLmutex* mutex)
@@ -73,13 +73,13 @@ void _grwlPlatformDestroyMutex(_GRWLmutex* mutex)
 
 void _grwlPlatformLockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == GRWL_TRUE);
+    assert(mutex->posix.allocated == true);
     pthread_mutex_lock(&mutex->posix.handle);
 }
 
 void _grwlPlatformUnlockMutex(_GRWLmutex* mutex)
 {
-    assert(mutex->posix.allocated == GRWL_TRUE);
+    assert(mutex->posix.allocated == true);
     pthread_mutex_unlock(&mutex->posix.handle);
 }
 

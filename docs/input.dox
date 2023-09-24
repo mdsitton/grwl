@@ -173,7 +173,7 @@ missed the key press.  The recommended solution for this is to use a
 key callback, but there is also the `GRWL_STICKY_KEYS` input mode.
 
 @code
-glfwSetInputMode(window, GRWL_STICKY_KEYS, GRWL_TRUE);
+glfwSetInputMode(window, GRWL_STICKY_KEYS, true);
 @endcode
 
 When sticky keys mode is enabled, the pollable state of a key will remain
@@ -186,7 +186,7 @@ If you wish to know what the state of the Caps Lock and Num Lock keys was when
 input events were generated, set the `GRWL_LOCK_KEY_MODS` input mode.
 
 @code
-glfwSetInputMode(window, GRWL_LOCK_KEY_MODS, GRWL_TRUE);
+glfwSetInputMode(window, GRWL_LOCK_KEY_MODS, true);
 @endcode
 
 When this input mode is enabled, any callback that receives
@@ -262,7 +262,7 @@ which on some platforms may not happen until one of its windows gets input
 focus.
 
 @code
-void keyboard_layout_callback(void)
+void keyboard_layout_callback()
 {
     update_keyboard_layout_name(glfwGetKeyboardLayoutName());
 }
@@ -421,13 +421,13 @@ You can get the current IME status by the following function:
 glfwGetInputMode(window, GRWL_IME);
 @endcode
 
-If you get GRWL_TRUE, it means the IME is on, and GRWL_FALSE means the IME is off.
+If you get true, it means the IME is on, and false means the IME is off.
 
 You can also change the IME status by the following function:
 
 @code
-glfwSetInputMode(window, GRWL_IME, GRWL_TRUE);
-glfwSetInputMode(window, GRWL_IME, GRWL_FALSE);
+glfwSetInputMode(window, GRWL_IME, true);
+glfwSetInputMode(window, GRWL_IME, false);
 @endcode
 
 You can use the following function to clear the current preedit.
@@ -445,7 +445,7 @@ The default full screen of GRWL is exclusive and is not suitable for IME.
 Setting this window hint enables IME to display properly on the full screen.
 
 @code
-glfwWindowHint(GRWL_SOFT_FULLSCREEN, GRWL_TRUE);
+glfwWindowHint(GRWL_SOFT_FULLSCREEN, true);
 @endcode
 
 
@@ -455,7 +455,7 @@ By default, the IME manages the drawing of the preedit candidates, but
 sometimes you need to do that on the application side for some reason.  In such
 a case, you can use
 [GRWL_MANAGE_PREEDIT_CANDIDATE](@ref GRWL_MANAGE_PREEDIT_CANDIDATE_hint) init hint.
-By setting this to `GRWL_TRUE`, the IME stops managing the drawing of the
+By setting this to `true`, the IME stops managing the drawing of the
 candidates and the application needs to manage it by using the following
 functions.
 
@@ -630,7 +630,7 @@ disabled by default.
 
 @code
 if (glfwRawMouseMotionSupported())
-    glfwSetInputMode(window, GRWL_RAW_MOUSE_MOTION, GRWL_TRUE);
+    glfwSetInputMode(window, GRWL_RAW_MOUSE_MOTION, true);
 @endcode
 
 If supported, raw mouse motion can be enabled or disabled per-window and at any
@@ -806,7 +806,7 @@ mouse button callback, but there is also the `GRWL_STICKY_MOUSE_BUTTONS`
 input mode.
 
 @code
-glfwSetInputMode(window, GRWL_STICKY_MOUSE_BUTTONS, GRWL_TRUE);
+glfwSetInputMode(window, GRWL_STICKY_MOUSE_BUTTONS, true);
 @endcode
 
 When sticky mouse buttons mode is enabled, the pollable state of a mouse button

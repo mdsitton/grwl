@@ -38,7 +38,7 @@
 // This avoids blocking other threads via the per-display Xlib lock that also
 // covers GLX functions
 //
-static GRWLbool waitForX11Event(double* timeout)
+static bool waitForX11Event(double* timeout)
 {
     struct pollfd fd = { ConnectionNumber(_grwl.x11.display), POLLIN };
 
@@ -46,18 +46,18 @@ static GRWLbool waitForX11Event(double* timeout)
     {
         if (!_grwlPollPOSIX(&fd, 1, timeout))
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Wait for event data to arrive on any event file descriptor
 // This avoids blocking other threads via the per-display Xlib lock that also
 // covers GLX functions
 //
-static GRWLbool waitForAnyEvent(double* timeout)
+static bool waitForAnyEvent(double* timeout)
 {
     nfds_t count = 2;
     struct pollfd fds[3] = { { ConnectionNumber(_grwl.x11.display), POLLIN }, { _grwl.x11.emptyEventPipe[0], POLLIN } };
@@ -73,24 +73,24 @@ static GRWLbool waitForAnyEvent(double* timeout)
     {
         if (!_grwlPollPOSIX(fds, count, timeout))
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         for (int i = 1; i < count; i++)
         {
             if (fds[i].revents & POLLIN)
             {
-                return GRWL_TRUE;
+                return true;
             }
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Writes a byte to the empty event pipe
 //
-static void writeEmptyEvent(void)
+static void writeEmptyEvent()
 {
     for (;;)
     {
@@ -105,7 +105,7 @@ static void writeEmptyEvent(void)
 
 // Drains available data from the empty event pipe
 //
-static void drainEmptyEvents(void)
+static void drainEmptyEvents()
 {
     for (;;)
     {
@@ -121,7 +121,7 @@ static void drainEmptyEvents(void)
 // Waits until a VisibilityNotify event arrives for the specified window or the
 // timeout period elapses (ICCCM section 4.2.2)
 //
-static GRWLbool waitForVisibilityNotify(_GRWLwindow* window)
+static bool waitForVisibilityNotify(_GRWLwindow* window)
 {
     XEvent dummy;
     double timeout = 0.1;
@@ -130,11 +130,11 @@ static GRWLbool waitForVisibilityNotify(_GRWLwindow* window)
     {
         if (!waitForX11Event(&timeout))
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Returns whether the window is iconified
@@ -337,7 +337,7 @@ static void updateWindowMode(_GRWLwindow* window)
             attributes.override_redirect = True;
             XChangeWindowAttributes(_grwl.x11.display, window->x11.handle, CWOverrideRedirect, &attributes);
 
-            window->x11.overrideRedirect = GRWL_TRUE;
+            window->x11.overrideRedirect = true;
         }
 
         // Enable compositor bypass
@@ -367,7 +367,7 @@ static void updateWindowMode(_GRWLwindow* window)
             attributes.override_redirect = False;
             XChangeWindowAttributes(_grwl.x11.display, window->x11.handle, CWOverrideRedirect, &attributes);
 
-            window->x11.overrideRedirect = GRWL_FALSE;
+            window->x11.overrideRedirect = false;
         }
 
         // Disable compositor bypass
@@ -432,7 +432,7 @@ static void captureCursor(_GRWLwindow* window)
 
 // Ungrabs the cursor
 //
-static void releaseCursor(void)
+static void releaseCursor()
 {
     XUngrabPointer(_grwl.x11.display, CurrentTime);
 }
@@ -671,7 +671,7 @@ static void _ximPreeditCaretCallback(XIC xic, XPointer clientData, XPointer call
 static void _ximStatusStartCallback(XIC xic, XPointer clientData, XPointer callData)
 {
     _GRWLwindow* window = (_GRWLwindow*)clientData;
-    window->x11.imeFocus = GRWL_TRUE;
+    window->x11.imeFocus = true;
 }
 
 // IME Status Done callback
@@ -681,7 +681,7 @@ static void _ximStatusStartCallback(XIC xic, XPointer clientData, XPointer callD
 static void _ximStatusDoneCallback(XIC xic, XPointer clientData, XPointer callData)
 {
     _GRWLwindow* window = (_GRWLwindow*)clientData;
-    window->x11.imeFocus = GRWL_FALSE;
+    window->x11.imeFocus = false;
 }
 
 // IME Status Draw callback
@@ -733,7 +733,7 @@ static XVaNestedList _createXIMStatusCallbacks(_GRWLwindow* window)
 
 // Create the X11 window (and its colormap)
 //
-static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, Visual* visual, int depth)
+static bool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, Visual* visual, int depth)
 {
     int width = wndconfig->width;
     int height = wndconfig->height;
@@ -776,14 +776,14 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
     if (!window->x11.handle)
     {
         _grwlInputErrorX11(GRWL_PLATFORM_ERROR, "X11: Failed to create window");
-        return GRWL_FALSE;
+        return false;
     }
 
     XSaveContext(_grwl.x11.display, window->x11.handle, _grwl.x11.context, (XPointer)window);
 
     if (!wndconfig->decorated)
     {
-        _grwlSetWindowDecoratedX11(window, GRWL_FALSE);
+        _grwlSetWindowDecoratedX11(window, false);
     }
 
     if (_grwl.x11.NET_WM_STATE && !window->monitor)
@@ -805,7 +805,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
             {
                 states[count++] = _grwl.x11.NET_WM_STATE_MAXIMIZED_VERT;
                 states[count++] = _grwl.x11.NET_WM_STATE_MAXIMIZED_HORZ;
-                window->x11.maximized = GRWL_TRUE;
+                window->x11.maximized = true;
             }
         }
 
@@ -844,7 +844,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
         if (!hints)
         {
             _grwlInputError(GRWL_OUT_OF_MEMORY, "X11: Failed to allocate WM hints");
-            return GRWL_FALSE;
+            return false;
         }
 
         hints->flags = StateHint;
@@ -860,7 +860,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
         if (!hints)
         {
             _grwlInputError(GRWL_OUT_OF_MEMORY, "X11: Failed to allocate size hints");
-            return GRWL_FALSE;
+            return false;
         }
 
         if (!wndconfig->resizable)
@@ -941,7 +941,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
     _grwlGetWindowPosX11(window, &window->x11.xpos, &window->x11.ypos);
     _grwlGetWindowSizeX11(window, &window->x11.width, &window->x11.height);
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Set the specified property to the selection converted to the requested target
@@ -1541,7 +1541,7 @@ static void processEvent(XEvent* event)
                 updateCursorImage(window);
             }
 
-            _grwlInputCursorEnter(window, GRWL_TRUE);
+            _grwlInputCursorEnter(window, true);
             _grwlInputCursorPos(window, x, y);
 
             window->x11.lastCursorPosX = x;
@@ -1551,7 +1551,7 @@ static void processEvent(XEvent* event)
 
         case LeaveNotify:
         {
-            _grwlInputCursorEnter(window, GRWL_FALSE);
+            _grwlInputCursorEnter(window, false);
             return;
         }
 
@@ -1675,7 +1675,7 @@ static void processEvent(XEvent* event)
                 // A drag operation has entered the window
                 unsigned long count;
                 Atom* formats = NULL;
-                const GRWLbool list = event->xclient.data.l[1] & 1;
+                const bool list = event->xclient.data.l[1] & 1;
 
                 _grwl.x11.xdnd.source = event->xclient.data.l[0];
                 _grwl.x11.xdnd.version = event->xclient.data.l[1] >> 24;
@@ -1859,7 +1859,7 @@ static void processEvent(XEvent* event)
                 XSetICFocus(window->x11.ic);
             }
 
-            _grwlInputWindowFocus(window, GRWL_TRUE);
+            _grwlInputWindowFocus(window, true);
             return;
         }
 
@@ -1891,7 +1891,7 @@ static void processEvent(XEvent* event)
                 _grwlIconifyWindowX11(window);
             }
 
-            _grwlInputWindowFocus(window, GRWL_FALSE);
+            _grwlInputWindowFocus(window, false);
             return;
         }
 
@@ -1916,7 +1916,7 @@ static void processEvent(XEvent* event)
                     return;
                 }
 
-                const GRWLbool iconified = (state == IconicState);
+                const bool iconified = (state == IconicState);
                 if (window->x11.iconified != iconified)
                 {
                     if (window->monitor)
@@ -1937,7 +1937,7 @@ static void processEvent(XEvent* event)
             }
             else if (event->xproperty.atom == _grwl.x11.NET_WM_STATE)
             {
-                const GRWLbool maximized = _grwlWindowMaximizedX11(window);
+                const bool maximized = _grwlWindowMaximizedX11(window);
                 if (window->x11.maximized != maximized)
                 {
                     window->x11.maximized = maximized;
@@ -1972,11 +1972,11 @@ unsigned long _grwlGetWindowPropertyX11(Window window, Atom property, Atom type,
     return itemCount;
 }
 
-GRWLbool _grwlIsVisualTransparentX11(Visual* visual)
+bool _grwlIsVisualTransparentX11(Visual* visual)
 {
     if (!_grwl.x11.xrender.available)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     XRenderPictFormat* pf = XRenderFindVisualFormat(_grwl.x11.display, visual);
@@ -1985,7 +1985,7 @@ GRWLbool _grwlIsVisualTransparentX11(Visual* visual)
 
 // Push contents of our selection to clipboard manager
 //
-void _grwlPushSelectionToManagerX11(void)
+void _grwlPushSelectionToManagerX11()
 {
     XConvertSelection(_grwl.x11.display, _grwl.x11.CLIPBOARD_MANAGER, _grwl.x11.SAVE_TARGETS, None,
                       _grwl.x11.helperWindowHandle, CurrentTime);
@@ -2029,7 +2029,7 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
     callback.callback = (XIMProc)inputContextDestroyCallback;
     callback.client_data = (XPointer)window;
 
-    window->x11.imeFocus = GRWL_FALSE;
+    window->x11.imeFocus = false;
 
     if (_grwl.x11.imStyle == STYLE_ONTHESPOT)
     {
@@ -2076,8 +2076,8 @@ void _grwlCreateInputContextX11(_GRWLwindow* window)
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                              const _GRWLfbconfig* fbconfig)
+bool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                          const _GRWLfbconfig* fbconfig)
 {
     Visual* visual = NULL;
     int depth;
@@ -2088,29 +2088,29 @@ GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconf
         {
             if (!_grwlInitGLX())
             {
-                return GRWL_FALSE;
+                return false;
             }
             if (!_grwlChooseVisualGLX(wndconfig, ctxconfig, fbconfig, &visual, &depth))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else if (ctxconfig->source == GRWL_EGL_CONTEXT_API)
         {
             if (!_grwlInitEGL())
             {
-                return GRWL_FALSE;
+                return false;
             }
             if (!_grwlChooseVisualEGL(wndconfig, ctxconfig, fbconfig, &visual, &depth))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else if (ctxconfig->source == GRWL_OSMESA_CONTEXT_API)
         {
             if (!_grwlInitOSMesa())
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
     }
@@ -2123,7 +2123,7 @@ GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconf
 
     if (!createNativeWindow(window, wndconfig, visual, depth))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (ctxconfig->client != GRWL_NO_API)
@@ -2132,33 +2132,33 @@ GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconf
         {
             if (!_grwlCreateContextGLX(window, ctxconfig, fbconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else if (ctxconfig->source == GRWL_EGL_CONTEXT_API)
         {
             if (!_grwlCreateContextEGL(window, ctxconfig, fbconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
         else if (ctxconfig->source == GRWL_OSMESA_CONTEXT_API)
         {
             if (!_grwlCreateContextOSMesa(window, ctxconfig, fbconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
 
         if (!_grwlRefreshContextAttribs(window, ctxconfig))
         {
-            return GRWL_FALSE;
+            return false;
         }
     }
 
     if (wndconfig->mousePassthrough)
     {
-        _grwlSetWindowMousePassthroughX11(window, GRWL_TRUE);
+        _grwlSetWindowMousePassthroughX11(window, true);
     }
 
     if (window->monitor)
@@ -2193,7 +2193,7 @@ GRWLbool _grwlCreateWindowX11(_GRWLwindow* window, const _GRWLwndconfig* wndconf
     }
 
     XFlush(_grwl.x11.display);
-    return GRWL_TRUE;
+    return true;
 }
 
 void _grwlDestroyWindowX11(_GRWLwindow* window)
@@ -2301,7 +2301,7 @@ void _grwlSetWindowIconX11(_GRWLwindow* window, int count, const GRWLimage* imag
 
 void _grwlSetWindowProgressIndicatorX11(_GRWLwindow* window, int progressState, double value)
 {
-    (void)window;
+    () window;
 
     const dbus_bool_t progressVisible = (progressState != GRWL_PROGRESS_INDICATOR_DISABLED);
 
@@ -2699,7 +2699,7 @@ void _grwlSetWindowMonitorX11(_GRWLwindow* window, _GRWLmonitor* monitor, int xp
     XFlush(_grwl.x11.display);
 }
 
-GRWLbool _grwlWindowFocusedX11(_GRWLwindow* window)
+bool _grwlWindowFocusedX11(_GRWLwindow* window)
 {
     Window focused;
     int state;
@@ -2708,22 +2708,22 @@ GRWLbool _grwlWindowFocusedX11(_GRWLwindow* window)
     return window->x11.handle == focused;
 }
 
-GRWLbool _grwlWindowIconifiedX11(_GRWLwindow* window)
+bool _grwlWindowIconifiedX11(_GRWLwindow* window)
 {
     return getWindowState(window) == IconicState;
 }
 
-GRWLbool _grwlWindowVisibleX11(_GRWLwindow* window)
+bool _grwlWindowVisibleX11(_GRWLwindow* window)
 {
     XWindowAttributes wa;
     XGetWindowAttributes(_grwl.x11.display, window->x11.handle, &wa);
     return wa.map_state == IsViewable;
 }
 
-GRWLbool _grwlWindowMaximizedX11(_GRWLwindow* window)
+bool _grwlWindowMaximizedX11(_GRWLwindow* window)
 {
     Atom* states;
-    GRWLbool maximized = GRWL_FALSE;
+    bool maximized = false;
 
     if (!_grwl.x11.NET_WM_STATE || !_grwl.x11.NET_WM_STATE_MAXIMIZED_VERT || !_grwl.x11.NET_WM_STATE_MAXIMIZED_HORZ)
     {
@@ -2737,7 +2737,7 @@ GRWLbool _grwlWindowMaximizedX11(_GRWLwindow* window)
     {
         if (states[i] == _grwl.x11.NET_WM_STATE_MAXIMIZED_VERT || states[i] == _grwl.x11.NET_WM_STATE_MAXIMIZED_HORZ)
         {
-            maximized = GRWL_TRUE;
+            maximized = true;
             break;
         }
     }
@@ -2750,7 +2750,7 @@ GRWLbool _grwlWindowMaximizedX11(_GRWLwindow* window)
     return maximized;
 }
 
-GRWLbool _grwlWindowHoveredX11(_GRWLwindow* window)
+bool _grwlWindowHoveredX11(_GRWLwindow* window)
 {
     Window w = _grwl.x11.root;
     while (w)
@@ -2771,35 +2771,35 @@ GRWLbool _grwlWindowHoveredX11(_GRWLwindow* window)
         }
         else if (!result)
         {
-            return GRWL_FALSE;
+            return false;
         }
         else if (w == window->x11.handle)
         {
-            return GRWL_TRUE;
+            return true;
         }
     }
 
-    return GRWL_FALSE;
+    return false;
 }
 
-GRWLbool _grwlFramebufferTransparentX11(_GRWLwindow* window)
+bool _grwlFramebufferTransparentX11(_GRWLwindow* window)
 {
     if (!window->x11.transparent)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     return XGetSelectionOwner(_grwl.x11.display, _grwl.x11.NET_WM_CM_Sx) != None;
 }
 
-void _grwlSetWindowResizableX11(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowResizableX11(_GRWLwindow* window, bool enabled)
 {
     int width, height;
     _grwlGetWindowSizeX11(window, &width, &height);
     updateNormalHints(window, width, height);
 }
 
-void _grwlSetWindowDecoratedX11(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowDecoratedX11(_GRWLwindow* window, bool enabled)
 {
     struct
     {
@@ -2817,7 +2817,7 @@ void _grwlSetWindowDecoratedX11(_GRWLwindow* window, GRWLbool enabled)
                     PropModeReplace, (unsigned char*)&hints, sizeof(hints) / sizeof(long));
 }
 
-void _grwlSetWindowFloatingX11(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowFloatingX11(_GRWLwindow* window, bool enabled)
 {
     if (!_grwl.x11.NET_WM_STATE || !_grwl.x11.NET_WM_STATE_ABOVE)
     {
@@ -2879,7 +2879,7 @@ void _grwlSetWindowFloatingX11(_GRWLwindow* window, GRWLbool enabled)
     XFlush(_grwl.x11.display);
 }
 
-void _grwlSetWindowMousePassthroughX11(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowMousePassthroughX11(_GRWLwindow* window, bool enabled)
 {
     if (!_grwl.x11.xshape.available)
     {
@@ -2928,7 +2928,7 @@ void _grwlSetWindowOpacityX11(_GRWLwindow* window, float opacity)
                     PropModeReplace, (unsigned char*)&value, 1);
 }
 
-void _grwlSetRawMouseMotionX11(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetRawMouseMotionX11(_GRWLwindow* window, bool enabled)
 {
     if (!_grwl.x11.xi.available)
     {
@@ -2950,12 +2950,12 @@ void _grwlSetRawMouseMotionX11(_GRWLwindow* window, GRWLbool enabled)
     }
 }
 
-GRWLbool _grwlRawMouseMotionSupportedX11(void)
+bool _grwlRawMouseMotionSupportedX11()
 {
     return _grwl.x11.xi.available;
 }
 
-void _grwlPollEventsX11(void)
+void _grwlPollEventsX11()
 {
     drainEmptyEvents();
 
@@ -2991,7 +2991,7 @@ void _grwlPollEventsX11(void)
     XFlush(_grwl.x11.display);
 }
 
-void _grwlWaitEventsX11(void)
+void _grwlWaitEventsX11()
 {
     waitForAnyEvent(NULL);
     _grwlPollEventsX11();
@@ -3003,7 +3003,7 @@ void _grwlWaitEventsTimeoutX11(double timeout)
     _grwlPollEventsX11();
 }
 
-void _grwlPostEmptyEventX11(void)
+void _grwlPostEmptyEventX11()
 {
     writeEmptyEvent();
 }
@@ -3122,7 +3122,7 @@ int _grwlGetKeyScancodeX11(int key)
     return _grwl.x11.scancodes[key];
 }
 
-const char* _grwlGetKeyboardLayoutNameX11(void)
+const char* _grwlGetKeyboardLayoutNameX11()
 {
     if (!_grwl.x11.xkb.available)
     {
@@ -3155,18 +3155,18 @@ const char* _grwlGetKeyboardLayoutNameX11(void)
     return _grwl.x11.keyboardLayoutName;
 }
 
-GRWLbool _grwlCreateCursorX11(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
+bool _grwlCreateCursorX11(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
 {
     cursor->x11.handle = _grwlCreateNativeCursorX11(image, xhot, yhot);
     if (!cursor->x11.handle)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
-GRWLbool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape)
+bool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape)
 {
     if (_grwl.x11.xcursor.handle)
     {
@@ -3248,18 +3248,18 @@ GRWLbool _grwlCreateStandardCursorX11(_GRWLcursor* cursor, int shape)
                 break;
             default:
                 _grwlInputError(GRWL_CURSOR_UNAVAILABLE, "X11: Standard cursor shape unavailable");
-                return GRWL_FALSE;
+                return false;
         }
 
         cursor->x11.handle = XCreateFontCursor(_grwl.x11.display, native);
         if (!cursor->x11.handle)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to create standard cursor");
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 void _grwlDestroyCursorX11(_GRWLcursor* cursor)
@@ -3293,7 +3293,7 @@ void _grwlSetClipboardStringX11(const char* string)
     }
 }
 
-const char* _grwlGetClipboardStringX11(void)
+const char* _grwlGetClipboardStringX11()
 {
     return getSelectionString(_grwl.x11.CLIPBOARD);
 }
@@ -3392,13 +3392,13 @@ int _grwlGetIMEStatusX11(_GRWLwindow* window)
 {
     if (!window->x11.ic)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     // Can not manage IME in the case of over-the-spot.
     if (_grwl.x11.imStyle == STYLE_OVERTHESPOT)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     return window->x11.imeFocus;
@@ -3446,7 +3446,7 @@ EGLenum _grwlGetEGLPlatformX11(EGLint** attribs)
     return 0;
 }
 
-EGLNativeDisplayType _grwlGetEGLNativeDisplayX11(void)
+EGLNativeDisplayType _grwlGetEGLNativeDisplayX11()
 {
     return _grwl.x11.display;
 }
@@ -3492,8 +3492,7 @@ void _grwlGetRequiredInstanceExtensionsX11(char** extensions)
     }
 }
 
-GRWLbool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device,
-                                                      uint32_t queuefamily)
+bool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhysicalDevice device, uint32_t queuefamily)
 {
     VisualID visualID = XVisualIDFromVisual(DefaultVisual(_grwl.x11.display, _grwl.x11.screen));
 
@@ -3505,14 +3504,14 @@ GRWLbool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhy
         if (!vkGetPhysicalDeviceXcbPresentationSupportKHR)
         {
             _grwlInputError(GRWL_API_UNAVAILABLE, "X11: Vulkan instance missing VK_KHR_xcb_surface extension");
-            return GRWL_FALSE;
+            return false;
         }
 
         xcb_connection_t* connection = XGetXCBConnection(_grwl.x11.display);
         if (!connection)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to retrieve XCB connection");
-            return GRWL_FALSE;
+            return false;
         }
 
         return vkGetPhysicalDeviceXcbPresentationSupportKHR(device, queuefamily, connection, visualID);
@@ -3525,7 +3524,7 @@ GRWLbool _grwlGetPhysicalDevicePresentationSupportX11(VkInstance instance, VkPhy
         if (!vkGetPhysicalDeviceXlibPresentationSupportKHR)
         {
             _grwlInputError(GRWL_API_UNAVAILABLE, "X11: Vulkan instance missing VK_KHR_xlib_surface extension");
-            return GRWL_FALSE;
+            return false;
         }
 
         return vkGetPhysicalDeviceXlibPresentationSupportKHR(device, queuefamily, _grwl.x11.display, visualID);
@@ -3616,7 +3615,7 @@ _GRWLusercontext* _grwlCreateUserContextX11(_GRWLwindow* window)
 //////                        GRWL native API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI Display* grwlGetX11Display(void)
+GRWLAPI Display* grwlGetX11Display()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
 
@@ -3664,7 +3663,7 @@ GRWLAPI void grwlSetX11SelectionString(const char* string)
     }
 }
 
-GRWLAPI const char* grwlGetX11SelectionString(void)
+GRWLAPI const char* grwlGetX11SelectionString()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
 

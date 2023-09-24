@@ -16,7 +16,7 @@
 
 // This contains all mutable state shared between compilation units of GRWL
 //
-_GRWLlibrary _grwl = { GRWL_FALSE };
+_GRWLlibrary _grwl = { false };
 
 // These are outside of _grwl so they can be used before initialization and
 // after termination without special handling when _grwl is cleared to zero
@@ -25,18 +25,18 @@ static _GRWLerror _grwlMainThreadError;
 static GRWLerrorfun _grwlErrorCallback;
 static GRWLallocator _grwlInitAllocator;
 static _GRWLinitconfig _grwlInitHints = {
-    GRWL_TRUE,                     // hat buttons
+    true,                          // hat buttons
     GRWL_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
     GRWL_ANY_PLATFORM,             // preferred platform
-    GRWL_FALSE,                    // whether to manage preedit candidate
+    false,                         // whether to manage preedit candidate
     NULL,                          // vkGetInstanceProcAddr function
     {
-        GRWL_TRUE, // macOS menu bar
-        GRWL_TRUE  // macOS bundle chdir
+        true, // macOS menu bar
+        true  // macOS bundle chdir
     },
     {
-        GRWL_TRUE, // X11 XCB Vulkan surface
-        GRWL_FALSE // X11 on-the-spot IM-style
+        true, // X11 XCB Vulkan surface
+        false // X11 on-the-spot IM-style
     },
     {
         GRWL_WAYLAND_PREFER_LIBDECOR // Wayland libdecor mode
@@ -66,7 +66,7 @@ static void* defaultReallocate(void* block, size_t size, void* user)
 
 // Terminate the library
 //
-static void terminate(void)
+static void terminate()
 {
     int i;
 
@@ -104,7 +104,7 @@ static void terminate(void)
     _grwl.platform.terminateJoysticks();
     _grwl.platform.terminate();
 
-    _grwl.initialized = GRWL_FALSE;
+    _grwl.initialized = false;
 
     while (_grwl.errorListHead)
     {
@@ -473,11 +473,11 @@ void _grwlInputError(int code, const char* format, ...)
 //////                        GRWL public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI int grwlInit(void)
+GRWLAPI int grwlInit()
 {
     if (_grwl.initialized)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     memset(&_grwl, 0, sizeof(_grwl));
@@ -493,20 +493,20 @@ GRWLAPI int grwlInit(void)
 
     if (!_grwlSelectPlatform(_grwl.hints.init.platformID, &_grwl.platform))
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwl.platform.init())
     {
         terminate();
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!_grwlPlatformCreateMutex(&_grwl.errorLock) || !_grwlPlatformCreateTls(&_grwl.errorSlot) ||
         !_grwlPlatformCreateTls(&_grwl.contextSlot) || !_grwlPlatformCreateTls(&_grwl.usercontextSlot))
     {
         terminate();
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwlPlatformSetTls(&_grwl.errorSlot, &_grwlMainThreadError);
@@ -516,13 +516,13 @@ GRWLAPI int grwlInit(void)
     _grwlPlatformInitTimer();
     _grwl.timer.offset = _grwlPlatformGetTimerValue();
 
-    _grwl.initialized = GRWL_TRUE;
+    _grwl.initialized = true;
 
     grwlDefaultWindowHints();
-    return GRWL_TRUE;
+    return true;
 }
 
-GRWLAPI void grwlTerminate(void)
+GRWLAPI void grwlTerminate()
 {
     if (!_grwl.initialized)
     {
@@ -640,7 +640,7 @@ GRWLAPI int grwlGetError(const char** description)
     return code;
 }
 
-GRWLAPI int grwlIsInitialized(void)
+GRWLAPI int grwlIsInitialized()
 {
     return _grwl.initialized;
 }

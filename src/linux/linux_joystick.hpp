@@ -29,13 +29,13 @@ typedef struct _GRWLlibraryLinux
     int inotify;
     int watch;
     regex_t regex;
-    GRWLbool dropped;
+    bool dropped;
 } _GRWLlibraryLinux;
 
-void _grwlDetectJoystickConnectionLinux(void);
+void _grwlDetectJoystickConnectionLinux();
 
-GRWLbool _grwlInitJoysticksLinux(void);
-void _grwlTerminateJoysticksLinux(void);
-GRWLbool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode);
-const char* _grwlGetMappingNameLinux(void);
+bool _grwlInitJoysticksLinux();
+void _grwlTerminateJoysticksLinux();
+bool _grwlPollJoystickLinux(_GRWLjoystick* js, int mode);
+const char* _grwlGetMappingNameLinux();
 void _grwlUpdateGamepadGUIDLinux(char* guid);

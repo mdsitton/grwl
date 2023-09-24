@@ -320,7 +320,7 @@ static int translateKeySyms(const KeySym* keysyms, int width)
 
 // Create key code translation tables
 //
-static void createKeyTables(void)
+static void createKeyTables()
 {
     int scancodeMin, scancodeMax;
 
@@ -541,14 +541,14 @@ static void createKeyTables(void)
 
 // Check whether the IM has a usable style
 //
-static GRWLbool hasUsableInputMethodStyle(void)
+static bool hasUsableInputMethodStyle()
 {
-    GRWLbool found = GRWL_FALSE;
+    bool found = false;
     XIMStyles* styles = NULL;
 
     if (XGetIMValues(_grwl.x11.im, XNQueryInputStyle, &styles, NULL) != NULL)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (_grwl.hints.init.x11.onTheSpotIMStyle)
@@ -564,7 +564,7 @@ static GRWLbool hasUsableInputMethodStyle(void)
     {
         if (styles->supported_styles[i] == _grwl.x11.imStyle)
         {
-            found = GRWL_TRUE;
+            found = true;
             break;
         }
     }
@@ -628,7 +628,7 @@ static Atom getAtomIfSupported(Atom* supportedAtoms, unsigned long atomCount, co
 
 // Check whether the running window manager is EWMH-compliant
 //
-static void detectEWMH(void)
+static void detectEWMH()
 {
     // First we read the _NET_SUPPORTING_WM_CHECK property on the root window
 
@@ -703,7 +703,7 @@ static void detectEWMH(void)
 
 // Look for and initialize supported X11 extensions
 //
-static GRWLbool initExtensions(void)
+static bool initExtensions()
 {
     #if defined(__OpenBSD__) || defined(__NetBSD__)
     _grwl.x11.vidmode.handle = _grwlPlatformLoadModule("libXxf86vm.so");
@@ -747,7 +747,7 @@ static GRWLbool initExtensions(void)
 
             if (XIQueryVersion(_grwl.x11.display, &_grwl.x11.xi.major, &_grwl.x11.xi.minor) == Success)
             {
-                _grwl.x11.xi.available = GRWL_TRUE;
+                _grwl.x11.xi.available = true;
             }
         }
     }
@@ -805,7 +805,7 @@ static GRWLbool initExtensions(void)
                 // The GRWL RandR path requires at least version 1.3
                 if (_grwl.x11.randr.major > 1 || _grwl.x11.randr.minor >= 3)
                 {
-                    _grwl.x11.randr.available = GRWL_TRUE;
+                    _grwl.x11.randr.available = true;
                 }
             }
             else
@@ -823,14 +823,14 @@ static GRWLbool initExtensions(void)
         {
             // This is likely an older Nvidia driver with broken gamma support
             // Flag it as useless and fall back to xf86vm gamma, if available
-            _grwl.x11.randr.gammaBroken = GRWL_TRUE;
+            _grwl.x11.randr.gammaBroken = true;
         }
 
         if (!sr->ncrtc)
         {
             // A system without CRTCs is likely a system with broken RandR
             // Disable the RandR monitor path and fall back to core functions
-            _grwl.x11.randr.monitorBroken = GRWL_TRUE;
+            _grwl.x11.randr.monitorBroken = true;
         }
 
         XRRFreeScreenResources(sr);
@@ -884,7 +884,7 @@ static GRWLbool initExtensions(void)
         {
             if (XineramaIsActive(_grwl.x11.display))
             {
-                _grwl.x11.xinerama.available = GRWL_TRUE;
+                _grwl.x11.xinerama.available = true;
             }
         }
     }
@@ -902,7 +902,7 @@ static GRWLbool initExtensions(void)
         {
             if (supported)
             {
-                _grwl.x11.xkb.detectable = GRWL_TRUE;
+                _grwl.x11.xkb.detectable = true;
             }
         }
 
@@ -952,7 +952,7 @@ static GRWLbool initExtensions(void)
         {
             if (XRenderQueryVersion(_grwl.x11.display, &_grwl.x11.xrender.major, &_grwl.x11.xrender.minor))
             {
-                _grwl.x11.xrender.available = GRWL_TRUE;
+                _grwl.x11.xrender.available = true;
             }
         }
     }
@@ -979,7 +979,7 @@ static GRWLbool initExtensions(void)
         {
             if (XShapeQueryVersion(_grwl.x11.display, &_grwl.x11.xshape.major, &_grwl.x11.xshape.minor))
             {
-                _grwl.x11.xshape.available = GRWL_TRUE;
+                _grwl.x11.xshape.available = true;
             }
         }
     }
@@ -1047,7 +1047,7 @@ static GRWLbool initExtensions(void)
     // Detect whether an EWMH-conformant window manager is running
     detectEWMH();
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // Retrieve system content scale via folklore heuristics
@@ -1089,7 +1089,7 @@ static void getSystemContentScale(float* xscale, float* yscale)
 
 // Create a blank cursor for hidden and disabled cursor modes
 //
-static Cursor createHiddenCursor(void)
+static Cursor createHiddenCursor()
 {
     unsigned char pixels[16 * 16 * 4] = { 0 };
     GRWLimage image = { 16, 16, pixels };
@@ -1098,7 +1098,7 @@ static Cursor createHiddenCursor(void)
 
 // Create a helper window for IPC
 //
-static Window createHelperWindow(void)
+static Window createHelperWindow()
 {
     XSetWindowAttributes wa;
     wa.event_mask = PropertyChangeMask;
@@ -1109,12 +1109,12 @@ static Window createHelperWindow(void)
 
 // Create the pipe for empty events without assumuing the OS has pipe2(2)
 //
-static GRWLbool createEmptyEventPipe(void)
+static bool createEmptyEventPipe()
 {
     if (pipe(_grwl.x11.emptyEventPipe) != 0)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to create empty event pipe: %s", strerror(errno));
-        return GRWL_FALSE;
+        return false;
     }
 
     for (int i = 0; i < 2; i++)
@@ -1126,11 +1126,11 @@ static GRWLbool createEmptyEventPipe(void)
             fcntl(_grwl.x11.emptyEventPipe[i], F_SETFD, df | FD_CLOEXEC) == -1)
         {
             _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to set flags for empty event pipe: %s", strerror(errno));
-            return GRWL_FALSE;
+            return false;
         }
     }
 
-    return GRWL_TRUE;
+    return true;
 }
 
 // X error handler
@@ -1152,7 +1152,7 @@ static int errorHandler(Display* display, XErrorEvent* event)
 
 // Sets the X error handler callback
 //
-void _grwlGrabErrorHandlerX11(void)
+void _grwlGrabErrorHandlerX11()
 {
     assert(_grwl.x11.errorHandler == NULL);
     _grwl.x11.errorCode = Success;
@@ -1161,7 +1161,7 @@ void _grwlGrabErrorHandlerX11(void)
 
 // Clears the X error handler callback
 //
-void _grwlReleaseErrorHandlerX11(void)
+void _grwlReleaseErrorHandlerX11()
 {
     // Synchronize to make sure all commands are processed
     XSync(_grwl.x11.display, False);
@@ -1220,7 +1220,7 @@ Cursor _grwlCreateNativeCursorX11(const GRWLimage* image, int xhot, int yhot)
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform)
+bool _grwlConnectX11(int platformID, _GRWLplatform* platform)
 {
     const _GRWLplatform x11 = {
         GRWL_PLATFORM_X11,
@@ -1337,7 +1337,7 @@ GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform)
             _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Failed to load Xlib");
         }
 
-        return GRWL_FALSE;
+        return false;
     }
 
     PFN_XInitThreads XInitThreads = (PFN_XInitThreads)_grwlPlatformGetModuleSymbol(module, "XInitThreads");
@@ -1351,7 +1351,7 @@ GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform)
         }
 
         _grwlPlatformFreeModule(module);
-        return GRWL_FALSE;
+        return false;
     }
 
     XInitThreads();
@@ -1374,17 +1374,17 @@ GRWLbool _grwlConnectX11(int platformID, _GRWLplatform* platform)
         }
 
         _grwlPlatformFreeModule(module);
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.x11.display = display;
     _grwl.x11.xlib.handle = module;
 
     *platform = x11;
-    return GRWL_TRUE;
+    return true;
 }
 
-int _grwlInitX11(void)
+int _grwlInitX11()
 {
     _grwlInitDBusPOSIX();
 
@@ -1563,7 +1563,7 @@ int _grwlInitX11(void)
 
     if (_grwl.x11.xlib.utf8LookupString && _grwl.x11.xlib.utf8SetWMProperties)
     {
-        _grwl.x11.xlib.utf8 = GRWL_TRUE;
+        _grwl.x11.xlib.utf8 = true;
     }
 
     _grwl.x11.screen = DefaultScreen(_grwl.x11.display);
@@ -1574,12 +1574,12 @@ int _grwlInitX11(void)
 
     if (!createEmptyEventPipe())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     if (!initExtensions())
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     _grwl.x11.helperWindowHandle = createHelperWindow();
@@ -1594,10 +1594,10 @@ int _grwlInitX11(void)
     }
 
     _grwlPollMonitorsX11();
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlTerminateX11(void)
+void _grwlTerminateX11()
 {
     if (_grwl.x11.helperWindowHandle)
     {

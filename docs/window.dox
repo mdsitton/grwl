@@ -184,65 +184,65 @@ context, but are ignored when requesting an OpenGL ES context:
 @anchor GRWL_RESIZABLE_hint
 __GRWL_RESIZABLE__ specifies whether the windowed mode window will be resizable
 _by the user_.  The window will still be resizable using the @ref
-glfwSetWindowSize function.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+glfwSetWindowSize function.  Possible values are `true` and `false`.
 This hint is ignored for full screen and undecorated windows.
 
 @anchor GRWL_VISIBLE_hint
 __GRWL_VISIBLE__ specifies whether the windowed mode window will be initially
-visible.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This hint is
+visible.  Possible values are `true` and `false`.  This hint is
 ignored for full screen windows.
 
 @anchor GRWL_DECORATED_hint
 __GRWL_DECORATED__ specifies whether the windowed mode window will have window
 decorations such as a border, a close widget, etc.  An undecorated window will
 not be resizable by the user but will still allow the user to generate close
-events on some platforms.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+events on some platforms.  Possible values are `true` and `false`.
 This hint is ignored for full screen windows.
 
 @anchor GRWL_FOCUSED_hint
 __GRWL_FOCUSED__ specifies whether the windowed mode window will be given input
-focus when created.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This
+focus when created.  Possible values are `true` and `false`.  This
 hint is ignored for full screen and initially hidden windows.
 
 @anchor GRWL_AUTO_ICONIFY_hint
 __GRWL_AUTO_ICONIFY__ specifies whether the full screen window will
 automatically iconify and restore the previous video mode on input focus loss.
-Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This hint is ignored for
+Possible values are `true` and `false`.  This hint is ignored for
 windowed mode windows.
 
 @anchor GRWL_FLOATING_hint
 __GRWL_FLOATING__ specifies whether the windowed mode window will be floating
 above other regular windows, also called topmost or always-on-top.  This is
 intended primarily for debugging purposes and cannot be used to implement proper
-full screen windows.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This
+full screen windows.  Possible values are `true` and `false`.  This
 hint is ignored for full screen windows.
 
 @anchor GRWL_MAXIMIZED_hint
 __GRWL_MAXIMIZED__ specifies whether the windowed mode window will be maximized
-when created.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This hint is
+when created.  Possible values are `true` and `false`.  This hint is
 ignored for full screen windows.
 
 @anchor GRWL_CENTER_CURSOR_hint
 __GRWL_CENTER_CURSOR__ specifies whether the cursor should be centered over
-newly created full screen windows.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.  This hint is ignored for windowed mode windows.
+newly created full screen windows.  Possible values are `true` and
+`false`.  This hint is ignored for windowed mode windows.
 
 @anchor GRWL_TRANSPARENT_FRAMEBUFFER_hint
 __GRWL_TRANSPARENT_FRAMEBUFFER__ specifies whether the window framebuffer will
 be transparent.  If enabled and supported by the system, the window framebuffer
 alpha channel will be used to combine the framebuffer with the background.  This
-does not affect window decorations.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.
+does not affect window decorations.  Possible values are `true` and
+`false`.
 
 @anchor GRWL_FOCUS_ON_SHOW_hint
 __GRWL_FOCUS_ON_SHOW__ specifies whether the window will be given input
-focus when @ref glfwShowWindow is called. Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.
+focus when @ref glfwShowWindow is called. Possible values are `true` and
+`false`.
 
 @anchor GRWL_SOFT_FULLSCREEN_hint
 __GRWL_SOFT_FULLSCREEN__ specifies whether the full screen window will be
-_soft full screen_ or _hard full screen_.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.  The default is `GRWL_FALSE` and the full screen window will be
+_soft full screen_ or _hard full screen_.  Possible values are `true` and
+`false`.  The default is `false` and the full screen window will be
 _hard full screen_.
 
 _Hard full screen_ is exclusive screen and it is suitable for applications
@@ -256,7 +256,7 @@ See [Full screen with IME](@ref ime_full_screen) for details.
 __GRWL_SCALE_TO_MONITOR__ specified whether the window content area should be
 resized based on the [monitor content scale](@ref monitor_scale) of any monitor
 it is placed on.  This includes the initial placement when the window is
-created.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+created.  Possible values are `true` and `false`.
 
 This hint only has an effect on platforms where screen coordinates and pixels
 always map 1:1 such as Windows and X11.  On platforms like macOS the resolution
@@ -267,7 +267,7 @@ __GRWL_MOUSE_PASSTHROUGH__ specifies whether the window is transparent to mouse
 input, letting any mouse events pass through to whatever window is behind it.
 This is only supported for undecorated windows.  Decorated windows with this
 enabled will behave differently between platforms.  Possible values are
-`GRWL_TRUE` and `GRWL_FALSE`.
+`true` and `false`.
 
 @anchor GRWL_POSITION_X
 @anchor GRWL_POSITION_Y
@@ -312,7 +312,7 @@ code.
 
 @anchor GRWL_STEREO
 __GRWL_STEREO__ specifies whether to use OpenGL stereoscopic rendering.
-Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This is a hard constraint.
+Possible values are `true` and `false`.  This is a hard constraint.
 
 @anchor GRWL_SAMPLES
 __GRWL_SAMPLES__ specifies the desired number of samples to use for
@@ -321,7 +321,7 @@ the application has no preference.
 
 @anchor GRWL_SRGB_CAPABLE
 __GRWL_SRGB_CAPABLE__ specifies whether the framebuffer should be sRGB capable.
-Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+Possible values are `true` and `false`.
 
 @note __OpenGL:__ If enabled and supported by the system, the
 `GL_FRAMEBUFFER_SRGB` enable will control sRGB rendering.  By default, sRGB
@@ -334,7 +334,7 @@ always have sRGB rendering enabled.
 @anchor GRWL_DOUBLEBUFFER_hint
 __GRWL_DOUBLEBUFFER__ specifies whether the framebuffer should be double
 buffered.  You nearly always want to use double buffering.  This is a hard
-constraint.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+constraint.  Possible values are `true` and `false`.
 
 
 @subsubsection window_hints_mtr Monitor related hints
@@ -418,7 +418,7 @@ Forward-compatibility is described in detail in the
 @anchor GRWL_OPENGL_DEBUG_CONTEXT_hint
 __GRWL_CONTEXT_DEBUG__ specifies whether the context should be created in debug
 mode, which may provide additional error and diagnostic reporting functionality.
-Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+Possible values are `true` and `false`.
 
 Debug contexts for OpenGL and OpenGL ES are described in detail by the
 [GL_KHR_debug](https://www.khronos.org/registry/OpenGL/extensions/KHR/KHR_debug.txt)
@@ -460,7 +460,7 @@ extension.
 
 @anchor GRWL_CONTEXT_NO_ERROR_hint
 __GRWL_CONTEXT_NO_ERROR__ specifies whether errors should be generated by the
-context.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  If enabled,
+context.  Possible values are `true` and `false`.  If enabled,
 situations that would have generated errors instead cause undefined behavior.
 
 The no error mode for OpenGL and OpenGL ES is described in detail by the
@@ -480,8 +480,8 @@ ignored on other platforms.
 
 @anchor GRWL_COCOA_RETINA_FRAMEBUFFER_hint
 __GRWL_COCOA_RETINA_FRAMEBUFFER__ specifies whether to use full resolution
-framebuffers on Retina displays.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.  This is ignored on other platforms.
+framebuffers on Retina displays.  Possible values are `true` and
+`false`.  This is ignored on other platforms.
 
 @anchor GRWL_COCOA_FRAME_NAME_hint
 __GRWL_COCOA_FRAME_NAME__ specifies the UTF-8 encoded name to use for autosaving
@@ -493,7 +493,7 @@ __GRWL_COCOA_GRAPHICS_SWITCHING__ specifies whether to in Automatic Graphics
 Switching, i.e. to allow the system to choose the integrated GPU for the OpenGL
 context and move it between GPUs if necessary or whether to force it to always
 run on the discrete GPU.  This only affects systems with both integrated and
-discrete GPUs.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This is
+discrete GPUs.  Possible values are `true` and `false`.  This is
 ignored on other platforms.
 
 Simpler programs and tools may want to enable this to save power, while games
@@ -526,18 +526,18 @@ by window managers to identify types of windows. This is set with
 
 Window hint                   | Default value               | Supported values
 ----------------------------- | --------------------------- | ----------------
-GRWL_RESIZABLE                | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_VISIBLE                  | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_DECORATED                | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_FOCUSED                  | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_AUTO_ICONIFY             | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_FLOATING                 | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_MAXIMIZED                | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_CENTER_CURSOR            | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_TRANSPARENT_FRAMEBUFFER  | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_FOCUS_ON_SHOW            | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_SCALE_TO_MONITOR         | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_MOUSE_PASSTHROUGH        | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
+GRWL_RESIZABLE                | `true`                 | `true` or `false`
+GRWL_VISIBLE                  | `true`                 | `true` or `false`
+GRWL_DECORATED                | `true`                 | `true` or `false`
+GRWL_FOCUSED                  | `true`                 | `true` or `false`
+GRWL_AUTO_ICONIFY             | `true`                 | `true` or `false`
+GRWL_FLOATING                 | `false`                | `true` or `false`
+GRWL_MAXIMIZED                | `false`                | `true` or `false`
+GRWL_CENTER_CURSOR            | `true`                 | `true` or `false`
+GRWL_TRANSPARENT_FRAMEBUFFER  | `false`                | `true` or `false`
+GRWL_FOCUS_ON_SHOW            | `true`                 | `true` or `false`
+GRWL_SCALE_TO_MONITOR         | `false`                | `true` or `false`
+GRWL_MOUSE_PASSTHROUGH        | `false`                | `true` or `false`
 GRWL_POSITION_X               | `GRWL_ANY_POSITION`         | Any valid screen x-coordinate or `GRWL_ANY_POSITION`
 GRWL_POSITION_Y               | `GRWL_ANY_POSITION`         | Any valid screen y-coordinate or `GRWL_ANY_POSITION`
 GRWL_RED_BITS                 | 8                           | 0 to `INT_MAX` or `GRWL_DONT_CARE`
@@ -553,23 +553,23 @@ GRWL_ACCUM_ALPHA_BITS         | 0                           | 0 to `INT_MAX` or 
 GRWL_AUX_BUFFERS              | 0                           | 0 to `INT_MAX` or `GRWL_DONT_CARE`
 GRWL_SAMPLES                  | 0                           | 0 to `INT_MAX` or `GRWL_DONT_CARE`
 GRWL_REFRESH_RATE             | `GRWL_DONT_CARE`            | 0 to `INT_MAX` or `GRWL_DONT_CARE`
-GRWL_STEREO                   | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_SRGB_CAPABLE             | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_DOUBLEBUFFER             | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_SOFT_FULLSCREEN          | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
+GRWL_STEREO                   | `false`                | `true` or `false`
+GRWL_SRGB_CAPABLE             | `false`                | `true` or `false`
+GRWL_DOUBLEBUFFER             | `true`                 | `true` or `false`
+GRWL_SOFT_FULLSCREEN          | `false`                | `true` or `false`
 GRWL_CLIENT_API               | `GRWL_OPENGL_API`           | `GRWL_OPENGL_API`, `GRWL_OPENGL_ES_API` or `GRWL_NO_API`
 GRWL_CONTEXT_CREATION_API     | `GRWL_NATIVE_CONTEXT_API`   | `GRWL_NATIVE_CONTEXT_API`, `GRWL_EGL_CONTEXT_API` or `GRWL_OSMESA_CONTEXT_API`
 GRWL_CONTEXT_VERSION_MAJOR    | 1                           | Any valid major version number of the chosen client API
 GRWL_CONTEXT_VERSION_MINOR    | 0                           | Any valid minor version number of the chosen client API
 GRWL_CONTEXT_ROBUSTNESS       | `GRWL_NO_ROBUSTNESS`        | `GRWL_NO_ROBUSTNESS`, `GRWL_NO_RESET_NOTIFICATION` or `GRWL_LOSE_CONTEXT_ON_RESET`
 GRWL_CONTEXT_RELEASE_BEHAVIOR | `GRWL_ANY_RELEASE_BEHAVIOR` | `GRWL_ANY_RELEASE_BEHAVIOR`, `GRWL_RELEASE_BEHAVIOR_FLUSH` or `GRWL_RELEASE_BEHAVIOR_NONE`
-GRWL_OPENGL_FORWARD_COMPAT    | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_CONTEXT_DEBUG            | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
+GRWL_OPENGL_FORWARD_COMPAT    | `false`                | `true` or `false`
+GRWL_CONTEXT_DEBUG            | `false`                | `true` or `false`
 GRWL_OPENGL_PROFILE           | `GRWL_OPENGL_ANY_PROFILE`   | `GRWL_OPENGL_ANY_PROFILE`, `GRWL_OPENGL_COMPAT_PROFILE` or `GRWL_OPENGL_CORE_PROFILE`
-GRWL_WIN32_KEYBOARD_MENU      | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
-GRWL_COCOA_RETINA_FRAMEBUFFER | `GRWL_TRUE`                 | `GRWL_TRUE` or `GRWL_FALSE`
+GRWL_WIN32_KEYBOARD_MENU      | `false`                | `true` or `false`
+GRWL_COCOA_RETINA_FRAMEBUFFER | `true`                 | `true` or `false`
 GRWL_COCOA_FRAME_NAME         | `""`                        | A UTF-8 encoded frame autosave name
-GRWL_COCOA_GRAPHICS_SWITCHING | `GRWL_FALSE`                | `GRWL_TRUE` or `GRWL_FALSE`
+GRWL_COCOA_GRAPHICS_SWITCHING | `false`                | `true` or `false`
 GRWL_X11_CLASS_NAME           | `""`                        | An ASCII encoded `WM_CLASS` class name
 GRWL_X11_INSTANCE_NAME        | `""`                        | An ASCII encoded `WM_CLASS` instance name
 GRWL_WAYLAND_APP_ID           | `""`                        | An ASCII encoded Wayland `app_id` name
@@ -628,7 +628,7 @@ again unless certain conditions are met.
 void window_close_callback(GRWLwindow* window)
 {
     if (!time_to_close)
-        glfwSetWindowShouldClose(window, GRWL_FALSE);
+        glfwSetWindowShouldClose(window, false);
 }
 @endcode
 
@@ -1062,7 +1062,7 @@ behavior by setting the [GRWL_MAXIMIZED](@ref GRWL_MAXIMIZED_hint) window hint
 before creating the window.
 
 @code
-glfwWindowHint(GRWL_MAXIMIZED, GRWL_TRUE);
+glfwWindowHint(GRWL_MAXIMIZED, true);
 @endcode
 
 
@@ -1100,7 +1100,7 @@ setting the [GRWL_VISIBLE](@ref GRWL_VISIBLE_hint) window hint before creating
 the window.
 
 @code
-glfwWindowHint(GRWL_VISIBLE, GRWL_FALSE);
+glfwWindowHint(GRWL_VISIBLE, false);
 @endcode
 
 Windows created hidden are completely invisible to the user until shown.  This
@@ -1155,7 +1155,7 @@ behavior by setting the [GRWL_FOCUSED](@ref GRWL_FOCUSED_hint) window hint
 before creating the window.
 
 @code
-glfwWindowHint(GRWL_FOCUSED, GRWL_FALSE);
+glfwWindowHint(GRWL_FOCUSED, false);
 @endcode
 
 
@@ -1233,7 +1233,7 @@ the [GRWL_TRANSPARENT_FRAMEBUFFER](@ref GRWL_TRANSPARENT_FRAMEBUFFER_hint)
 window hint.
 
 @code
-glfwWindowHint(GRWL_TRANSPARENT_FRAMEBUFFER, GRWL_TRUE);
+glfwWindowHint(GRWL_TRANSPARENT_FRAMEBUFFER, true);
 @endcode
 
 If supported by the system, the window content area will be composited with the
@@ -1305,7 +1305,7 @@ The [GRWL_DECORATED](@ref GRWL_DECORATED_attrib),
 changed with @ref glfwSetWindowAttrib.
 
 @code
-glfwSetWindowAttrib(window, GRWL_RESIZABLE, GRWL_FALSE);
+glfwSetWindowAttrib(window, GRWL_RESIZABLE, false);
 @endcode
 
 
@@ -1401,13 +1401,13 @@ context.
 of the GRWL header.
 
 @anchor GRWL_OPENGL_FORWARD_COMPAT_attrib
-__GRWL_OPENGL_FORWARD_COMPAT__ is `GRWL_TRUE` if the window's context is an
-OpenGL forward-compatible one, or `GRWL_FALSE` otherwise.
+__GRWL_OPENGL_FORWARD_COMPAT__ is `true` if the window's context is an
+OpenGL forward-compatible one, or `false` otherwise.
 
 @anchor GRWL_CONTEXT_DEBUG_attrib
 @anchor GRWL_OPENGL_DEBUG_CONTEXT_attrib
-__GRWL_CONTEXT_DEBUG__ is `GRWL_TRUE` if the window's context is in debug
-mode, or `GRWL_FALSE` otherwise.
+__GRWL_CONTEXT_DEBUG__ is `true` if the window's context is in debug
+mode, or `false` otherwise.
 
 @par
 This is the new name, introduced in GRWL 3.4.  The older
@@ -1433,7 +1433,7 @@ not be flushed on release.
 
 @anchor GRWL_CONTEXT_NO_ERROR_attrib
 __GRWL_CONTEXT_NO_ERROR__ indicates whether errors are generated by the context.
-Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  If enabled, situations that
+Possible values are `true` and `false`.  If enabled, situations that
 would have generated errors instead cause undefined behavior.
 
 @anchor GRWL_CONTEXT_ROBUSTNESS_attrib

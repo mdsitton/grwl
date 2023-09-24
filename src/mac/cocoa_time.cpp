@@ -13,7 +13,7 @@
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _grwlPlatformInitTimer(void)
+void _grwlPlatformInitTimer()
 {
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
@@ -21,12 +21,12 @@ void _grwlPlatformInitTimer(void)
     _grwl.timer.ns.frequency = (info.denom * 1e9) / info.numer;
 }
 
-uint64_t _grwlPlatformGetTimerValue(void)
+uint64_t _grwlPlatformGetTimerValue()
 {
     return mach_absolute_time();
 }
 
-uint64_t _grwlPlatformGetTimerFrequency(void)
+uint64_t _grwlPlatformGetTimerFrequency()
 {
     return _grwl.timer.ns.frequency;
 }

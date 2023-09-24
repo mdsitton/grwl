@@ -299,7 +299,7 @@ extern "C"
      *
      *  @ingroup native
      */
-    GRWLAPI Display* grwlGetX11Display(void);
+    GRWLAPI Display* grwlGetX11Display();
 
     /*! @brief Returns the `RRCrtc` of the specified monitor.
      *
@@ -387,7 +387,7 @@ extern "C"
      *
      *  @ingroup native
      */
-    GRWLAPI const char* grwlGetX11SelectionString(void);
+    GRWLAPI const char* grwlGetX11SelectionString();
 #endif
 
 #if defined(GRWL_EXPOSE_NATIVE_GLX)
@@ -435,7 +435,7 @@ extern "C"
      *
      *  @ingroup native
      */
-    GRWLAPI struct wl_display* grwlGetWaylandDisplay(void);
+    GRWLAPI struct wl_display* grwlGetWaylandDisplay();
 
     /*! @brief Returns the `struct wl_output*` of the specified monitor.
      *
@@ -482,7 +482,7 @@ extern "C"
      *
      *  @ingroup native
      */
-    GRWLAPI EGLDisplay grwlGetEGLDisplay(void);
+    GRWLAPI EGLDisplay grwlGetEGLDisplay();
 
     /*! @brief Returns the `EGLContext` of the specified window.
      *
@@ -540,7 +540,7 @@ extern "C"
      *  buffer, or `NULL`.
      *  @param[out] buffer Where to store the address of the color buffer, or
      *  `NULL`.
-     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
+     *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref
@@ -562,7 +562,7 @@ extern "C"
      *  buffer element, or `NULL`.
      *  @param[out] buffer Where to store the address of the depth buffer, or
      *  `NULL`.
-     *  @return `GRWL_TRUE` if successful, or `GRWL_FALSE` if an
+     *  @return `true` if successful, or `false` if an
      *  [error](@ref error_handling) occurred.
      *
      *  @errors Possible errors include @ref GRWL_NO_WINDOW_CONTEXT and @ref

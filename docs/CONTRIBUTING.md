@@ -66,7 +66,7 @@ GitHub Markdown; just surround it with triple backticks:
 You can also add syntax highlighting by appending the common file extension:
 
     ```c
-    int five(void)
+    int five()
     {
         return 5;
     }

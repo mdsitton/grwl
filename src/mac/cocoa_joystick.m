@@ -281,7 +281,7 @@ static void removeCallback(void* context, IOReturn result, void* sender, IOHIDDe
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlInitJoysticksCocoa(void)
+bool _grwlInitJoysticksCocoa()
 {
     CFMutableArrayRef matching;
     const long usages[] = { kHIDUsage_GD_Joystick, kHIDUsage_GD_GamePad, kHIDUsage_GD_MultiAxisController };
@@ -292,7 +292,7 @@ GRWLbool _grwlInitJoysticksCocoa(void)
     if (!matching)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to create array");
-        return GRWL_FALSE;
+        return false;
     }
 
     for (size_t i = 0; i < sizeof(usages) / sizeof(long); i++)
@@ -338,10 +338,10 @@ GRWLbool _grwlInitJoysticksCocoa(void)
     // Execute the run loop once in order to register any initially-attached
     // joysticks
     CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, false);
-    return GRWL_TRUE;
+    return true;
 }
 
-void _grwlTerminateJoysticksCocoa(void)
+void _grwlTerminateJoysticksCocoa()
 {
     for (int jid = 0; jid <= GRWL_JOYSTICK_LAST; jid++)
     {
@@ -358,7 +358,7 @@ void _grwlTerminateJoysticksCocoa(void)
     }
 }
 
-GRWLbool _grwlPollJoystickCocoa(_GRWLjoystick* js, int mode)
+bool _grwlPollJoystickCocoa(_GRWLjoystick* js, int mode)
 {
     if (mode & _GRWL_POLL_AXES)
     {
@@ -420,7 +420,7 @@ GRWLbool _grwlPollJoystickCocoa(_GRWLjoystick* js, int mode)
     return js->connected;
 }
 
-const char* _grwlGetMappingNameCocoa(void)
+const char* _grwlGetMappingNameCocoa()
 {
     return "Mac OS X";
 }

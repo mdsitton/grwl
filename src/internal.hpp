@@ -29,8 +29,7 @@
 
 #define _GRWL_MESSAGE_SIZE 1024
 
-typedef int GRWLbool;
-typedef void (*GRWLproc)(void);
+typedef void (*GRWLproc)();
 
 typedef struct _GRWLerror _GRWLerror;
 typedef struct _GRWLinitconfig _GRWLinitconfig;
@@ -181,7 +180,7 @@ typedef void* EGLNativeWindowType;
 typedef EGLBoolean(EGLAPIENTRY* PFN_eglGetConfigAttrib)(EGLDisplay, EGLConfig, EGLint, EGLint*);
 typedef EGLBoolean(EGLAPIENTRY* PFN_eglGetConfigs)(EGLDisplay, EGLConfig*, EGLint, EGLint*);
 typedef EGLDisplay(EGLAPIENTRY* PFN_eglGetDisplay)(EGLNativeDisplayType);
-typedef EGLint(EGLAPIENTRY* PFN_eglGetError)(void);
+typedef EGLint(EGLAPIENTRY* PFN_eglGetError)();
 typedef EGLBoolean(EGLAPIENTRY* PFN_eglInitialize)(EGLDisplay, EGLint*, EGLint*);
 typedef EGLBoolean(EGLAPIENTRY* PFN_eglTerminate)(EGLDisplay);
 typedef EGLBoolean(EGLAPIENTRY* PFN_eglBindAPI)(EGLenum);
@@ -275,7 +274,7 @@ typedef struct VkExtensionProperties
     uint32_t specVersion;
 } VkExtensionProperties;
 
-typedef void(APIENTRY* PFN_vkVoidFunction)(void);
+typedef void(APIENTRY* PFN_vkVoidFunction)();
 
 typedef PFN_vkVoidFunction(APIENTRY* PFN_vkGetInstanceProcAddr)(VkInstance, const char*);
 typedef VkResult(APIENTRY* PFN_vkEnumerateInstanceExtensionProperties)(const char*, uint32_t*, VkExtensionProperties*);
@@ -321,22 +320,22 @@ struct _GRWLerror
 //
 struct _GRWLinitconfig
 {
-    GRWLbool hatButtons;
+    bool hatButtons;
     int angleType;
     int platformID;
-    GRWLbool managePreeditCandidate;
+    bool managePreeditCandidate;
     PFN_vkGetInstanceProcAddr vulkanLoader;
 
     struct
     {
-        GRWLbool menubar;
-        GRWLbool chdir;
+        bool menubar;
+        bool chdir;
     } ns;
 
     struct
     {
-        GRWLbool xcbVulkanSurface;
-        GRWLbool onTheSpotIMStyle;
+        bool xcbVulkanSurface;
+        bool onTheSpotIMStyle;
     } x11;
 
     struct
@@ -358,22 +357,22 @@ struct _GRWLwndconfig
     int width;
     int height;
     const char* title;
-    GRWLbool resizable;
-    GRWLbool visible;
-    GRWLbool decorated;
-    GRWLbool focused;
-    GRWLbool autoIconify;
-    GRWLbool floating;
-    GRWLbool maximized;
-    GRWLbool centerCursor;
-    GRWLbool focusOnShow;
-    GRWLbool mousePassthrough;
-    GRWLbool scaleToMonitor;
-    GRWLbool softFullscreen;
+    bool resizable;
+    bool visible;
+    bool decorated;
+    bool focused;
+    bool autoIconify;
+    bool floating;
+    bool maximized;
+    bool centerCursor;
+    bool focusOnShow;
+    bool mousePassthrough;
+    bool scaleToMonitor;
+    bool softFullscreen;
 
     struct
     {
-        GRWLbool retina;
+        bool retina;
         char frameName[256];
     } ns;
 
@@ -385,8 +384,8 @@ struct _GRWLwndconfig
 
     struct
     {
-        GRWLbool keymenu;
-        GRWLbool genericBadge;
+        bool keymenu;
+        bool genericBadge;
     } win32;
 
     struct
@@ -407,9 +406,9 @@ struct _GRWLctxconfig
     int source;
     int major;
     int minor;
-    GRWLbool forward;
-    GRWLbool debug;
-    GRWLbool noerror;
+    bool forward;
+    bool debug;
+    bool noerror;
     int profile;
     int robustness;
     int release;
@@ -417,7 +416,7 @@ struct _GRWLctxconfig
 
     struct
     {
-        GRWLbool offline;
+        bool offline;
     } nsgl;
 };
 
@@ -442,11 +441,11 @@ struct _GRWLfbconfig
     int accumBlueBits;
     int accumAlphaBits;
     int auxBuffers;
-    GRWLbool stereo;
+    bool stereo;
     int samples;
-    GRWLbool sRGB;
-    GRWLbool doublebuffer;
-    GRWLbool transparent;
+    bool sRGB;
+    bool doublebuffer;
+    bool transparent;
     uintptr_t handle;
 };
 
@@ -457,7 +456,7 @@ struct _GRWLcontext
     int client;
     int source;
     int major, minor, revision;
-    GRWLbool forward, debug, noerror;
+    bool forward, debug, noerror;
     int profile;
     int robustness;
     int release;
@@ -544,15 +543,15 @@ struct _GRWLwindow
     struct _GRWLwindow* next;
 
     // Window settings and state
-    GRWLbool resizable;
-    GRWLbool decorated;
-    GRWLbool autoIconify;
-    GRWLbool floating;
-    GRWLbool focusOnShow;
-    GRWLbool mousePassthrough;
-    GRWLbool shouldClose;
+    bool resizable;
+    bool decorated;
+    bool autoIconify;
+    bool floating;
+    bool focusOnShow;
+    bool mousePassthrough;
+    bool shouldClose;
     void* userPointer;
-    GRWLbool doublebuffer;
+    bool doublebuffer;
     GRWLvidmode videoMode;
     _GRWLmonitor* monitor;
     _GRWLcursor* cursor;
@@ -561,15 +560,15 @@ struct _GRWLwindow
     int maxwidth, maxheight;
     int numer, denom;
 
-    GRWLbool stickyKeys;
-    GRWLbool stickyMouseButtons;
-    GRWLbool lockKeyMods;
+    bool stickyKeys;
+    bool stickyMouseButtons;
+    bool lockKeyMods;
     int cursorMode;
     char mouseButtons[GRWL_MOUSE_BUTTON_LAST + 1];
     char keys[GRWL_KEY_LAST + 1];
     // Virtual cursor position when cursor is disabled
     double virtualCursorPosX, virtualCursorPosY;
-    GRWLbool rawMouseMotion;
+    bool rawMouseMotion;
 
     _GRWLcontext context;
 
@@ -670,8 +669,8 @@ struct _GRWLusbinfo
 //
 struct _GRWLjoystick
 {
-    GRWLbool allocated;
-    GRWLbool connected;
+    bool allocated;
+    bool connected;
     float* axes;
     int axisCount;
     unsigned char* buttons;
@@ -710,31 +709,31 @@ struct _GRWLplatform
 {
     int platformID;
     // init
-    GRWLbool (*init)(void);
-    void (*terminate)(void);
+    bool (*init)();
+    void (*terminate)();
     // input
     void (*getCursorPos)(_GRWLwindow*, double*, double*);
     void (*setCursorPos)(_GRWLwindow*, double, double);
     void (*setCursorMode)(_GRWLwindow*, int);
-    void (*setRawMouseMotion)(_GRWLwindow*, GRWLbool);
-    GRWLbool (*rawMouseMotionSupported)(void);
-    GRWLbool (*createCursor)(_GRWLcursor*, const GRWLimage*, int, int);
-    GRWLbool (*createStandardCursor)(_GRWLcursor*, int);
+    void (*setRawMouseMotion)(_GRWLwindow*, bool);
+    bool (*rawMouseMotionSupported)();
+    bool (*createCursor)(_GRWLcursor*, const GRWLimage*, int, int);
+    bool (*createStandardCursor)(_GRWLcursor*, int);
     void (*destroyCursor)(_GRWLcursor*);
     void (*setCursor)(_GRWLwindow*, _GRWLcursor*);
     const char* (*getScancodeName)(int);
     int (*getKeyScancode)(int);
-    const char* (*getKeyboardLayoutName)(void);
+    const char* (*getKeyboardLayoutName)();
     void (*setClipboardString)(const char*);
-    const char* (*getClipboardString)(void);
+    const char* (*getClipboardString)();
     void (*updatePreeditCursorRectangle)(_GRWLwindow*);
     void (*resetPreeditText)(_GRWLwindow*);
     void (*setIMEStatus)(_GRWLwindow*, int);
     int (*getIMEStatus)(_GRWLwindow*);
-    GRWLbool (*initJoysticks)(void);
-    void (*terminateJoysticks)(void);
-    GRWLbool (*pollJoystick)(_GRWLjoystick*, int);
-    const char* (*getMappingName)(void);
+    bool (*initJoysticks)();
+    void (*terminateJoysticks)();
+    bool (*pollJoystick)(_GRWLjoystick*, int);
+    const char* (*getMappingName)();
     void (*updateGamepadGUID)(char*);
     // monitor
     void (*freeMonitor)(_GRWLmonitor*);
@@ -743,10 +742,10 @@ struct _GRWLplatform
     void (*getMonitorWorkarea)(_GRWLmonitor*, int*, int*, int*, int*);
     GRWLvidmode* (*getVideoModes)(_GRWLmonitor*, int*);
     void (*getVideoMode)(_GRWLmonitor*, GRWLvidmode*);
-    GRWLbool (*getGammaRamp)(_GRWLmonitor*, GRWLgammaramp*);
+    bool (*getGammaRamp)(_GRWLmonitor*, GRWLgammaramp*);
     void (*setGammaRamp)(_GRWLmonitor*, const GRWLgammaramp*);
     // window
-    GRWLbool (*createWindow)(_GRWLwindow*, const _GRWLwndconfig*, const _GRWLctxconfig*, const _GRWLfbconfig*);
+    bool (*createWindow)(_GRWLwindow*, const _GRWLwndconfig*, const _GRWLctxconfig*, const _GRWLfbconfig*);
     void (*destroyWindow)(_GRWLwindow*);
     void (*setWindowTitle)(_GRWLwindow*, const char*);
     void (*setWindowIcon)(_GRWLwindow*, int, const GRWLimage*);
@@ -770,30 +769,30 @@ struct _GRWLplatform
     void (*requestWindowAttention)(_GRWLwindow*);
     void (*focusWindow)(_GRWLwindow*);
     void (*setWindowMonitor)(_GRWLwindow*, _GRWLmonitor*, int, int, int, int, int);
-    GRWLbool (*windowFocused)(_GRWLwindow*);
-    GRWLbool (*windowIconified)(_GRWLwindow*);
-    GRWLbool (*windowVisible)(_GRWLwindow*);
-    GRWLbool (*windowMaximized)(_GRWLwindow*);
-    GRWLbool (*windowHovered)(_GRWLwindow*);
-    GRWLbool (*framebufferTransparent)(_GRWLwindow*);
+    bool (*windowFocused)(_GRWLwindow*);
+    bool (*windowIconified)(_GRWLwindow*);
+    bool (*windowVisible)(_GRWLwindow*);
+    bool (*windowMaximized)(_GRWLwindow*);
+    bool (*windowHovered)(_GRWLwindow*);
+    bool (*framebufferTransparent)(_GRWLwindow*);
     float (*getWindowOpacity)(_GRWLwindow*);
-    void (*setWindowResizable)(_GRWLwindow*, GRWLbool);
-    void (*setWindowDecorated)(_GRWLwindow*, GRWLbool);
-    void (*setWindowFloating)(_GRWLwindow*, GRWLbool);
+    void (*setWindowResizable)(_GRWLwindow*, bool);
+    void (*setWindowDecorated)(_GRWLwindow*, bool);
+    void (*setWindowFloating)(_GRWLwindow*, bool);
     void (*setWindowOpacity)(_GRWLwindow*, float);
-    void (*setWindowMousePassthrough)(_GRWLwindow*, GRWLbool);
-    void (*pollEvents)(void);
-    void (*waitEvents)(void);
+    void (*setWindowMousePassthrough)(_GRWLwindow*, bool);
+    void (*pollEvents)();
+    void (*waitEvents)();
     void (*waitEventsTimeout)(double);
-    void (*postEmptyEvent)(void);
+    void (*postEmptyEvent)();
     _GRWLusercontext* (*createUserContext)(_GRWLwindow*);
     // EGL
     EGLenum (*getEGLPlatform)(EGLint**);
-    EGLNativeDisplayType (*getEGLNativeDisplay)(void);
+    EGLNativeDisplayType (*getEGLNativeDisplay)();
     EGLNativeWindowType (*getEGLNativeWindow)(_GRWLwindow*);
     // vulkan
     void (*getRequiredInstanceExtensions)(char**);
-    GRWLbool (*getPhysicalDevicePresentationSupport)(VkInstance, VkPhysicalDevice, uint32_t);
+    bool (*getPhysicalDevicePresentationSupport)(VkInstance, VkPhysicalDevice, uint32_t);
     VkResult (*createWindowSurface)(VkInstance, _GRWLwindow*, const VkAllocationCallbacks*, VkSurfaceKHR*);
 };
 
@@ -801,7 +800,7 @@ struct _GRWLplatform
 //
 struct _GRWLlibrary
 {
-    GRWLbool initialized;
+    bool initialized;
     GRWLallocator allocator;
 
     _GRWLplatform platform;
@@ -822,7 +821,7 @@ struct _GRWLlibrary
     _GRWLmonitor** monitors;
     int monitorCount;
 
-    GRWLbool joysticksInitialized;
+    bool joysticksInitialized;
     _GRWLjoystick joysticks[GRWL_JOYSTICK_LAST + 1];
     _GRWLmapping* mappings;
     int mappingCount;
@@ -844,23 +843,23 @@ struct _GRWLlibrary
         EGLenum platform;
         EGLDisplay display;
         EGLint major, minor;
-        GRWLbool prefix;
+        bool prefix;
 
-        GRWLbool KHR_create_context;
-        GRWLbool KHR_create_context_no_error;
-        GRWLbool KHR_gl_colorspace;
-        GRWLbool KHR_get_all_proc_addresses;
-        GRWLbool KHR_context_flush_control;
-        GRWLbool EXT_client_extensions;
-        GRWLbool EXT_platform_base;
-        GRWLbool EXT_platform_x11;
-        GRWLbool EXT_platform_wayland;
-        GRWLbool EXT_present_opaque;
-        GRWLbool ANGLE_platform_angle;
-        GRWLbool ANGLE_platform_angle_opengl;
-        GRWLbool ANGLE_platform_angle_d3d;
-        GRWLbool ANGLE_platform_angle_vulkan;
-        GRWLbool ANGLE_platform_angle_metal;
+        bool KHR_create_context;
+        bool KHR_create_context_no_error;
+        bool KHR_gl_colorspace;
+        bool KHR_get_all_proc_addresses;
+        bool KHR_context_flush_control;
+        bool EXT_client_extensions;
+        bool EXT_platform_base;
+        bool EXT_platform_x11;
+        bool EXT_platform_wayland;
+        bool EXT_present_opaque;
+        bool ANGLE_platform_angle;
+        bool ANGLE_platform_angle_opengl;
+        bool ANGLE_platform_angle_d3d;
+        bool ANGLE_platform_angle_vulkan;
+        bool ANGLE_platform_angle_metal;
 
         void* handle;
 
@@ -889,17 +888,17 @@ struct _GRWLlibrary
 
     struct
     {
-        GRWLbool available;
+        bool available;
         void* handle;
         char* extensions[2];
         PFN_vkGetInstanceProcAddr GetInstanceProcAddr;
-        GRWLbool KHR_surface;
-        GRWLbool KHR_win32_surface;
-        GRWLbool MVK_macos_surface;
-        GRWLbool EXT_metal_surface;
-        GRWLbool KHR_xlib_surface;
-        GRWLbool KHR_xcb_surface;
-        GRWLbool KHR_wayland_surface;
+        bool KHR_surface;
+        bool KHR_win32_surface;
+        bool MVK_macos_surface;
+        bool EXT_metal_surface;
+        bool KHR_xlib_surface;
+        bool KHR_xcb_surface;
+        bool KHR_wayland_surface;
     } vk;
 
     struct
@@ -928,16 +927,16 @@ extern _GRWLlibrary _grwl;
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _grwlPlatformInitTimer(void);
-uint64_t _grwlPlatformGetTimerValue(void);
-uint64_t _grwlPlatformGetTimerFrequency(void);
+void _grwlPlatformInitTimer();
+uint64_t _grwlPlatformGetTimerValue();
+uint64_t _grwlPlatformGetTimerFrequency();
 
-GRWLbool _grwlPlatformCreateTls(_GRWLtls* tls);
+bool _grwlPlatformCreateTls(_GRWLtls* tls);
 void _grwlPlatformDestroyTls(_GRWLtls* tls);
 void* _grwlPlatformGetTls(_GRWLtls* tls);
 void _grwlPlatformSetTls(_GRWLtls* tls, void* value);
 
-GRWLbool _grwlPlatformCreateMutex(_GRWLmutex* mutex);
+bool _grwlPlatformCreateMutex(_GRWLmutex* mutex);
 void _grwlPlatformDestroyMutex(_GRWLmutex* mutex);
 void _grwlPlatformLockMutex(_GRWLmutex* mutex);
 void _grwlPlatformUnlockMutex(_GRWLmutex* mutex);
@@ -950,27 +949,27 @@ GRWLproc _grwlPlatformGetModuleSymbol(void* module, const char* name);
 //////                         GRWL event API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-void _grwlInputWindowFocus(_GRWLwindow* window, GRWLbool focused);
+void _grwlInputWindowFocus(_GRWLwindow* window, bool focused);
 void _grwlInputWindowPos(_GRWLwindow* window, int xpos, int ypos);
 void _grwlInputWindowSize(_GRWLwindow* window, int width, int height);
 void _grwlInputFramebufferSize(_GRWLwindow* window, int width, int height);
 void _grwlInputWindowContentScale(_GRWLwindow* window, float xscale, float yscale);
-void _grwlInputWindowIconify(_GRWLwindow* window, GRWLbool iconified);
-void _grwlInputWindowMaximize(_GRWLwindow* window, GRWLbool maximized);
+void _grwlInputWindowIconify(_GRWLwindow* window, bool iconified);
+void _grwlInputWindowMaximize(_GRWLwindow* window, bool maximized);
 void _grwlInputWindowDamage(_GRWLwindow* window);
 void _grwlInputWindowCloseRequest(_GRWLwindow* window);
 void _grwlInputWindowMonitor(_GRWLwindow* window, _GRWLmonitor* monitor);
 
-void _grwlInputKeyboardLayout(void);
+void _grwlInputKeyboardLayout();
 void _grwlInputKey(_GRWLwindow* window, int key, int scancode, int action, int mods);
-void _grwlInputChar(_GRWLwindow* window, uint32_t codepoint, int mods, GRWLbool plain);
+void _grwlInputChar(_GRWLwindow* window, uint32_t codepoint, int mods, bool plain);
 void _grwlInputPreedit(_GRWLwindow* window);
 void _grwlInputIMEStatus(_GRWLwindow* window);
 void _grwlInputPreeditCandidate(_GRWLwindow* window);
 void _grwlInputScroll(_GRWLwindow* window, double xoffset, double yoffset);
 void _grwlInputMouseClick(_GRWLwindow* window, int button, int action, int mods);
 void _grwlInputCursorPos(_GRWLwindow* window, double xpos, double ypos);
-void _grwlInputCursorEnter(_GRWLwindow* window, GRWLbool entered);
+void _grwlInputCursorEnter(_GRWLwindow* window, bool entered);
 void _grwlInputDrop(_GRWLwindow* window, int count, const char** names);
 void _grwlInputJoystick(_GRWLjoystick* js, int event);
 void _grwlInputJoystickAxis(_GRWLjoystick* js, int axis, float value);
@@ -990,13 +989,13 @@ void _grwlInputError(int code, const char* format, ...);
 //////                       GRWL internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlSelectPlatform(int platformID, _GRWLplatform* platform);
+bool _grwlSelectPlatform(int platformID, _GRWLplatform* platform);
 
-GRWLbool _grwlStringInExtensionString(const char* string, const char* extensions);
+bool _grwlStringInExtensionString(const char* string, const char* extensions);
 const _GRWLfbconfig* _grwlChooseFBConfig(const _GRWLfbconfig* desired, const _GRWLfbconfig* alternatives,
                                          unsigned int count);
-GRWLbool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig);
-GRWLbool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig);
+bool _grwlRefreshContextAttribs(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig);
+bool _grwlIsValidContextConfig(const _GRWLctxconfig* ctxconfig);
 
 const GRWLvidmode* _grwlChooseVideoMode(_GRWLmonitor* monitor, const GRWLvidmode* desired);
 int _grwlCompareVideoModes(const GRWLvidmode* first, const GRWLvidmode* second);
@@ -1006,28 +1005,28 @@ void _grwlAllocGammaArrays(GRWLgammaramp* ramp, unsigned int size);
 void _grwlFreeGammaArrays(GRWLgammaramp* ramp);
 void _grwlSplitBPP(int bpp, int* red, int* green, int* blue);
 
-void _grwlInitGamepadMappings(void);
+void _grwlInitGamepadMappings();
 _GRWLjoystick* _grwlAllocJoystick(const char* name, const char* guid, int axisCount, int buttonCount, int hatCount);
 void _grwlFreeJoystick(_GRWLjoystick* js);
 void _grwlCenterCursorInContentArea(_GRWLwindow* window);
 void _grwlPollAllJoysticks();
 
-GRWLbool _grwlInitEGL(void);
-void _grwlTerminateEGL(void);
-GRWLbool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
+bool _grwlInitEGL();
+void _grwlTerminateEGL();
+bool _grwlCreateContextEGL(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
 _GRWLusercontext* _grwlCreateUserContextEGL(_GRWLwindow* window);
 #if defined(_GRWL_X11)
-GRWLbool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                              const _GRWLfbconfig* fbconfig, Visual** visual, int* depth);
+bool _grwlChooseVisualEGL(const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                          const _GRWLfbconfig* fbconfig, Visual** visual, int* depth);
 #endif /*_GRWL_X11*/
 
-GRWLbool _grwlInitOSMesa(void);
-void _grwlTerminateOSMesa(void);
-GRWLbool _grwlCreateContextOSMesa(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
+bool _grwlInitOSMesa();
+void _grwlTerminateOSMesa();
+bool _grwlCreateContextOSMesa(_GRWLwindow* window, const _GRWLctxconfig* ctxconfig, const _GRWLfbconfig* fbconfig);
 _GRWLusercontext* _grwlCreateUserContextOSMesa(_GRWLwindow* window);
 
-GRWLbool _grwlInitVulkan(int mode);
-void _grwlTerminateVulkan(void);
+bool _grwlInitVulkan(int mode);
+void _grwlTerminateVulkan();
 const char* _grwlGetVulkanResultString(VkResult result);
 
 size_t _grwlEncodeUTF8(char* s, uint32_t codepoint);

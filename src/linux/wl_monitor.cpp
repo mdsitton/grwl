@@ -221,10 +221,10 @@ void _grwlGetVideoModeWayland(_GRWLmonitor* monitor, GRWLvidmode* mode)
     *mode = monitor->modes[monitor->wl.currentMode];
 }
 
-GRWLbool _grwlGetGammaRampWayland(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
+bool _grwlGetGammaRampWayland(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
 {
     _grwlInputError(GRWL_FEATURE_UNAVAILABLE, "Wayland: Gamma ramp access is not available");
-    return GRWL_FALSE;
+    return false;
 }
 
 void _grwlSetGammaRampWayland(_GRWLmonitor* monitor, const GRWLgammaramp* ramp)

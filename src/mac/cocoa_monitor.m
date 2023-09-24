@@ -96,21 +96,21 @@ static char* getMonitorName(CGDirectDisplayID displayID, NSScreen* screen)
 
 // Check whether the display mode should be included in enumeration
 //
-static GRWLbool modeIsGood(CGDisplayModeRef mode)
+static bool modeIsGood(CGDisplayModeRef mode)
 {
     uint32_t flags = CGDisplayModeGetIOFlags(mode);
 
     if (!(flags & kDisplayModeValidFlag) || !(flags & kDisplayModeSafeFlag))
     {
-        return GRWL_FALSE;
+        return false;
     }
     if (flags & kDisplayModeInterlacedFlag)
     {
-        return GRWL_FALSE;
+        return false;
     }
     if (flags & kDisplayModeStretchedFlag)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     #if MAC_OS_X_VERSION_MAX_ALLOWED <= 101100
@@ -119,12 +119,12 @@ static GRWLbool modeIsGood(CGDisplayModeRef mode)
         CFStringCompare(format, CFSTR(IO32BitDirectPixels), 0))
     {
         CFRelease(format);
-        return GRWL_FALSE;
+        return false;
     }
 
     CFRelease(format);
     #endif /* MAC_OS_X_VERSION_MAX_ALLOWED */
-    return GRWL_TRUE;
+    return true;
 }
 
 // Convert Core Graphics display mode to GRWL video mode
@@ -165,7 +165,7 @@ static GRWLvidmode vidmodeFromCGDisplayMode(CGDisplayModeRef mode, double fallba
 
 // Starts reservation for display fading
 //
-static CGDisplayFadeReservationToken beginFadeReservation(void)
+static CGDisplayFadeReservationToken beginFadeReservation()
 {
     CGDisplayFadeReservationToken token = kCGDisplayFadeReservationInvalidToken;
 
@@ -257,7 +257,7 @@ static double getFallbackRefreshRate(CGDirectDisplayID displayID)
 
 // Poll for changes in the set of connected monitors
 //
-void _grwlPollMonitorsCocoa(void)
+void _grwlPollMonitorsCocoa()
 {
     uint32_t displayCount;
     CGGetOnlineDisplayList(0, NULL, &displayCount);
@@ -560,7 +560,7 @@ void _grwlGetVideoModeCocoa(_GRWLmonitor* monitor, GRWLvidmode* mode)
     } // autoreleasepool
 }
 
-GRWLbool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
+bool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
 {
     @autoreleasepool
     {
@@ -580,7 +580,7 @@ GRWLbool _grwlGetGammaRampCocoa(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
         }
 
         _grwl_free(values);
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }

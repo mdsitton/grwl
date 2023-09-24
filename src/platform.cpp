@@ -16,7 +16,7 @@
 static const struct
 {
     int ID;
-    GRWLbool (*connect)(int, _GRWLplatform*);
+    bool (*connect)(int, _GRWLplatform*);
 } supportedPlatforms[] = {
 #if defined(_GRWL_WIN32)
     { GRWL_PLATFORM_WIN32, _grwlConnectWin32 },
@@ -32,7 +32,7 @@ static const struct
 #endif
 };
 
-GRWLbool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
+bool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
 {
     const size_t count = sizeof(supportedPlatforms) / sizeof(supportedPlatforms[0]);
     size_t i;
@@ -41,7 +41,7 @@ GRWLbool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
         desiredID != GRWL_PLATFORM_WAYLAND && desiredID != GRWL_PLATFORM_X11 && desiredID != GRWL_PLATFORM_NULL)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid platform ID 0x%08X", desiredID);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (desiredID == GRWL_ANY_PLATFORM)
@@ -57,7 +57,7 @@ GRWLbool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
         {
             if (supportedPlatforms[i].connect(desiredID, platform))
             {
-                return GRWL_TRUE;
+                return true;
             }
         }
 
@@ -76,14 +76,14 @@ GRWLbool _grwlSelectPlatform(int desiredID, _GRWLplatform* platform)
         _grwlInputError(GRWL_PLATFORM_UNAVAILABLE, "The requested platform is not supported");
     }
 
-    return GRWL_FALSE;
+    return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //////                        GRWL public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLAPI int grwlGetPlatform(void)
+GRWLAPI int grwlGetPlatform()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(0);
     return _grwl.platform.platformID;
@@ -98,26 +98,26 @@ GRWLAPI int grwlPlatformSupported(int platformID)
         platformID != GRWL_PLATFORM_X11 && platformID != GRWL_PLATFORM_NULL)
     {
         _grwlInputError(GRWL_INVALID_ENUM, "Invalid platform ID 0x%08X", platformID);
-        return GRWL_FALSE;
+        return false;
     }
 
     if (platformID == GRWL_PLATFORM_NULL)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     for (i = 0; i < count; i++)
     {
         if (platformID == supportedPlatforms[i].ID)
         {
-            return GRWL_TRUE;
+            return true;
         }
     }
 
-    return GRWL_FALSE;
+    return false;
 }
 
-GRWLAPI const char* grwlGetVersionString(void)
+GRWLAPI const char* grwlGetVersionString()
 {
     return _GRWL_MAKE_VERSION(GRWL_VERSION_MAJOR, GRWL_VERSION_MINOR, GRWL_VERSION_REVISION)
 #if defined(_GRWL_WIN32)

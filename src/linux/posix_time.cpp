@@ -14,7 +14,7 @@
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-void _grwlPlatformInitTimer(void)
+void _grwlPlatformInitTimer()
 {
     _grwl.timer.posix.clock = CLOCK_REALTIME;
     _grwl.timer.posix.frequency = 1000000000;
@@ -28,14 +28,14 @@ void _grwlPlatformInitTimer(void)
     #endif
 }
 
-uint64_t _grwlPlatformGetTimerValue(void)
+uint64_t _grwlPlatformGetTimerValue()
 {
     struct timespec ts;
     clock_gettime(_grwl.timer.posix.clock, &ts);
     return (uint64_t)ts.tv_sec * _grwl.timer.posix.frequency + (uint64_t)ts.tv_nsec;
 }
 
-uint64_t _grwlPlatformGetTimerFrequency(void)
+uint64_t _grwlPlatformGetTimerFrequency()
 {
     return _grwl.timer.posix.frequency;
 }

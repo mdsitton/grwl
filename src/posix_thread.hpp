@@ -12,7 +12,7 @@
 //
 typedef struct _GRWLtlsPOSIX
 {
-    GRWLbool allocated;
+    bool allocated;
     pthread_key_t key;
 } _GRWLtlsPOSIX;
 
@@ -20,6 +20,6 @@ typedef struct _GRWLtlsPOSIX
 //
 typedef struct _GRWLmutexPOSIX
 {
-    GRWLbool allocated;
+    bool allocated;
     pthread_mutex_t handle;
 } _GRWLmutexPOSIX;

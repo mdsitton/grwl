@@ -58,8 +58,8 @@ in any order.
 @subsection quick_init_term Initializing and terminating GRWL
 
 Before you can use most GRWL functions, the library must be initialized.  On
-successful initialization, `GRWL_TRUE` is returned.  If an error occurred,
-`GRWL_FALSE` is returned.
+successful initialization, `true` is returned.  If an error occurred,
+`false` is returned.
 
 @code
 if (!glfwInit())
@@ -68,7 +68,7 @@ if (!glfwInit())
 }
 @endcode
 
-Note that `GRWL_TRUE` and `GRWL_FALSE` are and will always be one and zero.
+Note that `true` and `false` are and will always be one and zero.
 
 When you are done using GRWL, typically just before the application exits, you
 need to terminate GRWL.
@@ -217,7 +217,7 @@ callback function.
 static void key_callback(GRWLwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GRWL_KEY_ESCAPE && action == GRWL_PRESS)
-        glfwSetWindowShouldClose(window, GRWL_TRUE);
+        glfwSetWindowShouldClose(window, true);
 }
 @endcode
 

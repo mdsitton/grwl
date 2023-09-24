@@ -45,7 +45,7 @@ GRWL_NOT_INITIALIZED error.
 
 @subsection intro_init_init Initializing GRWL
 
-The library is initialized with @ref glfwInit, which returns `GRWL_FALSE` if an
+The library is initialized with @ref glfwInit, which returns `false` if an
 error occurred.
 
 @code
@@ -58,7 +58,7 @@ if (!glfwInit())
 If any part of initialization fails, any parts that succeeded are terminated as
 if @ref glfwTerminate had been called.  The library only needs to be initialized
 once and additional calls to an already initialized library will return
-`GRWL_TRUE` immediately.
+`true` immediately.
 
 Once the library has been successfully initialized, it should be terminated
 before the application exits.  Modern systems are very good at freeing resources
@@ -77,7 +77,7 @@ Initialization hints are set before @ref glfwInit and affect how the library
 behaves until termination.  Hints are set with @ref glfwInitHint.
 
 @code
-glfwInitHint(GRWL_JOYSTICK_HAT_BUTTONS, GRWL_FALSE);
+glfwInitHint(GRWL_JOYSTICK_HAT_BUTTONS, false);
 @endcode
 
 The values you set hints to are never reset by GRWL, but they only take effect
@@ -103,7 +103,7 @@ backend.
 @anchor GRWL_JOYSTICK_HAT_BUTTONS
 __GRWL_JOYSTICK_HAT_BUTTONS__ specifies whether to also expose joystick hats as
 buttons, for compatibility with earlier versions of GRWL that did not have @ref
-glfwGetJoystickHats.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+glfwGetJoystickHats.  Possible values are `true` and `false`.
 
 @anchor GRWL_ANGLE_PLATFORM_TYPE_hint
 __GRWL_ANGLE_PLATFORM_TYPE__ specifies the platform type (rendering backend) to
@@ -121,8 +121,8 @@ extension.  This extension is not used if this hint is
 
 @anchor GRWL_MANAGE_PREEDIT_CANDIDATE_hint
 __GRWL_MANAGE_PREEDIT_CANDIDATE__ specifies whether to manage the preedit
-candidates on the application side.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.  The default is `GRWL_FALSE` and there is no need to manage
+candidates on the application side.  Possible values are `true` and
+`false`.  The default is `false` and there is no need to manage
 the candidates on the application side.  When you need to do that on the
 application side for some reason, you can enable this hint.  Please see
 @ref ime_support for more information about IME support.
@@ -135,13 +135,13 @@ application side for some reason, you can enable this hint.  Please see
 @anchor GRWL_COCOA_CHDIR_RESOURCES_hint
 __GRWL_COCOA_CHDIR_RESOURCES__ specifies whether to set the current directory to
 the application to the `Contents/Resources` subdirectory of the application's
-bundle, if present.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.  This is
+bundle, if present.  Possible values are `true` and `false`.  This is
 ignored on other platforms.
 
 @anchor GRWL_COCOA_MENUBAR_hint
 __GRWL_COCOA_MENUBAR__ specifies whether to create the menu bar and dock icon
 when GRWL is initialized.  This applies whether the menu bar is created from
-a nib or manually by GRWL.  Possible values are `GRWL_TRUE` and `GRWL_FALSE`.
+a nib or manually by GRWL.  Possible values are `true` and `false`.
 This is ignored on other platforms.
 
 
@@ -150,16 +150,16 @@ This is ignored on other platforms.
 @anchor GRWL_X11_XCB_VULKAN_SURFACE_hint
 __GRWL_X11_XCB_VULKAN_SURFACE__ specifies whether to prefer the
 `VK_KHR_xcb_surface` extension for creating Vulkan surfaces, or whether to use
-the `VK_KHR_xlib_surface` extension.  Possible values are `GRWL_TRUE` and
-`GRWL_FALSE`.  This is ignored on other platforms.
+the `VK_KHR_xlib_surface` extension.  Possible values are `true` and
+`false`.  This is ignored on other platforms.
 
 @anchor GRWL_X11_ONTHESPOT_hint
 __GRWL_X11_ONTHESPOT__ specifies whether to use on-the-spot input method style.
-On X11 platform, over-the-spot style is used if this hint is `GRWL_FALSE`,
-which is the default value.  You can set `GRWL_TRUE` to use on-the-spot style
+On X11 platform, over-the-spot style is used if this hint is `false`,
+which is the default value.  You can set `true` to use on-the-spot style
 as with other platforms.  However, on-the-spot style on X11 is unstable, so
 it is recommended not to use this hint in normal cases.  Possible values are
-`GRWL_TRUE` and `GRWL_FALSE`.  This is ignored on other platforms.  Please see
+`true` and `false`.  This is ignored on other platforms.  Please see
 @ref ime_support for more information about IME support.
 
 @subsubsection init_hints_wayland Wayland specific init hints
@@ -176,13 +176,13 @@ and `GRWL_WAYLAND_DISABLE_LIBDECOR`.  This is ignored on other platforms.
 Initialization hint                | Default value                   | Supported values
 ---------------------------------- | ------------------------------- | ----------------
 @ref GRWL_PLATFORM                 | `GRWL_ANY_PLATFORM`             | `GRWL_ANY_PLATFORM`, `GRWL_PLATFORM_WIN32`, `GRWL_PLATFORM_COCOA`, `GRWL_PLATFORM_X11`, `GRWL_PLATFORM_WAYLAND` or `GRWL_PLATFORM_NULL`
-@ref GRWL_JOYSTICK_HAT_BUTTONS     | `GRWL_TRUE`                     | `GRWL_TRUE` or `GRWL_FALSE`
+@ref GRWL_JOYSTICK_HAT_BUTTONS     | `true`                     | `true` or `false`
 @ref GRWL_ANGLE_PLATFORM_TYPE      | `GRWL_ANGLE_PLATFORM_TYPE_NONE` | `GRWL_ANGLE_PLATFORM_TYPE_NONE`, `GRWL_ANGLE_PLATFORM_TYPE_OPENGL`, `GRWL_ANGLE_PLATFORM_TYPE_OPENGLES`, `GRWL_ANGLE_PLATFORM_TYPE_D3D9`, `GRWL_ANGLE_PLATFORM_TYPE_D3D11`, `GRWL_ANGLE_PLATFORM_TYPE_VULKAN` or `GRWL_ANGLE_PLATFORM_TYPE_METAL`
-@ref GRWL_MANAGE_PREEDIT_CANDIDATE | `GRWL_FALSE`                    | `GRWL_TRUE` or `GRWL_FALSE`
-@ref GRWL_COCOA_CHDIR_RESOURCES    | `GRWL_TRUE`                     | `GRWL_TRUE` or `GRWL_FALSE`
-@ref GRWL_COCOA_MENUBAR            | `GRWL_TRUE`                     | `GRWL_TRUE` or `GRWL_FALSE`
-@ref GRWL_X11_XCB_VULKAN_SURFACE   | `GRWL_TRUE`                     | `GRWL_TRUE` or `GRWL_FALSE`
-@ref GRWL_X11_ONTHESPOT            | `GRWL_FALSE`                    | `GRWL_TRUE` or `GRWL_FALSE`
+@ref GRWL_MANAGE_PREEDIT_CANDIDATE | `false`                    | `true` or `false`
+@ref GRWL_COCOA_CHDIR_RESOURCES    | `true`                     | `true` or `false`
+@ref GRWL_COCOA_MENUBAR            | `true`                     | `true` or `false`
+@ref GRWL_X11_XCB_VULKAN_SURFACE   | `true`                     | `true` or `false`
+@ref GRWL_X11_ONTHESPOT            | `false`                    | `true` or `false`
 @ref GRWL_WAYLAND_LIBDECOR         | `GRWL_WAYLAND_PREFER_LIBDECOR`  | `GRWL_WAYLAND_PREFER_LIBDECOR` or `GRWL_WAYLAND_DISABLE_LIBDECOR`
 
 

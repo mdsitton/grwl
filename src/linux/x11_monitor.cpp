@@ -14,7 +14,7 @@
 
 // Check whether the display mode should be included in enumeration
 //
-static GRWLbool modeIsGood(const XRRModeInfo* mi)
+static bool modeIsGood(const XRRModeInfo* mi)
 {
     return (mi->modeFlags & RR_Interlace) == 0;
 }
@@ -78,7 +78,7 @@ static GRWLvidmode vidmodeFromModeInfo(const XRRModeInfo* mi, const XRRCrtcInfo*
 
 // Poll for changes in the set of connected monitors
 //
-void _grwlPollMonitorsX11(void)
+void _grwlPollMonitorsX11()
 {
     if (_grwl.x11.randr.available && !_grwl.x11.randr.monitorBroken)
     {
@@ -515,7 +515,7 @@ void _grwlGetVideoModeX11(_GRWLmonitor* monitor, GRWLvidmode* mode)
     }
 }
 
-GRWLbool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
+bool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
 {
     if (_grwl.x11.randr.available && !_grwl.x11.randr.gammaBroken)
     {
@@ -529,7 +529,7 @@ GRWLbool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
         memcpy(ramp->blue, gamma->blue, size * sizeof(unsigned short));
 
         XRRFreeGamma(gamma);
-        return GRWL_TRUE;
+        return true;
     }
     else if (_grwl.x11.vidmode.available)
     {
@@ -539,12 +539,12 @@ GRWLbool _grwlGetGammaRampX11(_GRWLmonitor* monitor, GRWLgammaramp* ramp)
         _grwlAllocGammaArrays(ramp, size);
 
         XF86VidModeGetGammaRamp(_grwl.x11.display, _grwl.x11.screen, ramp->size, ramp->red, ramp->green, ramp->blue);
-        return GRWL_TRUE;
+        return true;
     }
     else
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "X11: Gamma ramp access not supported by server");
-        return GRWL_FALSE;
+        return false;
     }
 }
 

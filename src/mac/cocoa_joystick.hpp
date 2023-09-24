@@ -21,8 +21,8 @@ typedef struct _GRWLjoystickNS
     CFMutableArrayRef hats;
 } _GRWLjoystickNS;
 
-GRWLbool _grwlInitJoysticksCocoa(void);
-void _grwlTerminateJoysticksCocoa(void);
-GRWLbool _grwlPollJoystickCocoa(_GRWLjoystick* js, int mode);
-const char* _grwlGetMappingNameCocoa(void);
+bool _grwlInitJoysticksCocoa();
+void _grwlTerminateJoysticksCocoa();
+bool _grwlPollJoystickCocoa(_GRWLjoystick* js, int mode);
+const char* _grwlGetMappingNameCocoa();
 void _grwlUpdateGamepadGUIDCocoa(char* guid);

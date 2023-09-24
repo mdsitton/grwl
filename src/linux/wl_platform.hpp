@@ -39,7 +39,7 @@ typedef int (*PFN_wl_display_roundtrip)(struct wl_display*);
 typedef int (*PFN_wl_display_get_fd)(struct wl_display*);
 typedef int (*PFN_wl_display_prepare_read)(struct wl_display*);
 typedef void (*PFN_wl_proxy_marshal)(struct wl_proxy*, uint32_t, ...);
-typedef int (*PFN_wl_proxy_add_listener)(struct wl_proxy*, void (**)(void), void*);
+typedef int (*PFN_wl_proxy_add_listener)(struct wl_proxy*, void (**)(), void*);
 typedef void (*PFN_wl_proxy_destroy)(struct wl_proxy*);
 typedef struct wl_proxy* (*PFN_wl_proxy_marshal_constructor)(struct wl_proxy*, uint32_t, const struct wl_interface*,
                                                              ...);
@@ -237,16 +237,16 @@ enum libdecor_capabilities
 struct libdecor_interface
 {
     void (*error)(struct libdecor*, enum libdecor_error, const char*);
-    void (*reserved0)(void);
-    void (*reserved1)(void);
-    void (*reserved2)(void);
-    void (*reserved3)(void);
-    void (*reserved4)(void);
-    void (*reserved5)(void);
-    void (*reserved6)(void);
-    void (*reserved7)(void);
-    void (*reserved8)(void);
-    void (*reserved9)(void);
+    void (*reserved0)();
+    void (*reserved1)();
+    void (*reserved2)();
+    void (*reserved3)();
+    void (*reserved4)();
+    void (*reserved5)();
+    void (*reserved6)();
+    void (*reserved7)();
+    void (*reserved8)();
+    void (*reserved9)();
 };
 
 struct libdecor_frame_interface
@@ -255,16 +255,16 @@ struct libdecor_frame_interface
     void (*close)(struct libdecor_frame*, void*);
     void (*commit)(struct libdecor_frame*, void*);
     void (*dismiss_popup)(struct libdecor_frame*, const char*, void*);
-    void (*reserved0)(void);
-    void (*reserved1)(void);
-    void (*reserved2)(void);
-    void (*reserved3)(void);
-    void (*reserved4)(void);
-    void (*reserved5)(void);
-    void (*reserved6)(void);
-    void (*reserved7)(void);
-    void (*reserved8)(void);
-    void (*reserved9)(void);
+    void (*reserved0)();
+    void (*reserved1)();
+    void (*reserved2)();
+    void (*reserved3)();
+    void (*reserved4)();
+    void (*reserved5)();
+    void (*reserved6)();
+    void (*reserved7)();
+    void (*reserved8)();
+    void (*reserved9)();
 };
 
 typedef struct libdecor* (*PFN_libdecor_new)(struct wl_display*, const struct libdecor_interface*);
@@ -341,8 +341,8 @@ typedef struct _GRWLdecorationWayland
 typedef struct _GRWLofferWayland
 {
     struct wl_data_offer* offer;
-    GRWLbool text_plain_utf8;
-    GRWLbool text_uri_list;
+    bool text_plain_utf8;
+    bool text_uri_list;
 } _GRWLofferWayland;
 
 typedef struct _GRWLscaleWayland
@@ -356,12 +356,12 @@ typedef struct _GRWLscaleWayland
 typedef struct _GRWLwindowWayland
 {
     int width, height;
-    GRWLbool visible;
-    GRWLbool maximized;
-    GRWLbool activated;
-    GRWLbool fullscreen;
-    GRWLbool hovered;
-    GRWLbool transparent;
+    bool visible;
+    bool maximized;
+    bool activated;
+    bool fullscreen;
+    bool hovered;
+    bool transparent;
     struct wl_surface* surface;
     struct wl_callback* callback;
 
@@ -373,10 +373,10 @@ typedef struct _GRWLwindowWayland
     struct
     {
         int width, height;
-        GRWLbool maximized;
-        GRWLbool iconified;
-        GRWLbool activated;
-        GRWLbool fullscreen;
+        bool maximized;
+        bool iconified;
+        bool activated;
+        bool fullscreen;
     } pending;
 
     struct
@@ -630,12 +630,12 @@ typedef struct _GRWLcursorWayland
     int currentImage;
 } _GRWLcursorWayland;
 
-GRWLbool _grwlConnectWayland(int platformID, _GRWLplatform* platform);
-int _grwlInitWayland(void);
-void _grwlTerminateWayland(void);
+bool _grwlConnectWayland(int platformID, _GRWLplatform* platform);
+int _grwlInitWayland();
+void _grwlTerminateWayland();
 
-GRWLbool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
-                                  const _GRWLfbconfig* fbconfig);
+bool _grwlCreateWindowWayland(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+                              const _GRWLfbconfig* fbconfig);
 void _grwlDestroyWindowWayland(_GRWLwindow* window);
 void _grwlSetWindowTitleWayland(_GRWLwindow* window, const char* title);
 void _grwlSetWindowIconWayland(_GRWLwindow* window, int count, const GRWLimage* images);
@@ -660,39 +660,39 @@ void _grwlRequestWindowAttentionWayland(_GRWLwindow* window);
 void _grwlFocusWindowWayland(_GRWLwindow* window);
 void _grwlSetWindowMonitorWayland(_GRWLwindow* window, _GRWLmonitor* monitor, int xpos, int ypos, int width, int height,
                                   int refreshRate);
-GRWLbool _grwlWindowFocusedWayland(_GRWLwindow* window);
-GRWLbool _grwlWindowIconifiedWayland(_GRWLwindow* window);
-GRWLbool _grwlWindowVisibleWayland(_GRWLwindow* window);
-GRWLbool _grwlWindowMaximizedWayland(_GRWLwindow* window);
-GRWLbool _grwlWindowHoveredWayland(_GRWLwindow* window);
-GRWLbool _grwlFramebufferTransparentWayland(_GRWLwindow* window);
-void _grwlSetWindowResizableWayland(_GRWLwindow* window, GRWLbool enabled);
-void _grwlSetWindowDecoratedWayland(_GRWLwindow* window, GRWLbool enabled);
-void _grwlSetWindowFloatingWayland(_GRWLwindow* window, GRWLbool enabled);
+bool _grwlWindowFocusedWayland(_GRWLwindow* window);
+bool _grwlWindowIconifiedWayland(_GRWLwindow* window);
+bool _grwlWindowVisibleWayland(_GRWLwindow* window);
+bool _grwlWindowMaximizedWayland(_GRWLwindow* window);
+bool _grwlWindowHoveredWayland(_GRWLwindow* window);
+bool _grwlFramebufferTransparentWayland(_GRWLwindow* window);
+void _grwlSetWindowResizableWayland(_GRWLwindow* window, bool enabled);
+void _grwlSetWindowDecoratedWayland(_GRWLwindow* window, bool enabled);
+void _grwlSetWindowFloatingWayland(_GRWLwindow* window, bool enabled);
 float _grwlGetWindowOpacityWayland(_GRWLwindow* window);
 void _grwlSetWindowOpacityWayland(_GRWLwindow* window, float opacity);
-void _grwlSetWindowMousePassthroughWayland(_GRWLwindow* window, GRWLbool enabled);
+void _grwlSetWindowMousePassthroughWayland(_GRWLwindow* window, bool enabled);
 
-void _grwlSetRawMouseMotionWayland(_GRWLwindow* window, GRWLbool enabled);
-GRWLbool _grwlRawMouseMotionSupportedWayland(void);
+void _grwlSetRawMouseMotionWayland(_GRWLwindow* window, bool enabled);
+bool _grwlRawMouseMotionSupportedWayland();
 
-void _grwlPollEventsWayland(void);
-void _grwlWaitEventsWayland(void);
+void _grwlPollEventsWayland();
+void _grwlWaitEventsWayland();
 void _grwlWaitEventsTimeoutWayland(double timeout);
-void _grwlPostEmptyEventWayland(void);
+void _grwlPostEmptyEventWayland();
 
 void _grwlGetCursorPosWayland(_GRWLwindow* window, double* xpos, double* ypos);
 void _grwlSetCursorPosWayland(_GRWLwindow* window, double xpos, double ypos);
 void _grwlSetCursorModeWayland(_GRWLwindow* window, int mode);
 const char* _grwlGetScancodeNameWayland(int scancode);
 int _grwlGetKeyScancodeWayland(int key);
-const char* _grwlGetKeyboardLayoutNameWayland(void);
-GRWLbool _grwlCreateCursorWayland(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
-GRWLbool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape);
+const char* _grwlGetKeyboardLayoutNameWayland();
+bool _grwlCreateCursorWayland(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot);
+bool _grwlCreateStandardCursorWayland(_GRWLcursor* cursor, int shape);
 void _grwlDestroyCursorWayland(_GRWLcursor* cursor);
 void _grwlSetCursorWayland(_GRWLwindow* window, _GRWLcursor* cursor);
 void _grwlSetClipboardStringWayland(const char* string);
-const char* _grwlGetClipboardStringWayland(void);
+const char* _grwlGetClipboardStringWayland();
 
 void _grwlUpdatePreeditCursorRectangleWayland(_GRWLwindow* window);
 void _grwlResetPreeditTextWayland(_GRWLwindow* window);
@@ -700,12 +700,12 @@ void _grwlSetIMEStatusWayland(_GRWLwindow* window, int active);
 int _grwlGetIMEStatusWayland(_GRWLwindow* window);
 
 EGLenum _grwlGetEGLPlatformWayland(EGLint** attribs);
-EGLNativeDisplayType _grwlGetEGLNativeDisplayWayland(void);
+EGLNativeDisplayType _grwlGetEGLNativeDisplayWayland();
 EGLNativeWindowType _grwlGetEGLNativeWindowWayland(_GRWLwindow* window);
 
 void _grwlGetRequiredInstanceExtensionsWayland(char** extensions);
-GRWLbool _grwlGetPhysicalDevicePresentationSupportWayland(VkInstance instance, VkPhysicalDevice device,
-                                                          uint32_t queuefamily);
+bool _grwlGetPhysicalDevicePresentationSupportWayland(VkInstance instance, VkPhysicalDevice device,
+                                                      uint32_t queuefamily);
 VkResult _grwlCreateWindowSurfaceWayland(VkInstance instance, _GRWLwindow* window,
                                          const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface);
 
@@ -715,7 +715,7 @@ void _grwlGetMonitorContentScaleWayland(_GRWLmonitor* monitor, float* xscale, fl
 void _grwlGetMonitorWorkareaWayland(_GRWLmonitor* monitor, int* xpos, int* ypos, int* width, int* height);
 GRWLvidmode* _grwlGetVideoModesWayland(_GRWLmonitor* monitor, int* count);
 void _grwlGetVideoModeWayland(_GRWLmonitor* monitor, GRWLvidmode* mode);
-GRWLbool _grwlGetGammaRampWayland(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
+bool _grwlGetGammaRampWayland(_GRWLmonitor* monitor, GRWLgammaramp* ramp);
 void _grwlSetGammaRampWayland(_GRWLmonitor* monitor, const GRWLgammaramp* ramp);
 
 void _grwlAddOutputWayland(uint32_t name, uint32_t version);

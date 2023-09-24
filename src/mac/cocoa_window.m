@@ -16,7 +16,7 @@
 
 // Returns whether the cursor is in the content area of the specified window
 //
-static GRWLbool cursorInContentArea(_GRWLwindow* window)
+static bool cursorInContentArea(_GRWLwindow* window)
 {
     const NSPoint pos = [window->ns.object mouseLocationOutsideOfEventStream];
     return [window->ns.view mouse:pos inRect:[window->ns.view frame]];
@@ -29,7 +29,7 @@ static void hideCursor(_GRWLwindow* window)
     if (!_grwl.ns.cursorHidden)
     {
         [NSCursor hide];
-        _grwl.ns.cursorHidden = GRWL_TRUE;
+        _grwl.ns.cursorHidden = true;
     }
 }
 
@@ -40,7 +40,7 @@ static void showCursor(_GRWLwindow* window)
     if (_grwl.ns.cursorHidden)
     {
         [NSCursor unhide];
-        _grwl.ns.cursorHidden = GRWL_FALSE;
+        _grwl.ns.cursorHidden = false;
     }
 }
 
@@ -362,7 +362,7 @@ static void setDockProgressIndicator(int progressState, double value)
         releaseMonitor(window);
     }
 
-    _grwlInputWindowIconify(window, GRWL_TRUE);
+    _grwlInputWindowIconify(window, true);
 }
 
 - (void)windowDidDeminiaturize:(NSNotification*)notification
@@ -372,7 +372,7 @@ static void setDockProgressIndicator(int progressState, double value)
         acquireMonitor(window);
     }
 
-    _grwlInputWindowIconify(window, GRWL_FALSE);
+    _grwlInputWindowIconify(window, false);
 }
 
 - (void)windowDidBecomeKey:(NSNotification*)notification
@@ -382,7 +382,7 @@ static void setDockProgressIndicator(int progressState, double value)
         _grwlCenterCursorInContentArea(window);
     }
 
-    _grwlInputWindowFocus(window, GRWL_TRUE);
+    _grwlInputWindowFocus(window, true);
     updateCursorMode(window);
 }
 
@@ -393,18 +393,18 @@ static void setDockProgressIndicator(int progressState, double value)
         _grwlIconifyWindowCocoa(window);
     }
 
-    _grwlInputWindowFocus(window, GRWL_FALSE);
+    _grwlInputWindowFocus(window, false);
 }
 
 - (void)windowDidChangeOcclusionState:(NSNotification*)notification
 {
     if ([window->ns.object occlusionState] & NSWindowOcclusionStateVisible)
     {
-        window->ns.occluded = GRWL_FALSE;
+        window->ns.occluded = false;
     }
     else
     {
-        window->ns.occluded = GRWL_TRUE;
+        window->ns.occluded = true;
     }
 }
 
@@ -569,7 +569,7 @@ static void setDockProgressIndicator(int progressState, double value)
         showCursor(window);
     }
 
-    _grwlInputCursorEnter(window, GRWL_FALSE);
+    _grwlInputCursorEnter(window, false);
 }
 
 - (void)mouseEntered:(NSEvent*)event
@@ -579,7 +579,7 @@ static void setDockProgressIndicator(int progressState, double value)
         hideCursor(window);
     }
 
-    _grwlInputCursorEnter(window, GRWL_TRUE);
+    _grwlInputCursorEnter(window, true);
 }
 
 - (void)viewDidChangeBackingProperties
@@ -967,13 +967,13 @@ static void setDockProgressIndicator(int progressState, double value)
 
 // Create the Cocoa window
 //
-static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLfbconfig* fbconfig)
+static bool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLfbconfig* fbconfig)
 {
     window->ns.delegate = [[GRWLWindowDelegate alloc] initWithGlfwWindow:window];
     if (window->ns.delegate == nil)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to create window delegate");
-        return GRWL_FALSE;
+        return false;
     }
 
     NSRect contentRect;
@@ -1026,7 +1026,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
     if (window->ns.object == nil)
     {
         _grwlInputError(GRWL_PLATFORM_ERROR, "Cocoa: Failed to create window");
-        return GRWL_FALSE;
+        return false;
     }
 
     if (window->monitor)
@@ -1104,7 +1104,7 @@ static GRWLbool createNativeWindow(_GRWLwindow* window, const _GRWLwndconfig* wn
     _grwlGetWindowSizeCocoa(window, &window->ns.width, &window->ns.height);
     _grwlGetFramebufferSizeCocoa(window, &window->ns.fbWidth, &window->ns.fbHeight);
 
-    return GRWL_TRUE;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1122,7 +1122,7 @@ float _grwlTransformYCocoa(float y)
 //////                       GRWL platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
+bool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndconfig, const _GRWLctxconfig* ctxconfig,
                                 const _GRWLfbconfig* fbconfig)
 {
     @autoreleasepool
@@ -1130,7 +1130,7 @@ GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndco
 
         if (!createNativeWindow(window, wndconfig, fbconfig))
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         if (ctxconfig->client != GRWL_NO_API)
@@ -1139,11 +1139,11 @@ GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndco
             {
                 if (!_grwlInitNSGL())
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
                 if (!_grwlCreateContextNSGL(window, ctxconfig, fbconfig))
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
             }
             else if (ctxconfig->source == GRWL_EGL_CONTEXT_API)
@@ -1155,34 +1155,34 @@ GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndco
 
                 if (!_grwlInitEGL())
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
                 if (!_grwlCreateContextEGL(window, ctxconfig, fbconfig))
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
             }
             else if (ctxconfig->source == GRWL_OSMESA_CONTEXT_API)
             {
                 if (!_grwlInitOSMesa())
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
                 if (!_grwlCreateContextOSMesa(window, ctxconfig, fbconfig))
                 {
-                    return GRWL_FALSE;
+                    return false;
                 }
             }
 
             if (!_grwlRefreshContextAttribs(window, ctxconfig))
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
 
         if (wndconfig->mousePassthrough)
         {
-            _grwlSetWindowMousePassthroughCocoa(window, GRWL_TRUE);
+            _grwlSetWindowMousePassthroughCocoa(window, true);
         }
 
         if (window->monitor)
@@ -1213,7 +1213,7 @@ GRWLbool _grwlCreateWindowCocoa(_GRWLwindow* window, const _GRWLwndconfig* wndco
                                                      name:NSTextInputContextKeyboardSelectionDidChangeNotification
                                                    object:nil];
 
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }
@@ -1786,7 +1786,7 @@ void _grwlSetWindowMonitorCocoa(_GRWLwindow* window, _GRWLmonitor* monitor, int 
     } // autoreleasepool
 }
 
-GRWLbool _grwlWindowFocusedCocoa(_GRWLwindow* window)
+bool _grwlWindowFocusedCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1794,7 +1794,7 @@ GRWLbool _grwlWindowFocusedCocoa(_GRWLwindow* window)
     } // autoreleasepool
 }
 
-GRWLbool _grwlWindowIconifiedCocoa(_GRWLwindow* window)
+bool _grwlWindowIconifiedCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1802,7 +1802,7 @@ GRWLbool _grwlWindowIconifiedCocoa(_GRWLwindow* window)
     } // autoreleasepool
 }
 
-GRWLbool _grwlWindowVisibleCocoa(_GRWLwindow* window)
+bool _grwlWindowVisibleCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1810,7 +1810,7 @@ GRWLbool _grwlWindowVisibleCocoa(_GRWLwindow* window)
     } // autoreleasepool
 }
 
-GRWLbool _grwlWindowMaximizedCocoa(_GRWLwindow* window)
+bool _grwlWindowMaximizedCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1821,13 +1821,13 @@ GRWLbool _grwlWindowMaximizedCocoa(_GRWLwindow* window)
         }
         else
         {
-            return GRWL_FALSE;
+            return false;
         }
 
     } // autoreleasepool
 }
 
-GRWLbool _grwlWindowHoveredCocoa(_GRWLwindow* window)
+bool _grwlWindowHoveredCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1836,7 +1836,7 @@ GRWLbool _grwlWindowHoveredCocoa(_GRWLwindow* window)
 
         if ([NSWindow windowNumberAtPoint:point belowWindowWithWindowNumber:0] != [window->ns.object windowNumber])
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         return NSMouseInRect(point, [window->ns.object convertRectToScreen:[window->ns.view frame]], NO);
@@ -1844,7 +1844,7 @@ GRWLbool _grwlWindowHoveredCocoa(_GRWLwindow* window)
     } // autoreleasepool
 }
 
-GRWLbool _grwlFramebufferTransparentCocoa(_GRWLwindow* window)
+bool _grwlFramebufferTransparentCocoa(_GRWLwindow* window)
 {
     @autoreleasepool
     {
@@ -1852,7 +1852,7 @@ GRWLbool _grwlFramebufferTransparentCocoa(_GRWLwindow* window)
     } // autoreleasepool
 }
 
-void _grwlSetWindowResizableCocoa(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowResizableCocoa(_GRWLwindow* window, bool enabled)
 {
     @autoreleasepool
     {
@@ -1875,7 +1875,7 @@ void _grwlSetWindowResizableCocoa(_GRWLwindow* window, GRWLbool enabled)
     } // autoreleasepool
 }
 
-void _grwlSetWindowDecoratedCocoa(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowDecoratedCocoa(_GRWLwindow* window, bool enabled)
 {
     @autoreleasepool
     {
@@ -1898,7 +1898,7 @@ void _grwlSetWindowDecoratedCocoa(_GRWLwindow* window, GRWLbool enabled)
     } // autoreleasepool
 }
 
-void _grwlSetWindowFloatingCocoa(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowFloatingCocoa(_GRWLwindow* window, bool enabled)
 {
     @autoreleasepool
     {
@@ -1913,7 +1913,7 @@ void _grwlSetWindowFloatingCocoa(_GRWLwindow* window, GRWLbool enabled)
     } // autoreleasepool
 }
 
-void _grwlSetWindowMousePassthroughCocoa(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetWindowMousePassthroughCocoa(_GRWLwindow* window, bool enabled)
 {
     @autoreleasepool
     {
@@ -1937,17 +1937,17 @@ void _grwlSetWindowOpacityCocoa(_GRWLwindow* window, float opacity)
     } // autoreleasepool
 }
 
-void _grwlSetRawMouseMotionCocoa(_GRWLwindow* window, GRWLbool enabled)
+void _grwlSetRawMouseMotionCocoa(_GRWLwindow* window, bool enabled)
 {
     _grwlInputError(GRWL_FEATURE_UNIMPLEMENTED, "Cocoa: Raw mouse motion not yet implemented");
 }
 
-GRWLbool _grwlRawMouseMotionSupportedCocoa(void)
+bool _grwlRawMouseMotionSupportedCocoa()
 {
-    return GRWL_FALSE;
+    return false;
 }
 
-void _grwlPollEventsCocoa(void)
+void _grwlPollEventsCocoa()
 {
     @autoreleasepool
     {
@@ -1969,7 +1969,7 @@ void _grwlPollEventsCocoa(void)
     } // autoreleasepool
 }
 
-void _grwlWaitEventsCocoa(void)
+void _grwlWaitEventsCocoa()
 {
     @autoreleasepool
     {
@@ -2008,7 +2008,7 @@ void _grwlWaitEventsTimeoutCocoa(double timeout)
     } // autoreleasepool
 }
 
-void _grwlPostEmptyEventCocoa(void)
+void _grwlPostEmptyEventCocoa()
 {
     @autoreleasepool
     {
@@ -2153,7 +2153,7 @@ int _grwlGetKeyScancodeCocoa(int key)
     return _grwl.ns.scancodes[key];
 }
 
-const char* _grwlGetKeyboardLayoutNameCocoa(void)
+const char* _grwlGetKeyboardLayoutNameCocoa()
 {
     TISInputSourceRef source = TISCopyCurrentKeyboardInputSource();
     NSString* name = (__bridge NSString*)TISGetInputSourceProperty(source, kTISPropertyLocalizedName);
@@ -2171,7 +2171,7 @@ const char* _grwlGetKeyboardLayoutNameCocoa(void)
     return _grwl.ns.keyboardLayoutName;
 }
 
-GRWLbool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
+bool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int xhot, int yhot)
 {
     @autoreleasepool
     {
@@ -2193,7 +2193,7 @@ GRWLbool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int
 
         if (rep == nil)
         {
-            return GRWL_FALSE;
+            return false;
         }
 
         memcpy([rep bitmapData], image -> pixels, image -> width * image -> height * 4);
@@ -2208,15 +2208,15 @@ GRWLbool _grwlCreateCursorCocoa(_GRWLcursor* cursor, const GRWLimage* image, int
 
         if (cursor->ns.object == nil)
         {
-            return GRWL_FALSE;
+            return false;
         }
 
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }
 
-GRWLbool _grwlCreateStandardCursorCocoa(_GRWLcursor* cursor, int shape)
+bool _grwlCreateStandardCursorCocoa(_GRWLcursor* cursor, int shape)
 {
     @autoreleasepool
     {
@@ -2283,11 +2283,11 @@ GRWLbool _grwlCreateStandardCursorCocoa(_GRWLcursor* cursor, int shape)
         if (!cursor->ns.object)
         {
             _grwlInputError(GRWL_CURSOR_UNAVAILABLE, "Cocoa: Standard cursor shape unavailable");
-            return GRWL_FALSE;
+            return false;
         }
 
         [cursor->ns.object retain];
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }
@@ -2324,7 +2324,7 @@ void _grwlSetClipboardStringCocoa(const char* string)
     } // autoreleasepool
 }
 
-const char* _grwlGetClipboardStringCocoa(void)
+const char* _grwlGetClipboardStringCocoa()
 {
     @autoreleasepool
     {
@@ -2457,11 +2457,11 @@ int _grwlGetIMEStatusCocoa(_GRWLwindow* window)
                 (__bridge NSString*)TISGetInputSourceProperty(asciiSource, kTISPropertyInputSourceID);
             if ([asciiSourceID compare:currentSourceID] == NSOrderedSame)
             {
-                return GRWL_FALSE;
+                return false;
             }
         }
 
-        return GRWL_TRUE;
+        return true;
 
     } // autoreleasepool
 }
@@ -2501,7 +2501,7 @@ EGLenum _grwlGetEGLPlatformCocoa(EGLint** attribs)
     return 0;
 }
 
-EGLNativeDisplayType _grwlGetEGLNativeDisplayCocoa(void)
+EGLNativeDisplayType _grwlGetEGLNativeDisplayCocoa()
 {
     return EGL_DEFAULT_DISPLAY;
 }
@@ -2525,10 +2525,10 @@ void _grwlGetRequiredInstanceExtensionsCocoa(char** extensions)
     }
 }
 
-GRWLbool _grwlGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device,
+bool _grwlGetPhysicalDevicePresentationSupportCocoa(VkInstance instance, VkPhysicalDevice device,
                                                         uint32_t queuefamily)
 {
-    return GRWL_TRUE;
+    return true;
 }
 
 VkResult _grwlCreateWindowSurfaceCocoa(VkInstance instance, _GRWLwindow* window, const VkAllocationCallbacks* allocator,

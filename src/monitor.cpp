@@ -47,20 +47,20 @@ static int compareVideoModes(const void* fp, const void* sp)
 
 // Retrieves the available modes for the specified monitor
 //
-static GRWLbool refreshVideoModes(_GRWLmonitor* monitor)
+static bool refreshVideoModes(_GRWLmonitor* monitor)
 {
     int modeCount;
     GRWLvidmode* modes;
 
     if (monitor->modes)
     {
-        return GRWL_TRUE;
+        return true;
     }
 
     modes = _grwl.platform.getVideoModes(monitor, &modeCount);
     if (!modes)
     {
-        return GRWL_FALSE;
+        return false;
     }
 
     qsort(modes, modeCount, sizeof(GRWLvidmode), compareVideoModes);
@@ -69,7 +69,7 @@ static GRWLbool refreshVideoModes(_GRWLmonitor* monitor)
     monitor->modes = modes;
     monitor->modeCount = modeCount;
 
-    return GRWL_TRUE;
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -314,7 +314,7 @@ GRWLAPI GRWLmonitor** grwlGetMonitors(int* count)
     return (GRWLmonitor**)_grwl.monitors;
 }
 
-GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor(void)
+GRWLAPI GRWLmonitor* grwlGetPrimaryMonitor()
 {
     _GRWL_REQUIRE_INIT_OR_RETURN(NULL);
 

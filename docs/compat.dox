@@ -178,7 +178,7 @@ creating OpenGL contexts of version 2.1 and below.  Where this extension is
 unavailable, the `GRWL_CONTEXT_VERSION_MAJOR` and `GRWL_CONTEXT_VERSION_MINOR`
 hints will only be partially supported, the `GRWL_CONTEXT_DEBUG` hint will have
 no effect, and setting the `GRWL_OPENGL_PROFILE` or `GRWL_OPENGL_FORWARD_COMPAT`
-hints to `GRWL_TRUE` will cause @ref grwlCreateWindow to fail.
+hints to `true` will cause @ref grwlCreateWindow to fail.
 
 GRWL uses the `GLX_ARB_create_context_profile` extension to provide support for
 context profiles.  Where this extension is unavailable, setting the
@@ -220,7 +220,7 @@ creating OpenGL contexts of version 2.1 and below.  Where this extension is
 unavailable, the `GRWL_CONTEXT_VERSION_MAJOR` and `GRWL_CONTEXT_VERSION_MINOR`
 hints will only be partially supported, the `GRWL_CONTEXT_DEBUG` hint will have
 no effect, and setting the `GRWL_OPENGL_PROFILE` or `GRWL_OPENGL_FORWARD_COMPAT`
-hints to `GRWL_TRUE` will cause @ref grwlCreateWindow to fail.
+hints to `true` will cause @ref grwlCreateWindow to fail.
 
 GRWL uses the `WGL_ARB_create_context_profile` extension to provide support for
 context profiles.  Where this extension is unavailable, setting the
@@ -264,7 +264,7 @@ a non-default value will cause @ref grwlCreateWindow to fail and the
 By default, GRWL uses the standard system-wide Vulkan loader to access the
 Vulkan API on all platforms except macOS.  This is installed by both graphics
 drivers and Vulkan SDKs.  If either the loader or at least one minimally
-functional ICD is missing, @ref grwlVulkanSupported will return `GRWL_FALSE` and
+functional ICD is missing, @ref grwlVulkanSupported will return `false` and
 all other Vulkan-related functions will fail with an @ref GRWL_API_UNAVAILABLE
 error.
 
